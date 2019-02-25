@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <windows.h>
 
+#include "cMazeMaker.h"
 
 #include "DebugRenderer/cDebugRenderer.h"
 #include "cLightHelper.h"
@@ -124,6 +125,13 @@ int main(void)
 {
 	loadConfig();
 
+
+	//********Generate Maze********
+	cMazeMaker Maze;
+	Maze.GenerateMaze(50, 50);
+	Maze.PrintMaze();
+	//********Generate Maze********
+
 	GLFWwindow* window;
 
 	glfwSetErrorCallback(error_callback);
@@ -152,10 +160,7 @@ int main(void)
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	glfwSwapInterval(1);
 
-
-	// Create the shader manager...
-	//cShaderManager TheShaderManager;	
-	//cShaderManager* pTheShaderManager;		
+		
 	pTheShaderManager = new cShaderManager();
 	pTheShaderManager->setBasePath("assets/shaders/");
 
@@ -171,7 +176,7 @@ int main(void)
 	if (pTheShaderManager->createProgramFromFile("BasicUberShader",
 		vertexShader,
 		fragmentShader))
-	{		// Shaders are OK
+	{		
 		std::cout << "Compiled shaders OK." << std::endl;
 	}
 	else
@@ -181,7 +186,6 @@ int main(void)
 	}
 
 
-	// Load the uniform location values (some of them, anyway)
 	cShaderManager::cShaderProgram* pSP = ::pTheShaderManager->pGetShaderProgramFromFriendlyName("BasicUberShader");
 	pSP->LoadUniformLocation("texture00");
 	pSP->LoadUniformLocation("texture01");
@@ -195,29 +199,23 @@ int main(void)
 	pSP->LoadUniformLocation("texBlendWeights[1]");
 
 
-
-
 	program = pTheShaderManager->getIDFromFriendlyName("BasicUberShader");
 
 
 	::g_pTheVAOMeshManager = new cVAOMeshManager();
 	::g_pTheVAOMeshManager->SetBasePath("assets/models");
-
 	::g_pTheTextureManager = new cBasicTextureManager();
-
 	::g_textRenderer = new cTextRend();
-	//Create Scene Manager
 	::g_pSceneManager = new cSceneManager();
 	::g_pSceneManager->setBasePath("scenes");
-
 	::LightManager = new cLightManager();
 
 	::g_pFBOMain = new cFBO();
+	cFBO* pFBO2 = new cFBO();
 
-	//
-	//	if ( FBOStatus == GL_FRAMEBUFFER_COMPLETE )
+
 	std::string FBOErrorString;
-	if (::g_pFBOMain->init(1024, 1024, FBOErrorString))
+	if (::g_pFBOMain->init(SCR_WIDTH, SCR_HEIGHT, FBOErrorString))
 	{
 		std::cout << "Framebuffer is good to go!" << std::endl;
 	}
@@ -228,12 +226,10 @@ int main(void)
 
 
 
-	cFBO* pFBO2 = new cFBO();
 
-	//
-	//	if ( FBOStatus == GL_FRAMEBUFFER_COMPLETE )
+
 	std::string pFBO2ERR;
-	if (pFBO2->init(1024, 1024, pFBO2ERR))
+	if (pFBO2->init(SCR_WIDTH, SCR_HEIGHT, pFBO2ERR))
 	{
 		std::cout << "Framebuffer 2 is good to go!" << std::endl;
 	}
@@ -242,31 +238,15 @@ int main(void)
 		std::cout << "Framebuffer 2 is NOT complete" << std::endl;
 	}
 
-	// Point back to default frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
-
-	// Loading the uniform variables here (rather than the inner draw loop)
 	GLint objectColour_UniLoc = glGetUniformLocation(program, "objectColour");
-	//uniform vec3 lightPos;
-	//uniform float lightAtten;
-
-
-//	GLint lightPos_UniLoc = glGetUniformLocation(program, "lightPos");
-//	GLint lightBrightness_UniLoc = glGetUniformLocation(program, "lightBrightness");
-
-	//	// uniform mat4 MVP;	THIS ONE IS NO LONGER USED	
-	//uniform mat4 matModel;	// M
-	//uniform mat4 matView;		// V
-	//uniform mat4 matProj;		// P
-	//GLint mvp_location = glGetUniformLocation(program, "MVP");
 	GLint matModel_location = glGetUniformLocation(program, "matModel");
 	GLint matView_location = glGetUniformLocation(program, "matView");
 	GLint matProj_location = glGetUniformLocation(program, "matProj");
 	GLint eyeLocation_location = glGetUniformLocation(program, "eyeLocation");
 
-	// Note that this point is to the +interface+ but we're creating the actual object
 	::g_pDebugRendererACTUAL = new cDebugRenderer();
 	::g_pDebugRenderer = (iDebugRenderer*)::g_pDebugRendererACTUAL;
 
@@ -356,7 +336,8 @@ int main(void)
 
 	//AddSomeVel
 
-
+	float idk = 0.0f;
+	cGameObject* dalek = findObjectByFriendlyName("dalek");
 
 	// Draw the "scene" (run the program)
 	while (!glfwWindowShouldClose(window))
@@ -409,10 +390,20 @@ int main(void)
 			10000.0f);	// Far clipping plane
 
 
-//glm::vec3 migpos = findObjectByFriendlyName("mig")->position;
-//matView = glm::lookAt(camera.Position, migpos, camera.WorldUp);
 
-		matView = glm::lookAt(glm::vec3(20.0f, 20.0f, 40.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		matView = glm::lookAt(camera.Position, dalek->position, camera.WorldUp);
+		glm::vec4 vecForwardDirection_ModelSpace = glm::vec4(0.0f, 0.0f, /**/1.0f/**/, 1.0f);
+
+		glm::quat dalekRotation = dalek->getQOrientation();
+		glm::mat4 matDalekRotation = glm::mat4(dalekRotation);
+		glm::vec4 vecForwardDirection_WorldSpace = matDalekRotation * vecForwardDirection_ModelSpace;
+	
+		// optional normalize
+		vecForwardDirection_WorldSpace = glm::normalize(vecForwardDirection_WorldSpace);
+
+
+
+		matView = glm::lookAt(dalek->position + glm::vec3(vecForwardDirection_WorldSpace) * 0.7f, dalek->position + glm::vec3(vecForwardDirection_WorldSpace), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		glUniform3f(eyeLocation_location, camera.Position.x, camera.Position.y, camera.Position.z);
 
@@ -426,84 +417,29 @@ int main(void)
 
 		std::sort(vec_transObj.begin(), vec_transObj.end(), distToCam);
 
-	
 
 
 
 
 
-		double FPS_currentTime = glfwGetTime();
-		nbFrames++;
-		if (FPS_currentTime - FPS_last_Time >= 1.0) { // If last prinf() was more than 1 sec ago
-			// printf and reset timer
-			//printf("%f ms/frame\n", 1000.0 / double(nbFrames));
-			FPS = nbFrames * 1;
-			nbFrames = 0;
-			FPS_last_Time += 1.0;
-		}
-		g_textRenderer->drawText(width, height, ("FPS: " + std::to_string(FPS)).c_str());
-
-		switch (physics_library)
-		{
-		case SIMPLE:
-			g_textRenderer->drawText(width, height, ("Physics: My crappy physics"), 100.0f);
-			break;
-		case BULLET:
-			g_textRenderer->drawText(width, height, ("Physics: Bullet"), 100.0f);
-			break;
-		case UNKNOWN:
-			break;
-		default:
-			break;
-		}
-		g_textRenderer->drawText(width, height, ("Gravity: " + std::to_string((int)g_Gravity.y)).c_str(), 150.0f);
-
-		//float sx = 2.0f / width;
-		//float sy = 2.0f / height;
-		//GLfloat yoffset = 50.0f;
-		//GLfloat xoffset = 8 * sx;
-
-		//g_textRend.renderText("ololosadasdasdassdasdasdasd", -1 + xoffset, 1 - yoffset * sy, sx, sy);
-		//yoffset += 50.0f;
-
-
-
-		//REFLECTION
-
+		//switch (physics_library)
 		//{
-		//	GLint bAddReflect_UniLoc = glGetUniformLocation(program, "bAddReflect");
-		//	//			glUniform1f( bAddReflect_UniLoc, (float)GL_TRUE );
-
-		//	GLint bAddRefract_UniLoc = glGetUniformLocation(program, "bAddRefract");
-		//	glUniform1f(bAddRefract_UniLoc, (float)GL_TRUE);
-
-		//	cGameObject* pBunny = findObjectByFriendlyName("Ufo2UVb");
-
-		//	glm::vec3 oldPos = pBunny->position;
-		//	glm::vec3 oldScale = pBunny->nonUniformScale;
-		//	glm::quat oldOrientation = pBunny->getQOrientation();
-
-		//	pBunny->position = glm::vec3(0.0f, 25.0f, 0.0f);
-		//	pBunny->setUniformScale(100.0f);
-		//	pBunny->setMeshOrientationEulerAngles(0.0f, 0.0f, 0.0f, true);
-
-		//	glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
-
-		//	DrawObject(pBunny, matModel, program);
-
-		//	pBunny->position = oldPos;
-		//	pBunny->nonUniformScale = oldScale;
-		//	pBunny->setQOrientation(oldOrientation);
-
-		//	glUniform1f(bAddReflect_UniLoc, (float)GL_FALSE);
-		//	glUniform1f(bAddRefract_UniLoc, (float)GL_FALSE);
+		//case SIMPLE:
+		//	g_textRenderer->drawText(width, height, ("Physics: My crappy physics"), 100.0f);
+		//	break;
+		//case BULLET:
+		//	g_textRenderer->drawText(width, height, ("Physics: Bullet"), 100.0f);
+		//	break;
+		//case UNKNOWN:
+		//	break;
+		//default:
+		//	break;
 		//}
+		//g_textRenderer->drawText(width, height, ("Gravity: " + std::to_string((int)g_Gravity.y)).c_str(), 150.0f);
 
 
 
 
-
-		// High res timer (likely in ms or ns)
 		currentTime = glfwGetTime();
 		deltaTime = currentTime - lastTime;
 
@@ -517,15 +453,15 @@ int main(void)
 		// update the "last time"
 		lastTime = currentTime;
 
-		for (unsigned int objIndex = 0;
-			objIndex != (unsigned int)vec_pObjectsToDraw.size();
-			objIndex++)
-		{
-			cGameObject* pCurrentMesh = vec_pObjectsToDraw[objIndex];
+		//for (unsigned int objIndex = 0;
+		//	objIndex != (unsigned int)vec_pObjectsToDraw.size();
+		//	objIndex++)
+		//{
+		//	cGameObject* pCurrentMesh = vec_pObjectsToDraw[objIndex];
 
-			pCurrentMesh->Update(deltaTime);
+		//	pCurrentMesh->Update(deltaTime);
 
-		}//for ( unsigned int objIndex = 0; 
+		//}//for ( unsigned int objIndex = 0; 
 
 		//sceneCommandGroup.Update(deltaTime);
 
@@ -534,49 +470,49 @@ int main(void)
 		// The physics update loop
 
 		//New Dll physics
-		gPhysicsWorld->Update(deltaTime);
+		//gPhysicsWorld->Update(deltaTime);
 
-		for (int i = 0; i < vec_pObjectsToDraw.size(); i++)
-		{
-			cGameObject* curMesh = vec_pObjectsToDraw[i];
-			if (curMesh->rigidBody != NULL && curMesh->rigidBody->GetShape()->GetShapeType() != nPhysics::SHAPE_TYPE_PLANE) {
+		//for (int i = 0; i < vec_pObjectsToDraw.size(); i++)
+		//{
+		//	cGameObject* curMesh = vec_pObjectsToDraw[i];
+		//	if (curMesh->rigidBody != NULL && curMesh->rigidBody->GetShape()->GetShapeType() != nPhysics::SHAPE_TYPE_PLANE) {
 
-				float rad;
-				curMesh->rigidBody->GetShape()->GetSphereRadius(rad);
-				if (curMesh->friendlyName == "chan") {
-					curMesh->position = curMesh->rigidBody->GetPosition();
-					curMesh->position.y = curMesh->rigidBody->GetPosition().y - rad;
-				}
-				else { curMesh->position = curMesh->rigidBody->GetPosition(); }
-				curMesh->m_meshQOrientation = glm::mat4(curMesh->rigidBody->GetMatRotation());
-				//HACK CHARACTER
+		//		float rad;
+		//		curMesh->rigidBody->GetShape()->GetSphereRadius(rad);
+		//		if (curMesh->friendlyName == "chan") {
+		//			curMesh->position = curMesh->rigidBody->GetPosition();
+		//			curMesh->position.y = curMesh->rigidBody->GetPosition().y - rad;
+		//		}
+		//		else { curMesh->position = curMesh->rigidBody->GetPosition(); }
+		//		curMesh->m_meshQOrientation = glm::mat4(curMesh->rigidBody->GetMatRotation());
+		//		//HACK CHARACTER
 
-			}
-		}
+		//	}
+		//}
 
-		if (bIsDebugMode) {
-			// Call the debug renderer
-			for (int i = 0; i < vec_pObjectsToDraw.size(); i++) {
-				cGameObject* curObj = vec_pObjectsToDraw[i];
-				//curObj->bIsVisible = false;
-				curObj->bDontLight = true;
-				if (curObj->rigidBody != NULL) {
-					if (curObj->rigidBody->GetShape()->GetShapeType() == nPhysics::SHAPE_TYPE_SPHERE) {
+		//if (bIsDebugMode) {
+		//	// Call the debug renderer
+		//	for (int i = 0; i < vec_pObjectsToDraw.size(); i++) {
+		//		cGameObject* curObj = vec_pObjectsToDraw[i];
+		//		//curObj->bIsVisible = false;
+		//		curObj->bDontLight = true;
+		//		if (curObj->rigidBody != NULL) {
+		//			if (curObj->rigidBody->GetShape()->GetShapeType() == nPhysics::SHAPE_TYPE_SPHERE) {
 
-						float rad;
-						curObj->rigidBody->GetShape()->GetSphereRadius(rad);
-						g_simpleDubugRenderer->drawSphere(curObj->rigidBody->GetPosition(), rad);
-					}
-					if (curObj->rigidBody->GetShape()->GetShapeType() == nPhysics::SHAPE_TYPE_PLANE) {
-						//curObj->bIsWireFrame = true;
-						curObj->bIsVisible = true;
-						glm::mat4 matIden = glm::mat4(1.0f);
-						DrawObject(curObj, matIden, program, NULL);
-					}
-				}
-			}
-		}
-		::g_pDebugRendererACTUAL->RenderDebugObjects(matView, matProjection, deltaTime);
+		//				float rad;
+		//				curObj->rigidBody->GetShape()->GetSphereRadius(rad);
+		//				g_simpleDubugRenderer->drawSphere(curObj->rigidBody->GetPosition(), rad);
+		//			}
+		//			if (curObj->rigidBody->GetShape()->GetShapeType() == nPhysics::SHAPE_TYPE_PLANE) {
+		//				//curObj->bIsWireFrame = true;
+		//				curObj->bIsVisible = true;
+		//				glm::mat4 matIden = glm::mat4(1.0f);
+		//				DrawObject(curObj, matIden, program, NULL);
+		//			}
+		//		}
+		//	}
+		//}
+		//::g_pDebugRendererACTUAL->RenderDebugObjects(matView, matProjection, deltaTime);
 
 		//::p_LuaScripts->UpdateCG(deltaTime);
 		//::p_LuaScripts->Update(deltaTime);
@@ -726,100 +662,122 @@ int main(void)
 
 		}//for ( unsigned int objIndex = 0; 
 
-
-
-
-		//SECOND BUFFER
-		glBindFramebuffer(GL_FRAMEBUFFER, pFBO2->ID);
-
-
-		pFBO2->clearBuffers(true, true);
-		glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 1st pass
-
-
-
-		glfwGetFramebufferSize(window, &width, &height);
-		ratio = width / (float)height;
-		glViewport(0, 0, width, height);
-
-		// These things will impact ANY framebuffer
-		// (controls state of the rendering, so doesn't matter where
-		//  the output goes to, right?)
-		glEnable(GL_DEPTH);		// Enables the KEEPING of the depth information
-		glEnable(GL_DEPTH_TEST);	// When drawing, checked the existing depth
-		glEnable(GL_CULL_FACE);	// Discared "back facing" triangles
-
-		// Colour and depth buffers are TWO DIFF THINGS.
-		// Note that this is clearing the main framebuffer
-		// (Which will do NOTHING to the offscreen buffer)
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-		matProjection = glm::perspective(1.0f,			// FOV
-			ratio,		// Aspect ratio
-			0.1f,			// Near clipping plane
-			10000.0f);	// Far clipping plane
-
-
-//glm::vec3 migpos = findObjectByFriendlyName("mig")->position;
-//matView = glm::lookAt(camera.Position, migpos, camera.WorldUp);
-
-		matView = glm::lookAt(glm::vec3(20.0f, 20.0f, 40.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-		glUniform3f(eyeLocation_location, camera.Position.x, camera.Position.y, camera.Position.z);
-
-		//matView = glm::lookAt( g_CameraEye,	// Eye
-		//	                    g_CameraAt,		// At
-		//	                    glm::vec3( 0.0f, 1.0f, 0.0f ) );// Up
-		glUniformMatrix4fv(matView_location, 1, GL_FALSE, glm::value_ptr(matView));
-		glUniformMatrix4fv(matProj_location, 1, GL_FALSE, glm::value_ptr(matProjection));
-		// Do all this ONCE per frame
-
-		//Copy LIGHT unnif
-
-		// Draw all the objects in the "scene"
-		for (unsigned int objIndex = 0;
-			objIndex != (unsigned int)vec_non_transObj.size();
-			objIndex++)
+		cGameObject* block = findObjectByFriendlyName("block");
+		block->position = glm::vec3(0.0f);
+		for (unsigned int a = 0; a < Maze.maze.size(); a++)
 		{
-			cGameObject* pCurrentMesh = vec_non_transObj[objIndex];
+			for (unsigned int b = 0; b < Maze.maze[a].size(); b++)
+			{
+				if (Maze.maze[a][b][0])
+				{
+					glm::mat4 matblock(1.0f);
+					DrawObject(block, matblock, program, NULL);
+					block->position.x += 20.0f;
+					//				std::cout << "X";
+					//				std::cout << '\u2500';
+					//				std::cout << (char)0xC5;
+					//				std::cout << (char)0xDA; //   (218)
+					//				std::cout << (char)0xBF; //   (191)
+					//				std::cout << (char)0xC0; //   (192)
+					//				std::cout << (char)0xD9; //   (217)
+				}
+				else
+				{
+					//std::cout << "  ";
+					block->position.x += 20.0f;
+				}
 
-			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
-
-			DrawObject(pCurrentMesh, matModel, program, NULL);
-
-		}//for ( unsigned int objIndex = 0; 
-
-		for (unsigned int objIndex = 0;
-			objIndex != (unsigned int)vec_transObj.size();
-			objIndex++)
-		{
-			cGameObject* pCurrentMesh = vec_transObj[objIndex];
-
-			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
-
-			DrawObject(pCurrentMesh, matModel, program, NULL);
-
-		}//for ( unsigned int objIndex = 0; 
-
-
-
-
-
-
-
-
-
+			}
+			block->position.x = 0.0f;
+			block->position.z += 20.0f;
+		}
+		
 
 
 
+//		//RENDER SCENE SECOND BUFFER
+//		glBindFramebuffer(GL_FRAMEBUFFER, pFBO2->ID);
+//
+//
+//		pFBO2->clearBuffers(true, true);
+//		glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 1st pass
+//
+//
+//
+//		glfwGetFramebufferSize(window, &width, &height);
+//		ratio = width / (float)height;
+//		glViewport(0, 0, width, height);
+//
+//		// These things will impact ANY framebuffer
+//		// (controls state of the rendering, so doesn't matter where
+//		//  the output goes to, right?)
+//		glEnable(GL_DEPTH);		// Enables the KEEPING of the depth information
+//		glEnable(GL_DEPTH_TEST);	// When drawing, checked the existing depth
+//		glEnable(GL_CULL_FACE);	// Discared "back facing" triangles
+//
+//		// Colour and depth buffers are TWO DIFF THINGS.
+//		// Note that this is clearing the main framebuffer
+//		// (Which will do NOTHING to the offscreen buffer)
+//		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//
+//		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+//		matProjection = glm::perspective(1.0f,			// FOV
+//			ratio,		// Aspect ratio
+//			0.1f,			// Near clipping plane
+//			10000.0f);	// Far clipping plane
+//
+//
+////glm::vec3 migpos = findObjectByFriendlyName("mig")->position;
+////matView = glm::lookAt(camera.Position, migpos, camera.WorldUp);
+//
+//		matView = glm::lookAt(glm::vec3(20.0f, 20.0f, 40.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+//		
+//		matView = glm::rotate(matView, idk += 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+//
+//		glUniform3f(eyeLocation_location, camera.Position.x, camera.Position.y, camera.Position.z);
+//
+//		//matView = glm::lookAt( g_CameraEye,	// Eye
+//		//	                    g_CameraAt,		// At
+//		//	                    glm::vec3( 0.0f, 1.0f, 0.0f ) );// Up
+//		glUniformMatrix4fv(matView_location, 1, GL_FALSE, glm::value_ptr(matView));
+//		glUniformMatrix4fv(matProj_location, 1, GL_FALSE, glm::value_ptr(matProjection));
+//		// Do all this ONCE per frame
+//
+//		//Copy LIGHT unnif
+//
+//		// Draw all the objects in the "scene"
+//		for (unsigned int objIndex = 0;
+//			objIndex != (unsigned int)vec_non_transObj.size();
+//			objIndex++)
+//		{
+//			cGameObject* pCurrentMesh = vec_non_transObj[objIndex];
+//
+//			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
+//
+//			DrawObject(pCurrentMesh, matModel, program, NULL);
+//
+//		}//for ( unsigned int objIndex = 0; 
+//
+//		for (unsigned int objIndex = 0;
+//			objIndex != (unsigned int)vec_transObj.size();
+//			objIndex++)
+//		{
+//			cGameObject* pCurrentMesh = vec_transObj[objIndex];
+//
+//			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
+//
+//			DrawObject(pCurrentMesh, matModel, program, NULL);
+//
+//		}//for ( unsigned int objIndex = 0; 
+//
+//
 
 
-		// *****************************************
+
+	// *****************************************
 	// 2nd pass
 	// *****************************************
-	//	glUniform1f(renderPassNumber_UniLoc, 2.0f);	// Tell shader it's the 1st pass
-	// 1. Set the Framebuffer output to the main framebuffer
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);		// Points to the "regular" frame buffer
 
 													// Get the size of the actual (screen) frame buffer
@@ -848,9 +806,13 @@ int main(void)
 		p2SidedQuad->materialDiffuse = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		//p2SidedQuad->bIsWireFrame = true;
 		// Rotate it so it's "up and down"
-		p2SidedQuad->setMeshOrientationEulerAngles(90.0f, 0.0f, 90.0f, true);
-		p2SidedQuad->position = glm::vec3(0.0f, 100.0f, 50.0f); ;
-		p2SidedQuad->setUniformScale(50.0f);
+		//p2SidedQuad->setMeshOrientationEulerAngles(90.0f, 0.0f, 90.0f, true);
+		//p2SidedQuad->position = glm::vec3(0.0f, 100.0f, 50.0f); ;
+		//p2SidedQuad->setUniformScale(50.0f);
+		//p2SidedQuad->nonUniformScale.x = 50.0f;
+		//p2SidedQuad->nonUniformScale.y = 50.0f;
+		//p2SidedQuad->nonUniformScale.z = 70.0f;
+		
 
 
 		//  (for now: soon there will be multiple textures)
@@ -867,18 +829,24 @@ int main(void)
 
 		matModel = glm::mat4(1.0f);
 		//p2SidedQuad->setMeshOrientationEulerAngles(90.0f, 0.0f, 90.0f, true);
-		p2SidedQuad->position = glm::vec3(0.0f, 200.0f, 0.0f);
-		p2SidedQuad->setMeshOrientationEulerAngles(90.0f, 0.0f, 90.0f, true);
+		//p2SidedQuad->position = glm::vec3(0.0f, 200.0f, 0.0f);
+		//p2SidedQuad->setMeshOrientationEulerAngles(90.0f, 0.0f, 90.0f, true);
 
-		DrawObject(p2SidedQuad, matModel, program, pFBO2);
+		//DrawObject(p2SidedQuad, matModel, program, pFBO2);
 
 		p2SidedQuad->bIsVisible = false;
 
 
 
+		//RENDER SCENE MAIN SCREEN
 
 
-		glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 1st pass
+
+
+
+		// Tell shader it's the 1st pass!
+		glUniform1f(renderPassNumber_UniLoc, 1.0f);
+
 		for (unsigned int objIndex = 0;
 			objIndex != (unsigned int)vec_non_transObj.size();
 			objIndex++)
@@ -903,10 +871,46 @@ int main(void)
 
 		}//for ( unsigned int objIndex = 0; 
 
+		block->position = glm::vec3(0.0f);
+		for (unsigned int a = 0; a < Maze.maze.size(); a++)
+		{
+			for (unsigned int b = 0; b < Maze.maze[a].size(); b++)
+			{
+				if (Maze.maze[a][b][0])
+				{
+					glm::mat4 matblock(1.0f);
+					DrawObject(block, matblock, program, NULL);
+					block->position.x += 20.0f;
+					//				std::cout << "X";
+					//				std::cout << '\u2500';
+					//				std::cout << (char)0xC5;
+					//				std::cout << (char)0xDA; //   (218)
+					//				std::cout << (char)0xBF; //   (191)
+					//				std::cout << (char)0xC0; //   (192)
+					//				std::cout << (char)0xD9; //   (217)
+				}
+				else
+				{
+					//std::cout << "  ";
+					block->position.x += 20.0f;
+				}
+
+			}
+			block->position.x = 0.0f;
+			block->position.z += 20.0f;
+		}
 
 
-
-
+		double FPS_currentTime = glfwGetTime();
+		nbFrames++;
+		if (FPS_currentTime - FPS_last_Time >= 1.0) { // If last prinf() was more than 1 sec ago
+			// printf and reset timer
+			//printf("%f ms/frame\n", 1000.0 / double(nbFrames));
+			FPS = nbFrames * 1;
+			nbFrames = 0;
+			FPS_last_Time += 1.0;
+		}
+		g_textRenderer->drawText(width, height, ("FPS: " + std::to_string(FPS)).c_str());
 
 
 

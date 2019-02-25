@@ -168,6 +168,8 @@
     <ClCompile Include="cLightManager.cpp" />
     <ClCompile Include="cLuaBrain.cpp" />
     <ClCompile Include="cGameObject.cpp" />
+    <ClCompile Include="cMazeMain.cpp" />
+    <ClCompile Include="cMazeMaker.cpp" />
     <ClCompile Include="cMesh.cpp" />
     <ClCompile Include="cMeshObject_Quaternion.cpp" />
     <ClCompile Include="cMoveToCommand.cpp" />
@@ -227,6 +229,7 @@
     <ClInclude Include="cLightHelper.h" />
     <ClInclude Include="cLightManager.h" />
     <ClInclude Include="cLuaBrain.h" />
+    <ClInclude Include="cMazeMaker.h" />
     <ClInclude Include="cMesh.h" />
     <ClInclude Include="cMoveToCommand.h" />
     <ClInclude Include="cMoveToEase.h" />

@@ -98,7 +98,8 @@ void key_callback( GLFWwindow* window,
 
 	if (glfwGetKey(window, GLFW_KEY_K))
 	{
-		SwitchToSolid(vec_pObjectsToDraw);
+		//SwitchToSolid(vec_pObjectsToDraw);
+		g_pSceneManager->saveScene("graphics_exam.json");
 	}
 
 
@@ -107,104 +108,6 @@ void key_callback( GLFWwindow* window,
 		bIsDebugMode = !bIsDebugMode;
 
 
-	}
-
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-	{
-		vec_pSpheres[SphIndex]->rigidBody->SetVelocity(vec_pSpheres[SphIndex]->rigidBody->GetVelocity() + glm::vec3(0.0f, 40.0f, 0.0f));
-		//::g_pSceneManager->saveScene("physics.json");
-		//g_pDebugRenderer->addDebugSphere(glm::vec3(0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 20, 100.0f);
-		//::g_pSceneManager->loadScene("output.json");
-		//CreateModels("Models.txt", g_pTheVAOMeshManager, program);
-
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_BACKSPACE))
-	{
-		SwapThePhysics();
-		//::g_pSceneManager->saveScene("output.json");
-		//::g_pSceneManager->loadScene("scene1.json");
-		//CreateModels("Models.txt", g_pTheVAOMeshManager, program);
-
-	}
-	if (glfwGetKey(window, GLFW_KEY_UP))
-	{
-		g_Gravity.y += 5.0f;
-		gPhysicsWorld->SetGravity(g_Gravity);
-
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN))
-	{
-		g_Gravity.y -= 5.0f;
-		gPhysicsWorld->SetGravity(g_Gravity);
-
-	}
-
-
-	if (glfwGetKey(window, GLFW_KEY_R))
-	{
-
-
-	}
-	if (key == GLFW_KEY_T && action == GLFW_PRESS)
-	{
-		vec_pSpheres[SphIndex]->vecTextures[0].strength = 1.0f;
-		vec_pSpheres[SphIndex]->vecTextures[1].strength = 0.0f;
-
-		if (SphIndex < (vec_pSpheres.size() - 1)) {
-			SphIndex = SphIndex + 1;
-		}
-		else { SphIndex = 0; }
-		//vec_pSpheres.at(SphIndex)->vecTextures[0].strength = 0.0f;
-		vec_pSpheres[SphIndex]->vecTextures[0].strength = 0.0f;
-		vec_pSpheres[SphIndex]->vecTextures[1].strength = 1.0f;
-
-	}
-
-
-
-	cGameObject* pSM = findObjectByFriendlyName("chan");
-
-
-	glm::vec3 velocity = pSM->rigidBody->GetVelocity();
-	pSM->currentAnimation = "Idle";
-	velocity.x = 0.0f;
-	velocity.z = 0.0f;
-	pSM->rigidBody->SetVelocity(velocity);
-	if (glfwGetKey(window, GLFW_KEY_1))
-	{
-		pSM->currentAnimation = "Idle";
-		//pSM->currentAnimation =  "assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx";
-
-
-	}
-	if (glfwGetKey(window, GLFW_KEY_2))
-	{
-		pSM->currentAnimation = "Walk-forward";
-		setVelZ(pSM, 13.f);
-		//pSM->rigidBody->SetVelocity(glm::vec3(0.f, 0.f,20.0f ));
-
-		//pSM->currentAnimation = "Unarmed-Attack-Kick-L1";
-		////pSM->currentAnimation = "assets/modelsFBX/RPG-Character_Unarmed-Attack-Kick-L1(FBX2013).FBX";
-
-		//// Add an animation state
-		//cAnimationState* pKick = new cAnimationState();
-		//pKick->defaultAnimation.name = "Unarmed-Attack-Kick-L1";
-
-	}
-	if (glfwGetKey(window, GLFW_KEY_3))
-	{
-		pSM->currentAnimation = "Walk-backward";
-		setVelZ(pSM, -13.f);
-		//pSM->rigidBody->SetVelocity(glm::vec3(0.f, 0.f, -20.f));
-		//pSM->currentAnimation = "assets/modelsFBX/RPG-Character_Unarmed-Fall(FBX2013).fbx";
-	}
-
-
-
-	if (glfwGetKey(window, GLFW_KEY_4))
-	{
-		pSM->currentAnimation = "Action1";
 	}
 
 
@@ -283,13 +186,7 @@ void key_callback( GLFWwindow* window,
 	}
 
 
-	
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-	{
 
-
-		//LightManager->vecLights.at(lightIndex)->AtenSphere = false;
-	}
 
 
 	return;
@@ -538,10 +435,6 @@ void ProcessAsynKeys(GLFWwindow* window)
 		////Object Rotation
 		if (glfwGetKey(window, GLFW_KEY_RIGHT)) { vec_pObjectsToDraw.at(index)->adjMeshOrientationEulerAngles(0.0f, 0.1f, 0.0f, false); }
 		if (glfwGetKey(window, GLFW_KEY_LEFT)) {vec_pObjectsToDraw.at(index)->adjMeshOrientationEulerAngles(0.0f, -0.1f, 0.0f, false);}
-		//if ( glfwGetKey( window, GLFW_KEY_UP ) )	{ vec_pObjectsToDraw.at(index)->postRotation.x += 0.1f; }
-		//if ( glfwGetKey( window, GLFW_KEY_DOWN ) )	{ vec_pObjectsToDraw.at(index)->postRotation.x -= 0.1f; }
-		//if ( glfwGetKey( window, GLFW_KEY_X ) )		{ vec_pObjectsToDraw.at(index)->postRotation.z += 0.1f; }
-		//if ( glfwGetKey( window, GLFW_KEY_C ) )		{ vec_pObjectsToDraw.at(index)->postRotation.z -= 0.1f; }
 
 		if (glfwGetKey(window, GLFW_KEY_V)) { vec_pObjectsToDraw.at(index)->nonUniformScale += 0.2f; }
 		if (glfwGetKey(window, GLFW_KEY_B)) { vec_pObjectsToDraw.at(index)->nonUniformScale -= 0.2f; }

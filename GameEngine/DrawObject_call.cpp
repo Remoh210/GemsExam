@@ -103,11 +103,11 @@ void BindTextures(cGameObject* pCurrentMesh, GLuint shaderProgramID, cFBO* fbo)
 		// Connect the texture for this object to the FBO texture
 		// Pick texture unit 16 (just because - I randomly picked that)
 
-		int FBO_Texture_Unit_Michael_Picked = 1;
+		int FBO_Texture_Unit = 1;
 
 		// 0x84C0  (or 33984)		
 		// Please bind to texture unit 34,000. Why gawd, why?
-		glActiveTexture(GL_TEXTURE0 + FBO_Texture_Unit_Michael_Picked);
+		glActiveTexture(GL_TEXTURE0 + FBO_Texture_Unit);
 
 		// Connect the specific texture to THIS texture unit
 //		glBindTexture( GL_TEXTURE_2D, g_FBO_colourTexture );
@@ -122,7 +122,7 @@ void BindTextures(cGameObject* pCurrentMesh, GLuint shaderProgramID, cFBO* fbo)
 		// Set the sampler (in the shader) to ALSO point to texture unit 16
 		// This one takes the unchanged texture unit numbers 
 //		glUniform1i( tex00_UniLoc, FBO_Texture_Unit_Michael_Picked );
-		glUniform1i(texPass1OutputTexture_UniLoc, FBO_Texture_Unit_Michael_Picked);
+		glUniform1i(texPass1OutputTexture_UniLoc, FBO_Texture_Unit);
 
 
 		// Set the blending to that it's 0th texture sampler

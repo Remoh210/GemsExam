@@ -5,6 +5,6 @@
         "Title" : "Balls!"
     },
     "Language" : "English",
-	  "Scene" : "physics.json",
+	  "Scene" : "graphics_exam.json",
     "Gravity" : [0.0, -50.0, 0.0]
 }

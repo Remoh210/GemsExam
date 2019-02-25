@@ -15,7 +15,7 @@ in vec4 vertBiNormXYZ;		// bi-normal (or bi-tangent) to the surface
 uniform vec4 objectDiffuse;		// becomes objectDiffuse in the shader
 uniform vec4 objectSpecular;	// rgb + a, which is the power)
 
-uniform vec3 eyeLocation;		// This is in "world space"
+uniform vec3 eyeLocation;		// This is in "world space"  
 
 // Set this to true (1), and the vertex colour is used
 uniform bool useVertexColour;
@@ -268,8 +268,9 @@ void main()
 //theLights[0].atten;
 
 	vec3 norm = normalize(vertNormal.xyz);
+
+	vec4 finalObjectColour = vec4(0.0,0.0,0.0,1.0);
 	
-	vec4 finalObjectColour = vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 	
 	for ( int index = 0; index < NUMBEROFLIGHTS; index++ )
 	{	
@@ -413,12 +414,23 @@ void main()
 	}//for(intindex=0...
 	
 	finalOutputColour.rgb = finalObjectColour.rgb;
+
+	
+	// CHANGED
+	float ambientAmount = 0.2;
+	// finalOutputColour.rgb = materialDiffuse.rgb * textureLod(textureSkyBox, 
+	// 		norm, 4).rgb * ambientAmount;
+
+	finalOutputColour.rgb += materialDiffuse.rgb  * ambientAmount;
+
 	finalOutputColour.a = wholeObjectAlphaTransparency;
 	
 		// Also output the normal to colour #1
 	finalOutputNormal.rgb = vertNormal.xyz;
 //	finalOutputNormal.r = 1.0f;
 	finalOutputNormal.a = 1.0f;
+
+	
 
 	
 	// Brigher for the dim projector
@@ -478,6 +490,7 @@ void main()
 //		finalOutputColour.r = 1.0f - ParticleImposterAlphaOverride;
 		
 	}//if(bIsParticleImposter)
+
 	
 	
 	// All done.

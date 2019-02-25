@@ -58,14 +58,8 @@
           }
       },
 	  {
-          "Name": "chan",
-		  "SkinnedMesh" : "assets/modelsFBX/chan.fbx",
-          "Animation": {
-            "Idle" : "assets/modelsFBX/chan-idle.fbx",
-		    "Walk-forward" : "assets/modelsFBX/chan-walk-forward.fbx",
-            "Walk-backward" : "assets/modelsFBX/chan-walk-backward.fbx",
-            "Action1" : "assets/modelsFBX/chan-dance.fbx"
-		  },
+          "Name": "dalek",
+		      "Mesh" : "dalek.ply",
           "Visible": true,
           "Use_Physics": true,
           "Wireframe": false,
@@ -75,8 +69,8 @@
               0.0
           ],
           "DiffuseRGB_Alpha": [
-              0.0,
-              0.0,
+              1.0,
+              1.0,
               0.0,
               1.0
           ],
@@ -92,25 +86,10 @@
               0.0
           ],
           "Scale": [
-              0.1,
-              0.1,
-              0.1
-          ],
-          "Textures": [
-              {
-                  "Name": "chanTex.bmp",
-                  "Strength": 1.0
-              },
-              {
-                  "Name": "testTex.bmp",
-                  "Strength": 0.0
-              }
-          ],
-          "RigidBody": {
-              "Type": "SPHERE",
-              "Radius": 10.0,
-              "Mass": 10.0
-          }
+              1.1,
+              1.1,
+              1.1
+          ]
       },
 
         {
@@ -398,14 +377,14 @@
                ]
            },
         {
-               "Name": "quad",
-               "Mesh": "quad.ply",
+               "Name": "block",
+               "Mesh": "maze_cube.ply",
                "Visible": true,
                "Use_Physics": true,
                "Wireframe": false,
                "Position": [
                    0.0,
-                   10.0,
+                   0.0,
                    0.0
                ],
                "DiffuseRGB_Alpha": [
@@ -429,9 +408,14 @@
                    10.0,
                    10.0,
                    10.0
+               ],
+               "Textures": [
+                   {
+                       "Name": "Metal.bmp",
+                       "Strength": 1.0
+                   }
                ]
            }
-
     ],
     "Lights": [
       {

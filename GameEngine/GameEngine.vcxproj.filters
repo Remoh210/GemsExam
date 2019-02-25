@@ -109,6 +109,9 @@
     <Filter Include="Ply">
       <UniqueIdentifier>{28cde939-6953-4b0a-8dba-15b3ce32ac62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cMazeMaker">
+      <UniqueIdentifier>{e6f98bac-0bd0-49e4-a662-b846e59c7728}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="theMain.cpp">
@@ -279,6 +282,12 @@
     <ClCompile Include="Ply\CVector3f.cpp">
       <Filter>Ply</Filter>
     </ClCompile>
+    <ClCompile Include="cMazeMain.cpp">
+      <Filter>cMazeMaker</Filter>
+    </ClCompile>
+    <ClCompile Include="cMazeMaker.cpp">
+      <Filter>cMazeMaker</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="linmath.h">
@@ -433,6 +442,9 @@
     </ClInclude>
     <ClInclude Include="Ply\CVector3f.h">
       <Filter>Ply</Filter>
+    </ClInclude>
+    <ClInclude Include="cMazeMaker.h">
+      <Filter>cMazeMaker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
