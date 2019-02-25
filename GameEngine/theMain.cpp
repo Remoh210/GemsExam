@@ -43,7 +43,7 @@ nPhysics::iPhysicsFactory* gPhysicsFactory = NULL;
 nPhysics::iPhysicsWorld* gPhysicsWorld = NULL;
 
 glm::vec3 g_Gravity = glm::vec3(0.0f, -1.0f, 0.0f);
-
+glm::vec3 DalekForward = glm::vec3(0.0f);
 GLuint program;
 cDebugRenderer* g_pDebugRendererACTUAL = NULL;
 iDebugRenderer* g_pDebugRenderer = NULL;
@@ -396,14 +396,14 @@ int main(void)
 
 		glm::quat dalekRotation = dalek->getQOrientation();
 		glm::mat4 matDalekRotation = glm::mat4(dalekRotation);
-		glm::vec4 vecForwardDirection_WorldSpace = matDalekRotation * vecForwardDirection_ModelSpace;
+		DalekForward = matDalekRotation * vecForwardDirection_ModelSpace;
 	
 		// optional normalize
-		vecForwardDirection_WorldSpace = glm::normalize(vecForwardDirection_WorldSpace);
+		DalekForward = glm::normalize(DalekForward);
 
+		glm::vec3 campos = dalek->position + glm::vec3(DalekForward) * 3.0f;
 
-
-		matView = glm::lookAt(dalek->position + glm::vec3(vecForwardDirection_WorldSpace) * 0.7f, dalek->position + glm::vec3(vecForwardDirection_WorldSpace), glm::vec3(0.0f, 1.0f, 0.0f));
+		matView = glm::lookAt(campos, dalek->position + (glm::vec3(DalekForward) * 4.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		glUniform3f(eyeLocation_location, camera.Position.x, camera.Position.y, camera.Position.z);
 
@@ -416,28 +416,6 @@ int main(void)
 		LightManager->CopyLightValuesToShader();
 
 		std::sort(vec_transObj.begin(), vec_transObj.end(), distToCam);
-
-
-
-
-
-
-		//switch (physics_library)
-		//{
-		//case SIMPLE:
-		//	g_textRenderer->drawText(width, height, ("Physics: My crappy physics"), 100.0f);
-		//	break;
-		//case BULLET:
-		//	g_textRenderer->drawText(width, height, ("Physics: Bullet"), 100.0f);
-		//	break;
-		//case UNKNOWN:
-		//	break;
-		//default:
-		//	break;
-		//}
-		//g_textRenderer->drawText(width, height, ("Gravity: " + std::to_string((int)g_Gravity.y)).c_str(), 150.0f);
-
-
 
 
 		currentTime = glfwGetTime();

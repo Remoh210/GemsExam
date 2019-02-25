@@ -37,6 +37,7 @@ cGameObject* cloesetObj;
 
 void SwitchToWireFrame(std::vector<cGameObject*> models);
 
+
 void setVelZ(cGameObject* sm, float vel)
 {
 	glm::vec3 velocity = sm->rigidBody->GetVelocity();
@@ -65,7 +66,7 @@ void key_callback( GLFWwindow* window,
 						  int mods)
 {
 
-
+	cGameObject* player = findObjectByFriendlyName("dalek");
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		
@@ -188,6 +189,27 @@ void key_callback( GLFWwindow* window,
 
 
 
+	
+
+	//Player Controls
+
+	if (bIsDebugMode) {
+
+		if (key == GLFW_KEY_D && action == GLFW_PRESS)
+		{
+
+			player->adjMeshOrientationEulerAngles(0.0f, -45.0f, 0.0f, true);
+		}
+		if (key == GLFW_KEY_A && action == GLFW_PRESS)
+		{
+
+			player->adjMeshOrientationEulerAngles(0.0f, 45.0f, 0.0f, true);
+		}
+
+	}
+
+
+
 
 	return;
 }
@@ -262,13 +284,29 @@ bool AreAllModifiersUp(GLFWwindow* window)
 
 void ProcessAsynKeys(GLFWwindow* window)
 {
-	const float CAMERA_SPEED_SLOW = 5.0f;
-	const float CAMERA_SPEED_FAST = 10.0f;
+	const float CAMERA_SPEED_SLOW = 0.3f;
+	const float CAMERA_SPEED_FAST = 5.0f;
 
-	// WASD + q = "up", e = down		y axis = up and down
-	//									x axis = left and right
-	//									z axis = forward and backward
-	// 
+
+
+
+	cGameObject* player = findObjectByFriendlyName("dalek");
+
+
+	if (bIsDebugMode) {
+		if (glfwGetKey(window, GLFW_KEY_W))
+		{
+
+			player->position += DalekForward * 5.0f * (float)deltaTime;
+		}
+
+	}
+
+
+
+
+
+
 
 	float cameraSpeed = CAMERA_SPEED_SLOW;
 	if ( glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS  )
@@ -281,20 +319,20 @@ void ProcessAsynKeys(GLFWwindow* window)
 	{
 		// Note: The "== GLFW_PRESS" isn't really needed as it's actually "1" 
 		// (so the if() treats the "1" as true...)
-
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-			camera.ProcessKeyboard(FORWARD, deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-			camera.ProcessKeyboard(BACKWARD, deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-			camera.ProcessKeyboard(LEFT, deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-			camera.ProcessKeyboard(RIGHT, deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-			camera.ProcessKeyboard(UP, deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-			camera.ProcessKeyboard(DOWN, deltaTime);
-
+		if (!bIsDebugMode) {
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+				camera.ProcessKeyboard(FORWARD, deltaTime);
+			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+				camera.ProcessKeyboard(BACKWARD, deltaTime);
+			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+				camera.ProcessKeyboard(LEFT, deltaTime);
+			if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+				camera.ProcessKeyboard(RIGHT, deltaTime);
+			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+				camera.ProcessKeyboard(UP, deltaTime);
+			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+				camera.ProcessKeyboard(DOWN, deltaTime);
+		}
 
 	}//if(AreAllModifiersUp(window)
 
@@ -433,11 +471,11 @@ void ProcessAsynKeys(GLFWwindow* window)
 		if ( glfwGetKey( window, GLFW_KEY_E ) )	{ vec_pObjectsToDraw.at(index)->position.y += cameraSpeed; }
 
 		////Object Rotation
-		if (glfwGetKey(window, GLFW_KEY_RIGHT)) { vec_pObjectsToDraw.at(index)->adjMeshOrientationEulerAngles(0.0f, 0.1f, 0.0f, false); }
-		if (glfwGetKey(window, GLFW_KEY_LEFT)) {vec_pObjectsToDraw.at(index)->adjMeshOrientationEulerAngles(0.0f, -0.1f, 0.0f, false);}
+		if (glfwGetKey(window, GLFW_KEY_RIGHT)) { vec_pObjectsToDraw.at(index)->adjMeshOrientationEulerAngles(0.0f, 0.01f, 0.0f, false); }
+		if (glfwGetKey(window, GLFW_KEY_LEFT)) {vec_pObjectsToDraw.at(index)->adjMeshOrientationEulerAngles(0.0f, -0.01f, 0.0f, false);}
 
-		if (glfwGetKey(window, GLFW_KEY_V)) { vec_pObjectsToDraw.at(index)->nonUniformScale += 0.2f; }
-		if (glfwGetKey(window, GLFW_KEY_B)) { vec_pObjectsToDraw.at(index)->nonUniformScale -= 0.2f; }
+		if (glfwGetKey(window, GLFW_KEY_V)) { vec_pObjectsToDraw.at(index)->nonUniformScale += 0.02f; }
+		if (glfwGetKey(window, GLFW_KEY_B)) { vec_pObjectsToDraw.at(index)->nonUniformScale -= 0.02f; }
 
 
 
@@ -463,6 +501,10 @@ void ProcessAsynKeys(GLFWwindow* window)
 		
 
 	}
+
+
+
+
 	
 	return;
 }

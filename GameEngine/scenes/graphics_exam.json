@@ -2,9 +2,9 @@
     "Camera": {
         "Speed": 100.0,
         "Position": [
-            -226.91175842285157,
-            225.23321533203126,
-            437.5372619628906
+            -147.73362731933595,
+            323.4296569824219,
+            444.4248352050781
         ]
     },
     "GameObjects": [
@@ -15,9 +15,9 @@
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                15.0,
+                30.0,
                 40.27769470214844,
-                30.0
+                31.499996185302736
             ],
             "DiffuseRGB_Alpha": [
                 0.0,
@@ -64,7 +64,7 @@
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                30.0,
+                35.0,
                 0.0,
                 380.0
             ],
@@ -98,9 +98,9 @@
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                0.0,
-                0.0,
-                0.0
+                490.0,
+                -10.0,
+                480.0
             ],
             "DiffuseRGB_Alpha": [
                 0.0,
@@ -116,17 +116,17 @@
             ],
             "Rotation": [
                 0.0,
-                -0.0,
+                -8.537743951819721e-7,
                 0.0
             ],
             "Scale": [
-                100.0,
-                100.0,
-                100.0
+                538.0148315429688,
+                538.0148315429688,
+                538.0148315429688
             ],
             "Textures": [
                 {
-                    "Name": "metal.bmp",
+                    "Name": "grassTex.bmp",
                     "Strength": 1.0
                 }
             ],
@@ -348,9 +348,9 @@
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                -5.0,
-                215.0,
-                430.0
+                -0.19999980926513673,
+                251.3003692626953,
+                428.50006103515627
             ],
             "DiffuseRGB_Alpha": [
                 0.0,
@@ -366,13 +366,53 @@
             ],
             "Rotation": [
                 0.0,
-                -90.0,
+                -89.98021697998047,
                 0.0
+            ],
+            "Scale": [
+                1.9600000381469727,
+                1.9600000381469727,
+                1.9600000381469727
+            ]
+        },
+        {
+            "Name": "retroTV",
+            "Mesh": "RetroTV.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                55.0,
+                291.8985595703125,
+                459.30023193359377
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                180.0,
+                -88.32906341552735,
+                180.0
             ],
             "Scale": [
                 1.8000001907348633,
                 1.8000001907348633,
                 1.8000001907348633
+            ],
+            "Textures": [
+                {
+                    "Name": "blackWoodTex.bmp",
+                    "Strength": 1.0
+                }
             ]
         },
         {
@@ -410,7 +450,7 @@
             ],
             "Textures": [
                 {
-                    "Name": "Metal.bmp",
+                    "Name": "brickTex.bmp",
                     "Strength": 1.0
                 }
             ]

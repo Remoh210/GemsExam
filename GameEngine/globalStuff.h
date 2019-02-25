@@ -71,6 +71,7 @@ extern double deltaTime;
 extern unsigned int SCR_WIDTH;
 extern unsigned int SCR_HEIGHT;
 extern glm::vec3 g_Gravity;
+extern glm::vec3 DalekForward;
 
 extern cFBO* g_pFBOMain;
 
