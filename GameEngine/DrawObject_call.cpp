@@ -37,7 +37,7 @@ GLint texPass1OutputTexture_UniLoc = -1;
 
 
 // Will bind the textures in use for this object on this draw call
-void BindTextures(cGameObject* pCurrentMesh, GLuint shaderProgramID)
+void BindTextures(cGameObject* pCurrentMesh, GLuint shaderProgramID, cFBO* fbo)
 {
 
 
@@ -111,7 +111,7 @@ void BindTextures(cGameObject* pCurrentMesh, GLuint shaderProgramID)
 
 		// Connect the specific texture to THIS texture unit
 //		glBindTexture( GL_TEXTURE_2D, g_FBO_colourTexture );
-		glBindTexture(GL_TEXTURE_2D, ::g_pFBOMain->colourTexture_0_ID);
+		glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
 
 		// Now pick to read from the normal (output from the 1st pass):
 //		glBindTexture( GL_TEXTURE_2D, ::g_pFBOMain->normalTexture_1_ID );
@@ -216,7 +216,7 @@ void DrawScene_Simple(std::vector<cGameObject*> vec_pMeshSceneObjects,
 
 		glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
 
-		DrawObject(pCurrentMesh, matModel, shaderProgramID);
+		DrawObject(pCurrentMesh, matModel, shaderProgramID, NULL);
 
 	}//for ( unsigned int objIndex = 0; 
 
@@ -228,7 +228,7 @@ static float g_HACK_CurrentTime = 0.0f;
 
 void DrawObject(cGameObject* pCurrentMesh,
 	glm::mat4x4 &matModel,
-	GLuint shaderProgramID)
+	GLuint shaderProgramID, cFBO* fbo)
 {
 
 	// Is this object visible
@@ -240,7 +240,7 @@ void DrawObject(cGameObject* pCurrentMesh,
 
 
 	// Set up the texture binding for this object
-	BindTextures(pCurrentMesh, shaderProgramID);
+	BindTextures(pCurrentMesh, shaderProgramID, fbo);
 
 
 
@@ -557,7 +557,7 @@ void DrawObject(cGameObject* pCurrentMesh,
 	for (unsigned int childMeshIndex = 0; childMeshIndex != pCurrentMesh->vec_pChildObjectsToDraw.size(); childMeshIndex++)
 	{
 		glm::mat4 matWorldParent = matModel;
-		DrawObject(pCurrentMesh->vec_pChildObjectsToDraw[childMeshIndex], matWorldParent, shaderProgramID);
+		DrawObject(pCurrentMesh->vec_pChildObjectsToDraw[childMeshIndex], matWorldParent, shaderProgramID, NULL);
 	}
 
 	return;

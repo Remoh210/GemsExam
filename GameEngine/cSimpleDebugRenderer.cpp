@@ -17,6 +17,6 @@ void cSimpleDebugRenderer::drawSphere(glm::vec3 pos, float rad)
 	mUnitSphere->setUniformScale(rad);
 	mUnitSphere->bIsVisible = true;
 	mUnitSphere->bDontLight = true;
-	DrawObject(mUnitSphere, iden, mShaderProgram);
+	DrawObject(mUnitSphere, iden, mShaderProgram, NULL);
 	mUnitSphere->bIsVisible = false;
 }

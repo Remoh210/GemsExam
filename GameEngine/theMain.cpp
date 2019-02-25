@@ -115,10 +115,10 @@ cFBO* g_pFBOMain;
 //  Or leave it here!!
 
 // Set up the off screen textures to draw to
-GLuint g_FBO = 0;
-GLuint g_FBO_colourTexture = 0;
-GLuint g_FBO_depthTexture = 0;
-GLint g_FBO_SizeInPixes = 512;		// = 512 the WIDTH of the framebuffer, in pixels;
+//GLuint g_FBO = 0;
+//GLuint g_FBO_colourTexture = 0;
+//GLuint g_FBO_depthTexture = 0;
+//GLint g_FBO_SizeInPixes = 512;		// = 512 the WIDTH of the framebuffer, in pixels;
 
 int main(void)
 {
@@ -224,6 +224,22 @@ int main(void)
 	else
 	{
 		std::cout << "Framebuffer is NOT complete" << std::endl;
+	}
+
+
+
+	cFBO* pFBO2 = new cFBO();
+
+	//
+	//	if ( FBOStatus == GL_FRAMEBUFFER_COMPLETE )
+	std::string pFBO2ERR;
+	if (pFBO2->init(1024, 1024, pFBO2ERR))
+	{
+		std::cout << "Framebuffer 2 is good to go!" << std::endl;
+	}
+	else
+	{
+		std::cout << "Framebuffer 2 is NOT complete" << std::endl;
 	}
 
 	// Point back to default frame buffer
@@ -353,16 +369,6 @@ int main(void)
 		//// Set for the 1st pass
 		////glBindFramebuffer(GL_FRAMEBUFFER, g_FBO);		// Point output to FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, ::g_pFBOMain->ID);
-		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		//**********************************************************
-		// Clear the offscreen frame buffer
-		//glViewport(0, 0, g_FBO_SizeInPixes, g_FBO_SizeInPixes);
-		//GLfloat	zero = 0.0f;
-		//GLfloat one = 1.0f;
-		//glClearBufferfv(GL_COLOR, 0, &zero);
-		//glClearBufferfv(GL_DEPTH, 0, &one);
-		//**********************************************************
 
 
 		::g_pFBOMain->clearBuffers(true, true);
@@ -565,7 +571,7 @@ int main(void)
 						//curObj->bIsWireFrame = true;
 						curObj->bIsVisible = true;
 						glm::mat4 matIden = glm::mat4(1.0f);
-						DrawObject(curObj, matIden, program);
+						DrawObject(curObj, matIden, program, NULL);
 					}
 				}
 			}
@@ -596,7 +602,7 @@ int main(void)
 
 				pDebugSphere->materialDiffuse = oldDiffuse;
 				pDebugSphere->setUniformScale(0.1f);			// Position
-				DrawObject(pDebugSphere, matBall, program);
+				DrawObject(pDebugSphere, matBall, program, NULL);
 
 				const float ACCURACY_OF_DISTANCE = 0.0001f;
 				const float INFINITE_DISTANCE = 10000.0f;
@@ -611,7 +617,7 @@ int main(void)
 				pDebugSphere->setUniformScale(distance90Percent);			// 90% brightness
 				//pDebugSphere->objColour = glm::vec3(1.0f,1.0f,0.0f);
 				pDebugSphere->setDiffuseColour(glm::vec3(1.0f, 1.0f, 0.0f));
-				DrawObject(pDebugSphere, matBall, program);
+				DrawObject(pDebugSphere, matBall, program, NULL);
 
 				//			pDebugSphere->objColour = glm::vec3(0.0f,1.0f,0.0f);	// 50% brightness
 				pDebugSphere->setDiffuseColour(glm::vec3(0.0f, 1.0f, 0.0f));
@@ -622,7 +628,7 @@ int main(void)
 						CurLight->atten.y,
 						CurLight->atten.z);
 				pDebugSphere->setUniformScale(distance50Percent);
-				DrawObject(pDebugSphere, matBall, program);
+				DrawObject(pDebugSphere, matBall, program, NULL);
 
 				//			pDebugSphere->objColour = glm::vec3(1.0f,0.0f,0.0f);	// 25% brightness
 				pDebugSphere->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));
@@ -633,7 +639,7 @@ int main(void)
 						CurLight->atten.y,
 						CurLight->atten.z);
 				pDebugSphere->setUniformScale(distance25Percent);
-				DrawObject(pDebugSphere, matBall, program);
+				DrawObject(pDebugSphere, matBall, program, NULL);
 
 				float distance1Percent =
 					pLightHelper->calcApproxDistFromAtten(0.01f, ACCURACY_OF_DISTANCE,
@@ -644,7 +650,7 @@ int main(void)
 				//			pDebugSphere->objColour = glm::vec3(0.0f,0.0f,1.0f);	// 1% brightness
 				pDebugSphere->setDiffuseColour(glm::vec3(0.0f, 0.0f, 1.0f));
 				pDebugSphere->setUniformScale(distance1Percent);
-				DrawObject(pDebugSphere, matBall, program);
+				DrawObject(pDebugSphere, matBall, program, NULL);
 
 				//			pDebugSphere->objColour = oldColour;
 				pDebugSphere->materialDiffuse = oldDiffuse;
@@ -686,7 +692,7 @@ int main(void)
 		glUniform1f(useSkyBoxTexture_UniLoc, (float)GL_TRUE);
 
 		glm::mat4 matIdentity = glm::mat4(1.0f);
-		DrawObject(pSkyBox, matIdentity, program);
+		DrawObject(pSkyBox, matIdentity, program, NULL);
 
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
@@ -704,7 +710,7 @@ int main(void)
 
 			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
 
-			DrawObject(pCurrentMesh, matModel, program);
+			DrawObject(pCurrentMesh, matModel, program, NULL);
 
 		}//for ( unsigned int objIndex = 0; 
 
@@ -716,9 +722,98 @@ int main(void)
 
 			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
 
-			DrawObject(pCurrentMesh, matModel, program);
+			DrawObject(pCurrentMesh, matModel, program, NULL);
 
 		}//for ( unsigned int objIndex = 0; 
+
+
+
+
+		//SECOND BUFFER
+		glBindFramebuffer(GL_FRAMEBUFFER, pFBO2->ID);
+
+
+		pFBO2->clearBuffers(true, true);
+		glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 1st pass
+
+
+
+		glfwGetFramebufferSize(window, &width, &height);
+		ratio = width / (float)height;
+		glViewport(0, 0, width, height);
+
+		// These things will impact ANY framebuffer
+		// (controls state of the rendering, so doesn't matter where
+		//  the output goes to, right?)
+		glEnable(GL_DEPTH);		// Enables the KEEPING of the depth information
+		glEnable(GL_DEPTH_TEST);	// When drawing, checked the existing depth
+		glEnable(GL_CULL_FACE);	// Discared "back facing" triangles
+
+		// Colour and depth buffers are TWO DIFF THINGS.
+		// Note that this is clearing the main framebuffer
+		// (Which will do NOTHING to the offscreen buffer)
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+		matProjection = glm::perspective(1.0f,			// FOV
+			ratio,		// Aspect ratio
+			0.1f,			// Near clipping plane
+			10000.0f);	// Far clipping plane
+
+
+//glm::vec3 migpos = findObjectByFriendlyName("mig")->position;
+//matView = glm::lookAt(camera.Position, migpos, camera.WorldUp);
+
+		matView = glm::lookAt(glm::vec3(20.0f, 20.0f, 40.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+		glUniform3f(eyeLocation_location, camera.Position.x, camera.Position.y, camera.Position.z);
+
+		//matView = glm::lookAt( g_CameraEye,	// Eye
+		//	                    g_CameraAt,		// At
+		//	                    glm::vec3( 0.0f, 1.0f, 0.0f ) );// Up
+		glUniformMatrix4fv(matView_location, 1, GL_FALSE, glm::value_ptr(matView));
+		glUniformMatrix4fv(matProj_location, 1, GL_FALSE, glm::value_ptr(matProjection));
+		// Do all this ONCE per frame
+
+		//Copy LIGHT unnif
+
+		// Draw all the objects in the "scene"
+		for (unsigned int objIndex = 0;
+			objIndex != (unsigned int)vec_non_transObj.size();
+			objIndex++)
+		{
+			cGameObject* pCurrentMesh = vec_non_transObj[objIndex];
+
+			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
+
+			DrawObject(pCurrentMesh, matModel, program, NULL);
+
+		}//for ( unsigned int objIndex = 0; 
+
+		for (unsigned int objIndex = 0;
+			objIndex != (unsigned int)vec_transObj.size();
+			objIndex++)
+		{
+			cGameObject* pCurrentMesh = vec_transObj[objIndex];
+
+			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
+
+			DrawObject(pCurrentMesh, matModel, program, NULL);
+
+		}//for ( unsigned int objIndex = 0; 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		// *****************************************
 	// 2nd pass
@@ -768,10 +863,16 @@ int main(void)
 
 		// 4. Draw a single quad		
 		glm::mat4 matModel = glm::mat4(1.0f);	// identity
-		DrawObject(p2SidedQuad, matModel, program);
+		DrawObject(p2SidedQuad, matModel, program, ::g_pFBOMain);
+
+		matModel = glm::mat4(1.0f);
+		//p2SidedQuad->setMeshOrientationEulerAngles(90.0f, 0.0f, 90.0f, true);
+		p2SidedQuad->position = glm::vec3(0.0f, 200.0f, 0.0f);
+		p2SidedQuad->setMeshOrientationEulerAngles(90.0f, 0.0f, 90.0f, true);
+
+		DrawObject(p2SidedQuad, matModel, program, pFBO2);
 
 		p2SidedQuad->bIsVisible = false;
-
 
 
 
@@ -786,7 +887,7 @@ int main(void)
 
 			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
 
-			DrawObject(pCurrentMesh, matModel, program);
+			DrawObject(pCurrentMesh, matModel, program, NULL);
 
 		}//for ( unsigned int objIndex = 0; 
 
@@ -798,9 +899,18 @@ int main(void)
 
 			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
 
-			DrawObject(pCurrentMesh, matModel, program);
+			DrawObject(pCurrentMesh, matModel, program, NULL);
 
 		}//for ( unsigned int objIndex = 0; 
+
+
+
+
+
+
+
+
+
 
 
 		UpdateWindowTitle();
