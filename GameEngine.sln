@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine", "GameEngine\GameEngine.vcxproj", "{F63D2F6C-8CBF-47DF-A2AE-BD1354C271AC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E3A9F462-FC4D-48DD-B144-EF8BB9CE5E2C} = {E3A9F462-FC4D-48DD-B144-EF8BB9CE5E2C}
+		{F6A4CFFF-BF94-4DE8-A9A6-0C1A07A7AC83} = {F6A4CFFF-BF94-4DE8-A9A6-0C1A07A7AC83}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics_Interfaces", "Physics_Interfaces\Physics_Interfaces.vcxproj", "{D62DA76F-9D9F-40B5-A183-E25D886DFF18}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimplePhysics", "SimplePhysics\SimplePhysics.vcxproj", "{F6A4CFFF-BF94-4DE8-A9A6-0C1A07A7AC83}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletPhysics", "BulletPhysics\BulletPhysics.vcxproj", "{E3A9F462-FC4D-48DD-B144-EF8BB9CE5E2C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F63D2F6C-8CBF-47DF-A2AE-BD1354C271AC}.Debug|x64.ActiveCfg = Debug|x64
+		{F63D2F6C-8CBF-47DF-A2AE-BD1354C271AC}.Debug|x64.Build.0 = Debug|x64
+		{F63D2F6C-8CBF-47DF-A2AE-BD1354C271AC}.Debug|x86.ActiveCfg = Debug|Win32
+		{F63D2F6C-8CBF-47DF-A2AE-BD1354C271AC}.Debug|x86.Build.0 = Debug|Win32
+		{F63D2F6C-8CBF-47DF-A2AE-BD1354C271AC}.Release|x64.ActiveCfg = Release|x64
+		{F63D2F6C-8CBF-47DF-A2AE-BD1354C271AC}.Release|x64.Build.0 = Release|x64
+		{F63D2F6C-8CBF-47DF-A2AE-BD1354C271AC}.Release|x86.ActiveCfg = Release|Win32
+		{F63D2F6C-8CBF-47DF-A2AE-BD1354C271AC}.Release|x86.Build.0 = Release|Win32
+		{D62DA76F-9D9F-40B5-A183-E25D886DFF18}.Debug|x64.ActiveCfg = Debug|x64
+		{D62DA76F-9D9F-40B5-A183-E25D886DFF18}.Debug|x64.Build.0 = Debug|x64
+		{D62DA76F-9D9F-40B5-A183-E25D886DFF18}.Debug|x86.ActiveCfg = Debug|Win32
+		{D62DA76F-9D9F-40B5-A183-E25D886DFF18}.Debug|x86.Build.0 = Debug|Win32
+		{D62DA76F-9D9F-40B5-A183-E25D886DFF18}.Release|x64.ActiveCfg = Release|x64
+		{D62DA76F-9D9F-40B5-A183-E25D886DFF18}.Release|x64.Build.0 = Release|x64
+		{D62DA76F-9D9F-40B5-A183-E25D886DFF18}.Release|x86.ActiveCfg = Release|Win32
+		{D62DA76F-9D9F-40B5-A183-E25D886DFF18}.Release|x86.Build.0 = Release|Win32
+		{F6A4CFFF-BF94-4DE8-A9A6-0C1A07A7AC83}.Debug|x64.ActiveCfg = Debug|x64
+		{F6A4CFFF-BF94-4DE8-A9A6-0C1A07A7AC83}.Debug|x64.Build.0 = Debug|x64
+		{F6A4CFFF-BF94-4DE8-A9A6-0C1A07A7AC83}.Debug|x86.ActiveCfg = Debug|Win32
+		{F6A4CFFF-BF94-4DE8-A9A6-0C1A07A7AC83}.Debug|x86.Build.0 = Debug|Win32
+		{F6A4CFFF-BF94-4DE8-A9A6-0C1A07A7AC83}.Release|x64.ActiveCfg = Release|x64
+		{F6A4CFFF-BF94-4DE8-A9A6-0C1A07A7AC83}.Release|x64.Build.0 = Release|x64
+		{F6A4CFFF-BF94-4DE8-A9A6-0C1A07A7AC83}.Release|x86.ActiveCfg = Release|Win32
+		{F6A4CFFF-BF94-4DE8-A9A6-0C1A07A7AC83}.Release|x86.Build.0 = Release|Win32
+		{E3A9F462-FC4D-48DD-B144-EF8BB9CE5E2C}.Debug|x64.ActiveCfg = Debug|x64
+		{E3A9F462-FC4D-48DD-B144-EF8BB9CE5E2C}.Debug|x64.Build.0 = Debug|x64
+		{E3A9F462-FC4D-48DD-B144-EF8BB9CE5E2C}.Debug|x86.ActiveCfg = Debug|Win32
+		{E3A9F462-FC4D-48DD-B144-EF8BB9CE5E2C}.Debug|x86.Build.0 = Debug|Win32
+		{E3A9F462-FC4D-48DD-B144-EF8BB9CE5E2C}.Release|x64.ActiveCfg = Release|x64
+		{E3A9F462-FC4D-48DD-B144-EF8BB9CE5E2C}.Release|x64.Build.0 = Release|x64
+		{E3A9F462-FC4D-48DD-B144-EF8BB9CE5E2C}.Release|x86.ActiveCfg = Release|Win32
+		{E3A9F462-FC4D-48DD-B144-EF8BB9CE5E2C}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C917036D-2A21-4223-B493-23938029D0E6}
+	EndGlobalSection
+EndGlobal

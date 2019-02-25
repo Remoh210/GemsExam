@@ -1,0 +1,979 @@
+{
+    "Camera": {
+        "Speed": 1000.0,
+        "Position": [
+            -1090.79638671875,
+            1368.47216796875,
+            -394.6293640136719
+        ]
+    },
+    "GameObjects": [
+        {
+            "Name": "teapot",
+            "Mesh": "Utah_Teapot_xyz_n_GARBAGE_uv.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                300.0,
+                335.0,
+                -560.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                -0.7071070075035095,
+                0.0,
+                0.0,
+                0.7071070075035095
+            ],
+            "Scale": [
+                0.8999999761581421,
+                0.8999999761581421,
+                0.8999999761581421
+            ],
+            "Textures": [
+                {
+                    "Name": "metal.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "roomUV",
+            "Mesh": "roomUV.ply",
+            "Visible": true,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                -110.0,
+                0.0,
+                110.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                100.0,
+                100.0,
+                100.0
+            ],
+            "Textures": [
+                {
+                    "Name": "roomTex.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "Ufo2UVb",
+            "Mesh": "Ufo2UVb.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                -690.0,
+                10.0,
+                1935.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                120.39900207519531,
+                120.39900207519531,
+                120.39900207519531
+            ],
+            "Textures": [
+                {
+                    "Name": "metal.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "table",
+            "Mesh": "table.ply",
+            "Visible": true,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                510.0,
+                -30.0,
+                910.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                2.9000000953674318,
+                2.9000000953674318,
+                2.9000000953674318
+            ],
+            "Textures": [
+                {
+                    "Name": "metal.bmp",
+                    "Strength": 0.262006014585495
+                },
+                {
+                    "Name": "wood.bmp",
+                    "Strength": 0.7379980087280273
+                }
+            ]
+        },
+        {
+            "Name": "knight",
+            "Mesh": "knight.ply",
+            "Visible": true,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                1355.0,
+                355.0,
+                -625.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                22.600000381469728,
+                22.600000381469728,
+                22.600000381469728
+            ],
+            "Textures": [
+                {
+                    "Name": "knightTex.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "knight2",
+            "Mesh": "knight2.ply",
+            "Visible": true,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                1270.0,
+                465.0,
+                1910.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                -0.9995740056037903,
+                0.0,
+                -0.029199600219726564
+            ],
+            "Scale": [
+                20.399999618530275,
+                20.399999618530275,
+                20.399999618530275
+            ],
+            "Textures": [
+                {
+                    "Name": "knight2Tex.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "fireplace",
+            "Mesh": "fireplace.ply",
+            "Visible": true,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                -615.0,
+                -170.0,
+                20.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                64.20020294189453,
+                64.20020294189453,
+                64.20020294189453
+            ],
+            "Textures": [
+                {
+                    "Name": "fireplace.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "lantern",
+            "Mesh": "lantern.ply",
+            "Visible": true,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                360.0,
+                130.0,
+                1010.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                1.8000099658966065,
+                1.8000099658966065,
+                1.8000099658966065
+            ],
+            "Textures": [
+                {
+                    "Name": "lantern.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "cat",
+            "Mesh": "cat.ply",
+            "Visible": true,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                -445.0,
+                95.0,
+                850.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                0.5
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                -0.9916650056838989,
+                0.0,
+                -0.12884500622749329
+            ],
+            "Scale": [
+                11.399999618530274,
+                11.399999618530274,
+                11.399999618530274
+            ],
+            "Textures": [
+                {
+                    "Name": "cat.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "bread",
+            "Mesh": "bread.ply",
+            "Visible": true,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                760.0,
+                120.0,
+                900.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                0.5
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                102.80000305175781,
+                102.80000305175781,
+                102.80000305175781
+            ],
+            "Textures": [
+                {
+                    "Name": "bread.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "Sphere_320_faces_xyz_n",
+            "Mesh": "Sphere_320_faces_xyz_n.ply",
+            "Visible": false,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                686.0,
+                2220.0,
+                185.0
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                30.0,
+                30.0,
+                30.0
+            ]
+        },
+        {
+            "Name": "AxePainted",
+            "Mesh": "AxePainted.ply",
+            "Visible": true,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                -530.0,
+                390.0,
+                -770.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                -2.98022992950564e-8,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                33.599998474121097,
+                33.599998474121097,
+                33.599998474121097
+            ],
+            "Textures": [
+                {
+                    "Name": "AxeTex.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "pokeball",
+            "Mesh": "pokeball.ply",
+            "Visible": true,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                535.0,
+                160.0,
+                885.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                0.800000011920929
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                -0.9995740056037903,
+                0.0,
+                -0.029199600219726564
+            ],
+            "Scale": [
+                0.4000000059604645,
+                0.4000000059604645,
+                0.4000000059604645
+            ],
+            "Textures": [
+                {
+                    "Name": "pokeballTex.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "ivysaur",
+            "Mesh": "ivysaur.ply",
+            "Visible": true,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                285.0,
+                245.0,
+                825.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                0.6000000238418579
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                0.0,
+                -0.9995750188827515,
+                0.0,
+                -0.029199600219726564
+            ],
+            "Scale": [
+                132.7989959716797,
+                132.7989959716797,
+                132.7989959716797
+            ],
+            "Textures": [
+                {
+                    "Name": "ivysaurTex.bmp",
+                    "Strength": 1.0
+                }
+            ]
+        },
+        {
+            "Name": "SkyBoxObject",
+            "Mesh": "Sphere_320_faces_xyz_n_GARBAGE_uv_INVERTED_NORMALS.ply",
+            "Visible": false,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                -1090.79638671875,
+                1368.47216796875,
+                -394.6293640136719
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                0.4117647111415863,
+                0.7058823704719544,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                5000.0,
+                5000.0,
+                5000.0
+            ]
+        },
+        {
+            "Name": "DebugSphere",
+            "Mesh": "Sphere_320.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": true,
+            "Position": [
+                -100.0,
+                10.0,
+                0.0
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                0.4117647111415863,
+                0.7058823704719544,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "Name": "SkyBoxObject",
+            "Mesh": "Sphere_320_faces_xyz_n_GARBAGE_uv_INVERTED_NORMALS.ply",
+            "Visible": false,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                0.4117647111415863,
+                0.7058823704719544,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                5000.0,
+                5000.0,
+                5000.0
+            ]
+        },
+        {
+            "Name": "DebugSphere",
+            "Mesh": "Sphere_320.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": true,
+            "Position": [
+                -100.0,
+                10.0,
+                0.0
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                0.4117647111415863,
+                0.7058823704719544,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "Name": "SkyBoxObject",
+            "Mesh": "Sphere_320_faces_xyz_n_GARBAGE_uv_INVERTED_NORMALS.ply",
+            "Visible": false,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                0.4117647111415863,
+                0.7058823704719544,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                5000.0,
+                5000.0,
+                5000.0
+            ]
+        },
+        {
+            "Name": "DebugSphere",
+            "Mesh": "Sphere_320.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": true,
+            "Position": [
+                -100.0,
+                10.0,
+                0.0
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                0.4117647111415863,
+                0.7058823704719544,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "Lights": [
+        {
+            "Name": "MainLight",
+            "Type": "POINT_LIGHT",
+            "Position": [
+                686.0,
+                2170.0,
+                185.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.000009235969628207386,
+                2.2847000025194576e-7,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Turned": "ON"
+        },
+        {
+            "Name": "Torch_Light0",
+            "Type": "SPOT_LIGHT",
+            "Angles": [
+                0.0,
+                0.0
+            ],
+            "ObjectLookAt": "table",
+            "Position": [
+                0.0,
+                400.0,
+                0.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.00009999999747378752,
+                0.000014999999621068128,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.9279999732971191,
+                0.4359999895095825,
+                0.1080000028014183,
+                1.0
+            ],
+            "Turned": "OFF"
+        },
+        {
+            "Name": "Torch_Light1",
+            "Type": "SPOT_LIGHT",
+            "Angles": [
+                20.0,
+                30.0
+            ],
+            "ObjectLookAt": "table",
+            "Position": [
+                10.0,
+                400.0,
+                0.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.00009999999747378752,
+                0.000014999999621068128,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.9279999732971191,
+                0.4359999895095825,
+                0.1080000028014183,
+                1.0
+            ],
+            "Turned": "ON"
+        },
+        {
+            "Name": "Torch_Light2",
+            "Type": "SPOT_LIGHT",
+            "Angles": [
+                0.0,
+                0.0
+            ],
+            "ObjectLookAt": "table",
+            "Position": [
+                20.0,
+                400.0,
+                0.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.00009999999747378752,
+                0.000014999999621068128,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.9279999732971191,
+                0.4359999895095825,
+                0.1080000028014183,
+                1.0
+            ],
+            "Turned": "OFF"
+        },
+        {
+            "Name": "Torch_Light3",
+            "Type": "SPOT_LIGHT",
+            "Angles": [
+                0.0,
+                0.0
+            ],
+            "ObjectLookAt": "table",
+            "Position": [
+                30.0,
+                400.0,
+                0.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.00009999999747378752,
+                0.000014999999621068128,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.9279999732971191,
+                0.4359999895095825,
+                0.1080000028014183,
+                1.0
+            ],
+            "Turned": "OFF"
+        },
+        {
+            "Name": "ChestLight",
+            "Type": "SPOT_LIGHT",
+            "Angles": [
+                0.0,
+                0.0
+            ],
+            "Direction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Position": [
+                -675.0,
+                40.0,
+                520.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.00009999999747378752,
+                0.00002099999983329326,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.984000027179718,
+                0.03999999910593033,
+                0.04651160165667534,
+                0.0
+            ],
+            "Turned": "OFF"
+        },
+        {
+            "Name": "QuestLight",
+            "Type": "POINT_LIGHT",
+            "Position": [
+                -675.0,
+                40.0,
+                520.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.00009999999747378752,
+                0.00002099999983329326,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.6399999856948853,
+                0.027000000700354577,
+                0.8999999761581421,
+                1.0
+            ],
+            "Turned": "OFF"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "Window": {
+        "Width": 1350,
+        "Height": 764,
+        "Title" : "Balls!"
+    },
+    "Language" : "English",
+	  "Scene" : "physics.json",
+    "Gravity" : [0.0, -50.0, 0.0]
+}

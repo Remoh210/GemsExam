@@ -1,0 +1,302 @@
+{
+    "Camera": {
+        "Speed": 100.0,
+        "Position": [
+            0.0,
+            50.0,
+            0.0
+        ]
+    },
+    "GameObjects": [
+        {
+            "Name": "earth",
+            "Mesh": "earth.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                0.0,
+                100.0,
+                0.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100.0
+            ],
+            "Rotation": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Textures": [
+                {
+                    "Name": "earthTex.bmp",
+                    "Strength": 1.0
+                }
+            ],
+            "RigidBody": {
+                "Type": "SPHERE",
+                "Radius": 1.0,
+                "Mass": 10.0
+            }
+        },
+          {
+                  "Name": "plane_floor",
+                  "Mesh": "plane_floor.ply",
+                  "Visible": true,
+                  "Use_Physics": true,
+                  "Wireframe": false,
+                  "Position": [
+                      0.0,
+                      2.0,
+                      0.0
+                  ],
+                  "DiffuseRGB_Alpha": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                  ],
+                  "SpecularRGB_Alpha": [
+                      1.0,
+                      1.0,
+                      1.0,
+                      100.0
+                  ],
+                  "Rotation": [
+                      0.0,
+                      0.0,
+                      0.0
+                  ],
+                  "Scale": [
+                      100,
+                      100,
+                      100
+                  ],
+                  "Textures": [
+                      {
+                          "Name": "metal.bmp",
+                          "Strength": 1.0
+                      }
+                  ],
+                  "RigidBody": {
+                      "Type": "PLANE",
+                      "Normal": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "Constant": 2.0
+                  }
+       },
+        {
+            "Name": "Sphere_320_faces_xyz_n",
+            "Mesh": "Sphere_320_faces_xyz_n.ply",
+            "Visible": false,
+            "Use_Physics": false,
+            "Wireframe": false,
+            "Position": [
+                686.0,
+                2220.0,
+                185.0
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Rotation": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "Scale": [
+                30.0,
+                30.0,
+                30.0
+            ]
+        }
+
+    ],
+    "Lights": [
+        {
+            "Name": "MainLight",
+            "Type": "POINT_LIGHT",
+            "Position": [
+                706.0,
+                2140.0,
+                185.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.00015549414092674851,
+                3.6068104236619549e-7,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Turned": "ON"
+        },
+        {
+            "Name": "Torch_Light0",
+            "Type": "POINT_LIGHT",
+            "Position": [
+                0.0,
+                330.0,
+                0.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.00009999999747378752,
+                0.000014999999621068128,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.9279999732971191,
+                0.4359999895095825,
+                0.1080000028014183,
+                1.0
+            ],
+            "Turned": "OFF"
+        },
+        {
+            "Name": "Torch_Light1",
+            "Type": "SPOT_LIGHT",
+            "Angles": [
+                10.0,
+                20.0
+            ],
+            "ObjectLookAt": "table",
+            "Position": [
+                10.0,
+                1725.0,
+                480.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.000028619990189326928,
+                7.610128704982344e-8,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.9279999732971191,
+                0.4359999895095825,
+                0.1080000028014183,
+                1.0
+            ],
+            "Turned": "OFF"
+        },
+        {
+            "Name": "Torch_Light2",
+            "Type": "POINT_LIGHT",
+            "Position": [
+                1155.0,
+                -290.0,
+                -455.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.0006081397295929492,
+                0.00001757841164362617,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.9279999732971191,
+                0.4359999895095825,
+                0.1080000028014183,
+                1.0
+            ],
+            "Turned": "ON"
+        },
+        {
+            "Name": "Torch_Light3",
+            "Type": "POINT_LIGHT",
+            "Position": [
+                30.0,
+                400.0,
+                0.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.00009999999747378752,
+                0.000014999999621068128,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.9279999732971191,
+                0.4359999895095825,
+                0.1080000028014183,
+                1.0
+            ],
+            "Turned": "OFF"
+        },
+        {
+            "Name": "ChestLight",
+            "Type": "POINT_LIGHT",
+            "Position": [
+                -700.0,
+                40.0,
+                520.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.00009999999747378752,
+                0.00002099999983329326,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.984000027179718,
+                0.03999999910593033,
+                0.04651160165667534,
+                0.0
+            ],
+            "Turned": "OFF"
+        },
+        {
+            "Name": "QuestLight",
+            "Type": "POINT_LIGHT",
+            "Position": [
+                -685.0,
+                40.0,
+                520.0
+            ],
+            "Attenuation": [
+                0.0,
+                0.00009999999747378752,
+                0.00002099999983329326,
+                -431602080.0
+            ],
+            "DiffuseRGB_Alpha": [
+                0.6399999856948853,
+                0.027000000700354577,
+                0.8999999761581421,
+                1.0
+            ],
+            "Turned": "OFF"
+        }
+    ]
+}

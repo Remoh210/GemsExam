@@ -1,0 +1,2 @@
+Camera_position -899.016 1170.16 -456.766
+Camera_Speed 1000
