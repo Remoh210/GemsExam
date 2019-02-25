@@ -44,7 +44,7 @@ enum controlType
 	THIRD_PERSON
 };
 
-controlType controlScheme = FIRST_PERSON;
+controlType controlScheme = THIRD_PERSON;
 
 void SwitchToWireFrame(std::vector<cGameObject*> models); 
 
@@ -212,7 +212,7 @@ void key_callback( GLFWwindow* window,
 
 	//Player Controls
 
-	if (bIsDebugMode) {
+	if (!bIsDebugMode) {
 
 
 		if (controlScheme == FIRST_PERSON)
@@ -343,7 +343,7 @@ void ProcessAsynKeys(GLFWwindow* window)
 	cGameObject* player = findObjectByFriendlyName("dalek");
 
 
-	if (bIsDebugMode) {
+	if (!bIsDebugMode) {
 		if (controlScheme == THIRD_PERSON) {
 			if (glfwGetKey(window, GLFW_KEY_W) || glfwGetKey(window, GLFW_KEY_A)
 				|| glfwGetKey(window, GLFW_KEY_S) || glfwGetKey(window, GLFW_KEY_D))
@@ -381,7 +381,7 @@ void ProcessAsynKeys(GLFWwindow* window)
 	{
 		// Note: The "== GLFW_PRESS" isn't really needed as it's actually "1" 
 		// (so the if() treats the "1" as true...)
-		if (!bIsDebugMode) {
+		if (bIsDebugMode) {
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 				camera.ProcessKeyboard(FORWARD, deltaTime);
 			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)

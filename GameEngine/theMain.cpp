@@ -669,9 +669,7 @@ int main(void)
 		glEnable(GL_DEPTH_TEST);	// When drawing, checked the existing depth
 		glEnable(GL_CULL_FACE);	// Discared "back facing" triangles
 
-		// 2. Clear everything **ON THE MAIN FRAME BUFFER** 
-		//     (NOT the offscreen buffer)
-		// This clears the ACTUAL screen framebuffer
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -688,8 +686,18 @@ int main(void)
 
 		glUniform1f(renderPassNumber_UniLoc, 2.0f);	// Tell shader it's the 2nd pass
 
-		matView = camera.GetViewMatrix();
 
+		if (bIsDebugMode) {
+			camera.b_controlledByScript = false;
+			matView = camera.GetViewMatrix();
+		}
+		else
+		{
+			camera.Position = glm::vec3(-460.0f, 595.0f, 405.0f);
+			camera.b_controlledByScript = true;
+			matView = glm::lookAt(camera.Position, glm::vec3(100.0f, 300.0f, 400.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		
 
 		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 		matProjection = glm::perspective(1.0f,			// FOV
@@ -705,6 +713,7 @@ int main(void)
 		// 4. Draw a single quad		
 		glm::mat4 matModel = glm::mat4(1.0f);	// identity
 		DrawObject(p2SidedQuad, matModel, program, ::g_pFBOMain);
+
 
 		matModel = glm::mat4(1.0f);
 		p2SidedQuad->bIsVisible = false;

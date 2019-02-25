@@ -132,7 +132,7 @@ void main()
 			texRecticle *= 0.15;
 		}
 		
-		finalOutputColour.rgb = texture( texPass1OutputTexture, vertUV_x2.st + 0.004*vec2( sin(1024.0*vertUV_x2.s),cos(768.0*vertUV_x2.t))).rgb
+		finalOutputColour.rgb = texture( texPass1OutputTexture, vertUV_x2.st + 0.007*vec2( sin(1024.0*vertUV_x2.s),cos(768.0*vertUV_x2.t))).rgb
 		                           + texRecticle.rgb;
 		
 //		float bw =   0.2126f * finalOutputColour.r
