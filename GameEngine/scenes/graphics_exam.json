@@ -9,55 +9,6 @@
     },
     "GameObjects": [
         {
-            "Name": "moon",
-            "Mesh": "earth.ply",
-            "Visible": true,
-            "Use_Physics": true,
-            "Wireframe": false,
-            "Position": [
-                30.0,
-                40.27769470214844,
-                31.499996185302736
-            ],
-            "DiffuseRGB_Alpha": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "SpecularRGB_Alpha": [
-                1.0,
-                1.0,
-                1.0,
-                100.0
-            ],
-            "Rotation": [
-                0.0,
-                -0.0,
-                0.0
-            ],
-            "Scale": [
-                10.0,
-                10.0,
-                10.0
-            ],
-            "Textures": [
-                {
-                    "Name": "moonTex.bmp",
-                    "Strength": 1.0
-                },
-                {
-                    "Name": "testTex.bmp",
-                    "Strength": 0.0
-                }
-            ],
-            "RigidBody": {
-                "Type": "SPHERE",
-                "Radius": 10.0,
-                "Mass": 50.0
-            }
-        },
-        {
             "Name": "dalek",
             "Mesh": "dalek.ply",
             "Visible": true,
@@ -81,9 +32,9 @@
                 100000.0
             ],
             "Rotation": [
-                -180.0,
-                88.33070373535156,
-                -180.0
+                0.0,
+                0.0,
+                0.0
             ],
             "Scale": [
                 0.30000007152557375,
@@ -126,7 +77,7 @@
             ],
             "Textures": [
                 {
-                    "Name": "grassTex.bmp",
+                    "Name": "groundTex.bmp",
                     "Strength": 1.0
                 }
             ],
@@ -141,209 +92,10 @@
                 "Mass": 0.0
             }
         },
-        {
-            "Name": "plane_floor_back",
-            "Mesh": "plane_floor.ply",
-            "Visible": true,
-            "Use_Physics": true,
-            "Wireframe": false,
-            "Position": [
-                0.0,
-                98.0,
-                -100.0
-            ],
-            "DiffuseRGB_Alpha": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "SpecularRGB_Alpha": [
-                1.0,
-                1.0,
-                1.0,
-                100.0
-            ],
-            "Rotation": [
-                90.0,
-                -0.0,
-                0.0
-            ],
-            "Scale": [
-                100.0,
-                100.0,
-                100.0
-            ],
-            "Textures": [
-                {
-                    "Name": "metal.bmp",
-                    "Strength": 1.0
-                }
-            ],
-            "RigidBody": {
-                "Type": "PLANE",
-                "Constant": -100.0,
-                "Normal": [
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "Mass": 0.0
-            }
-        },
-        {
-            "Name": "plane_floor_front",
-            "Mesh": "plane_floor.ply",
-            "Visible": true,
-            "Use_Physics": true,
-            "Wireframe": false,
-            "Position": [
-                0.0,
-                98.0,
-                100.0
-            ],
-            "DiffuseRGB_Alpha": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "SpecularRGB_Alpha": [
-                1.0,
-                1.0,
-                1.0,
-                100.0
-            ],
-            "Rotation": [
-                -90.0,
-                0.0,
-                0.0
-            ],
-            "Scale": [
-                100.0,
-                100.0,
-                100.0
-            ],
-            "Textures": [
-                {
-                    "Name": "metal.bmp",
-                    "Strength": 1.0
-                }
-            ],
-            "RigidBody": {
-                "Type": "PLANE",
-                "Constant": -100.0,
-                "Normal": [
-                    0.0,
-                    0.0,
-                    -1.0
-                ],
-                "Mass": 0.0
-            }
-        },
-        {
-            "Name": "plane_right",
-            "Mesh": "plane_floor.ply",
-            "Visible": true,
-            "Use_Physics": true,
-            "Wireframe": false,
-            "Position": [
-                100.0,
-                98.0,
-                0.0
-            ],
-            "DiffuseRGB_Alpha": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "SpecularRGB_Alpha": [
-                1.0,
-                1.0,
-                1.0,
-                100.0
-            ],
-            "Rotation": [
-                0.0,
-                -0.0,
-                90.0
-            ],
-            "Scale": [
-                100.0,
-                100.0,
-                100.0
-            ],
-            "Textures": [
-                {
-                    "Name": "Metal.bmp",
-                    "Strength": 1.0
-                }
-            ],
-            "RigidBody": {
-                "Type": "PLANE",
-                "Constant": -100.0,
-                "Normal": [
-                    -1.0,
-                    0.0,
-                    0.0
-                ],
-                "Mass": 0.0
-            }
-        },
-        {
-            "Name": "plane_left",
-            "Mesh": "plane_floor.ply",
-            "Visible": true,
-            "Use_Physics": true,
-            "Wireframe": false,
-            "Position": [
-                -100.0,
-                98.0,
-                0.0
-            ],
-            "DiffuseRGB_Alpha": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "SpecularRGB_Alpha": [
-                1.0,
-                1.0,
-                1.0,
-                100.0
-            ],
-            "Rotation": [
-                0.0,
-                -0.0,
-                -90.0
-            ],
-            "Scale": [
-                100.0,
-                100.0,
-                100.0
-            ],
-            "Textures": [
-                {
-                    "Name": "Metal.bmp",
-                    "Strength": 1.0
-                }
-            ],
-            "RigidBody": {
-                "Type": "PLANE",
-                "Constant": -100.0,
-                "Normal": [
-                    1.0,
-                    0.0,
-                    0.0
-                ],
-                "Mass": 0.0
-            }
-        },
+
         {
             "Name": "plane_tv",
-            "Mesh": "tv_screen.ply",
+            "Mesh": "tv_screen_new.ply",
             "Visible": false,
             "Use_Physics": true,
             "Wireframe": false,
@@ -373,6 +125,12 @@
                 1.9600000381469727,
                 1.9600000381469727,
                 1.9600000381469727
+            ],
+            "Textures": [
+                {
+                    "Name": "recticleTex.bmp",
+                    "Strength": 1.0
+                }
             ]
         },
         {

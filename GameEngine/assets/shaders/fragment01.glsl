@@ -92,6 +92,7 @@ uniform sampler2D texture07;
 // For the 2 pass rendering
 uniform float renderPassNumber;	// 1 = 1st pass, 2nd for offscreen to quad
 uniform sampler2D texPass1OutputTexture;
+uniform sampler2D texPass1OutputTexture2;
 
 
 // Cube map texture (NOT a sampler3D)
@@ -125,7 +126,14 @@ void main()
 //		vec3 ObjectNormal = texture( texObjectColour, vertUV_x2.st ).rgb;
 	
 		// 2nd pass (very simple)
-		finalOutputColour.rgb = texture( texPass1OutputTexture, vertUV_x2.st ).rgb;
+		vec4 texRecticle = texture( texture00, vertUV_x2.st ).rgba;
+		if (texRecticle.g > 0.5 && texRecticle.r < 0.5)
+		{
+			texRecticle *= 0.15;
+		}
+		
+		finalOutputColour.rgb = texture( texPass1OutputTexture, vertUV_x2.st + 0.004*vec2( sin(1024.0*vertUV_x2.s),cos(768.0*vertUV_x2.t))).rgb
+		                           + texRecticle.rgb;
 		
 //		float bw =   0.2126f * finalOutputColour.r
 //                   + 0.7152f * finalOutputColour.g 

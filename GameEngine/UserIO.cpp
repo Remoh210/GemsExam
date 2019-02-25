@@ -28,6 +28,8 @@ bool bIsPicked = false;
 cGameObject* closedModel;
 bool bMouseInWindow = false;
 
+
+
 bool IsPicked = false;
 void commandsInterface();
 
@@ -35,8 +37,16 @@ cGameObject* CloseToObj(std::vector<cGameObject*> models);
 
 cGameObject* cloesetObj;
 
-void SwitchToWireFrame(std::vector<cGameObject*> models);
 
+enum controlType
+{
+	FIRST_PERSON,
+	THIRD_PERSON
+};
+
+controlType controlScheme = FIRST_PERSON;
+
+void SwitchToWireFrame(std::vector<cGameObject*> models); 
 
 void setVelZ(cGameObject* sm, float vel)
 {
@@ -65,7 +75,6 @@ void key_callback( GLFWwindow* window,
 						  int action, 
 						  int mods)
 {
-
 	cGameObject* player = findObjectByFriendlyName("dalek");
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
@@ -104,10 +113,21 @@ void key_callback( GLFWwindow* window,
 	}
 
 
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+	{
+		controlScheme = FIRST_PERSON;
+
+	}
+
+	if (key == GLFW_KEY_2 && action == GLFW_PRESS)
+	{
+		controlScheme = THIRD_PERSON;
+
+	}
+
 	if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
 	{
 		bIsDebugMode = !bIsDebugMode;
-
 
 	}
 
@@ -188,24 +208,54 @@ void key_callback( GLFWwindow* window,
 
 
 
-
 	
 
 	//Player Controls
 
 	if (bIsDebugMode) {
 
-		if (key == GLFW_KEY_D && action == GLFW_PRESS)
+
+		if (controlScheme == FIRST_PERSON)
+		{
+			if (key == GLFW_KEY_D && action == GLFW_PRESS)
+			{
+
+				player->adjMeshOrientationEulerAngles(0.0f, -45.0f, 0.0f, true);
+			}
+			if (key == GLFW_KEY_A && action == GLFW_PRESS)
+			{
+
+				player->adjMeshOrientationEulerAngles(0.0f, 45.0f, 0.0f, true);
+			}
+		}
+
+
+		if (controlScheme == THIRD_PERSON)
 		{
 
-			player->adjMeshOrientationEulerAngles(0.0f, -45.0f, 0.0f, true);
-		}
-		if (key == GLFW_KEY_A && action == GLFW_PRESS)
-		{
+			if (key == GLFW_KEY_W && action == GLFW_PRESS)
+			{
 
-			player->adjMeshOrientationEulerAngles(0.0f, 45.0f, 0.0f, true);
-		}
+				player->setMeshOrientationEulerAngles(0.0f, 0.0f, 0.0f, true);
+			}
 
+			if (key == GLFW_KEY_A && action == GLFW_PRESS)
+			{
+
+				player->setMeshOrientationEulerAngles(0.0f, 90.0f, 0.0f, true);
+			}
+
+			if (key == GLFW_KEY_D && action == GLFW_PRESS)
+			{
+
+				player->setMeshOrientationEulerAngles(0.0f, -90.0f, 0.0f, true);
+			}
+			if (key == GLFW_KEY_S && action == GLFW_PRESS)
+			{
+				player->setMeshOrientationEulerAngles(0.0f, 180.0f, 0.0f, true);
+				//player->adjMeshOrientationEulerAngles(0.0f, 45.0f, 0.0f, true);
+			}
+		}
 	}
 
 
@@ -294,11 +344,23 @@ void ProcessAsynKeys(GLFWwindow* window)
 
 
 	if (bIsDebugMode) {
-		if (glfwGetKey(window, GLFW_KEY_W))
-		{
-
-			player->position += DalekForward * 5.0f * (float)deltaTime;
+		if (controlScheme == THIRD_PERSON) {
+			if (glfwGetKey(window, GLFW_KEY_W) || glfwGetKey(window, GLFW_KEY_A)
+				|| glfwGetKey(window, GLFW_KEY_S) || glfwGetKey(window, GLFW_KEY_D))
+			{
+				player->position += DalekForward * 15.0f * (float)deltaTime;
+			}
 		}
+
+		if (controlScheme == FIRST_PERSON) {
+
+			if (glfwGetKey(window, GLFW_KEY_W))
+			{
+				player->position += DalekForward * 15.0f * (float)deltaTime;
+			}
+
+		}
+
 
 	}
 
@@ -341,55 +403,7 @@ void ProcessAsynKeys(GLFWwindow* window)
 	//LIGHT CONTROL*********************************************************************************************************
 	if ( IsCtrlDown(window) )
 	{
-		if (glfwGetKey(window, GLFW_KEY_W)) {
-			//glm::vec3 CamDir = glm::vec3(camera.Front.x, 0.0f, camera.Front.z);
-			//CamDir = glm::normalize(CamDir);
-			glm::vec3 velVec = vec_pSpheres[SphIndex]->rigidBody->GetVelocity();
-			////lets add some speed
-			glm::vec3 CamDir = camera.Front - camera.Position;
-			CamDir = glm::normalize(CamDir);
-			CamDir.y = 0.0f;
-			velVec += CamDir * 200.0f * (float)deltaTime;
-			velVec.y = 1.1f;
-			vec_pSpheres[SphIndex]->rigidBody->SetVelocity(velVec);
-		}
-		if (glfwGetKey(window, GLFW_KEY_S)) {
-			//glm::vec3 CamDir = glm::vec3(camera.Front.x, 0.0f, camera.Front.z);
-			//CamDir = glm::normalize(CamDir);
-			glm::vec3 velVec = vec_pSpheres[SphIndex]->rigidBody->GetVelocity();
-			////lets add some speed
-			glm::vec3 CamDir = camera.Front - camera.Position;
-			CamDir = glm::normalize(CamDir);
-			CamDir.y = 0.0f;
-			velVec += -CamDir * 200.0f * (float)deltaTime;
-			velVec.y = 1.1f;
-			vec_pSpheres[SphIndex]->rigidBody->SetVelocity(velVec);
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_D)) {
-			//glm::vec3 CamDir = glm::vec3(camera.Front.x, 0.0f, camera.Front.z);
-//CamDir = glm::normalize(CamDir);
-			glm::vec3 velVec = vec_pSpheres[SphIndex]->rigidBody->GetVelocity();
-			////lets add some speed
-			glm::vec3 CamDir = camera.Right;
-			CamDir = glm::normalize(CamDir);
-			CamDir.y = 0.0f;
-			velVec += CamDir * 200.0f * (float)deltaTime;
-			velVec.y = 1.1f;
-			vec_pSpheres[SphIndex]->rigidBody->SetVelocity(velVec);
-		}
-		if (glfwGetKey(window, GLFW_KEY_A)) {
-			//glm::vec3 CamDir = glm::vec3(camera.Front.x, 0.0f, camera.Front.z);
-//CamDir = glm::normalize(CamDir);
-			glm::vec3 velVec = vec_pSpheres[SphIndex]->rigidBody->GetVelocity();
-			////lets add some speed
-			glm::vec3 CamDir = camera.Right;
-			CamDir = glm::normalize(CamDir);
-			CamDir.y = 0.0f;
-			velVec += - CamDir * 200.0f * (float)deltaTime;
-			velVec.y = 1.1f;
-			vec_pSpheres[SphIndex]->rigidBody->SetVelocity(velVec);
-		}
+		
 		
 		if ( glfwGetKey( window, GLFW_KEY_W ) )	{	LightManager->vecLights.at(lightIndex)->position.z += cameraSpeed;	}
 		if ( glfwGetKey( window, GLFW_KEY_S ) )	{	LightManager->vecLights.at(lightIndex)->position.z -= cameraSpeed;	}

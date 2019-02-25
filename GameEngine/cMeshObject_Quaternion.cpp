@@ -9,7 +9,8 @@ void cGameObject::setMeshOrientationEulerAngles(glm::vec3 newAnglesEuler, bool b
 			glm::radians(newAnglesEuler.z));
 	}
 
-	this->m_meshQOrientation = glm::quat(glm::vec3(newAnglesEuler.x, newAnglesEuler.y, newAnglesEuler.z));
+	glm::vec3 myEuler = glm::vec3(newAnglesEuler.x, newAnglesEuler.y, newAnglesEuler.z);
+	this->m_meshQOrientation = glm::quat(myEuler);
 	return;
 }
 

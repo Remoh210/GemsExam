@@ -33,6 +33,7 @@ GLint texBW_1_UniLoc = -1;
 
 // Texture sampler for off screen texture
 GLint texPass1OutputTexture_UniLoc = -1;
+GLint texPass1OutputTexture_UniLoc2 = -1;
 
 
 
@@ -69,34 +70,12 @@ void BindTextures(cGameObject* pCurrentMesh, GLuint shaderProgramID, cFBO* fbo)
 
 
 		texPass1OutputTexture_UniLoc = glGetUniformLocation(shaderProgramID, "texPass1OutputTexture");
+		texPass1OutputTexture_UniLoc2 = glGetUniformLocation(shaderProgramID, "texPass1OutputTexture2");
 
 	}//if(!HACK_bTextureUniformLocationsLoaded )
 
 
-	// ******************************************************************** 
-	//    _  _              _ _       ___ ___  ___    _           _                  _    _         _ _           
-	//   | || |__ _ _ _  __| | |___  | __| _ )/ _ \  | |_ _____ _| |_ _  _ _ _ ___  | |__(_)_ _  __| (_)_ _  __ _ 
-	//   | __ / _` | ' \/ _` | / -_) | _|| _ \ (_) | |  _/ -_) \ /  _| || | '_/ -_) | '_ \ | ' \/ _` | | ' \/ _` |
-	//   |_||_\__,_|_||_\__,_|_\___| |_| |___/\___/   \__\___/_\_\\__|\_,_|_| \___| |_.__/_|_||_\__,_|_|_||_\__, |
-	//                                                                                                      |___/ 
-	// HACK: This is dealing with the SINGLE FBO object, currently.
-	// The cGameObject has a boolean to indicate that is using this
-	// offscreen texture (the FBO). 
-	// If it IS using this, then we bind the texture to that, and exit.
-	// We will be making this more sophisticated so that we can have
-	// multiple FBOs (which we will need and-or want)
-
-	// HACK: hakity hack hack hack hack hack
-	//    _  _   _   ___ _  ___ 
-	//   | || | /_\ / __| |/ / |
-	//   | __ |/ _ \ (__| ' <|_|
-	//   |_||_/_/ \_\___|_|\_(_)
-	//                          	
-	// This lets us "get at" the one, global FBO
-//	extern GLuint g_FBO;
-//	extern GLuint g_FBO_colourTexture;		// <--- texture number of the texture
-//	extern GLuint g_FBO_depthTexture;
-//	extern GLint g_FBO_SizeInPixes;		// = 512 the WIDTH of the framebuffer, in pixels;
+	
 
 	if (pCurrentMesh->b_HACK_UsesOffscreenFBO)
 	{
@@ -105,24 +84,26 @@ void BindTextures(cGameObject* pCurrentMesh, GLuint shaderProgramID, cFBO* fbo)
 
 		int FBO_Texture_Unit = 1;
 
-		// 0x84C0  (or 33984)		
-		// Please bind to texture unit 34,000. Why gawd, why?
 		glActiveTexture(GL_TEXTURE0 + FBO_Texture_Unit);
 
-		// Connect the specific texture to THIS texture unit
-//		glBindTexture( GL_TEXTURE_2D, g_FBO_colourTexture );
 		glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
 
-		// Now pick to read from the normal (output from the 1st pass):
-//		glBindTexture( GL_TEXTURE_2D, ::g_pFBOMain->normalTexture_1_ID );
-//		glBindTexture( GL_TEXTURE_2D, ::g_pFBOMain->depthTexture_ID );
-//		glBindTexture( GL_TEXTURE_2D, ::g_pFBOMain->vertexWorldPos_2_ID );
-
-
-		// Set the sampler (in the shader) to ALSO point to texture unit 16
-		// This one takes the unchanged texture unit numbers 
-//		glUniform1i( tex00_UniLoc, FBO_Texture_Unit_Michael_Picked );
 		glUniform1i(texPass1OutputTexture_UniLoc, FBO_Texture_Unit);
+
+
+
+		int FBO_Texture_Unit2 = 0;
+
+		glActiveTexture(GL_TEXTURE0 + FBO_Texture_Unit2);
+
+		// Connect the specific texture to THIS texture unit
+		std::string texName = pCurrentMesh->vecTextures[0].name;
+
+		GLuint texID = ::g_pTheTextureManager->getTextureIDFromName(texName);
+
+		glBindTexture(GL_TEXTURE_2D, texID);
+
+		glUniform1i(texPass1OutputTexture_UniLoc2, FBO_Texture_Unit2);
 
 
 		// Set the blending to that it's 0th texture sampler

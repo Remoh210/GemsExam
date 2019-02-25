@@ -215,7 +215,7 @@ int main(void)
 
 
 	std::string FBOErrorString;
-	if (::g_pFBOMain->init(SCR_WIDTH, SCR_HEIGHT, FBOErrorString))
+	if (::g_pFBOMain->init(800, 600, FBOErrorString))
 	{
 		std::cout << "Framebuffer is good to go!" << std::endl;
 	}
@@ -224,19 +224,6 @@ int main(void)
 		std::cout << "Framebuffer is NOT complete" << std::endl;
 	}
 
-
-
-
-
-	std::string pFBO2ERR;
-	if (pFBO2->init(SCR_WIDTH, SCR_HEIGHT, pFBO2ERR))
-	{
-		std::cout << "Framebuffer 2 is good to go!" << std::endl;
-	}
-	else
-	{
-		std::cout << "Framebuffer 2 is NOT complete" << std::endl;
-	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -367,9 +354,9 @@ int main(void)
 		glm::mat4x4	matView = glm::mat4(1.0f);
 
 
-		glfwGetFramebufferSize(window, &width, &height);
-		ratio = width / (float)height;
-		glViewport(0, 0, width, height);
+		
+		ratio = 800 / (float)600;
+		glViewport(0, 0, 800, 600);
 
 		// These things will impact ANY framebuffer
 		// (controls state of the rendering, so doesn't matter where
@@ -387,12 +374,11 @@ int main(void)
 		matProjection = glm::perspective(1.0f,			// FOV
 			ratio,		// Aspect ratio
 			0.1f,			// Near clipping plane
-			10000.0f);	// Far clipping plane
+			500.0f);	// Far clipping plane
 
 
-
-		matView = glm::lookAt(camera.Position, dalek->position, camera.WorldUp);
-		glm::vec4 vecForwardDirection_ModelSpace = glm::vec4(0.0f, 0.0f, /**/1.0f/**/, 1.0f);
+		dalek->bIsVisible = false;
+		glm::vec4 vecForwardDirection_ModelSpace = glm::vec4(1.0f, 0.0f, /**/0.0f/**/, 1.0f);
 
 		glm::quat dalekRotation = dalek->getQOrientation();
 		glm::mat4 matDalekRotation = glm::mat4(dalekRotation);
@@ -401,11 +387,11 @@ int main(void)
 		// optional normalize
 		DalekForward = glm::normalize(DalekForward);
 
-		glm::vec3 campos = dalek->position + glm::vec3(DalekForward) * 3.0f;
+		glm::vec3 campos = dalek->position - glm::vec3(DalekForward) * 10.0f;
 
 		matView = glm::lookAt(campos, dalek->position + (glm::vec3(DalekForward) * 4.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-		glUniform3f(eyeLocation_location, camera.Position.x, camera.Position.y, camera.Position.z);
+		glUniform3f(eyeLocation_location, campos.x, campos.y, campos.z);
 
 		//matView = glm::lookAt( g_CameraEye,	// Eye
 		//	                    g_CameraAt,		// At
@@ -651,13 +637,7 @@ int main(void)
 					glm::mat4 matblock(1.0f);
 					DrawObject(block, matblock, program, NULL);
 					block->position.x += 20.0f;
-					//				std::cout << "X";
-					//				std::cout << '\u2500';
-					//				std::cout << (char)0xC5;
-					//				std::cout << (char)0xDA; //   (218)
-					//				std::cout << (char)0xBF; //   (191)
-					//				std::cout << (char)0xC0; //   (192)
-					//				std::cout << (char)0xD9; //   (217)
+
 				}
 				else
 				{
@@ -673,89 +653,11 @@ int main(void)
 
 
 
-//		//RENDER SCENE SECOND BUFFER
-//		glBindFramebuffer(GL_FRAMEBUFFER, pFBO2->ID);
-//
-//
-//		pFBO2->clearBuffers(true, true);
-//		glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 1st pass
-//
-//
-//
-//		glfwGetFramebufferSize(window, &width, &height);
-//		ratio = width / (float)height;
-//		glViewport(0, 0, width, height);
-//
-//		// These things will impact ANY framebuffer
-//		// (controls state of the rendering, so doesn't matter where
-//		//  the output goes to, right?)
-//		glEnable(GL_DEPTH);		// Enables the KEEPING of the depth information
-//		glEnable(GL_DEPTH_TEST);	// When drawing, checked the existing depth
-//		glEnable(GL_CULL_FACE);	// Discared "back facing" triangles
-//
-//		// Colour and depth buffers are TWO DIFF THINGS.
-//		// Note that this is clearing the main framebuffer
-//		// (Which will do NOTHING to the offscreen buffer)
-//		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//
-//		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-//		matProjection = glm::perspective(1.0f,			// FOV
-//			ratio,		// Aspect ratio
-//			0.1f,			// Near clipping plane
-//			10000.0f);	// Far clipping plane
-//
-//
-////glm::vec3 migpos = findObjectByFriendlyName("mig")->position;
-////matView = glm::lookAt(camera.Position, migpos, camera.WorldUp);
-//
-//		matView = glm::lookAt(glm::vec3(20.0f, 20.0f, 40.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-//		
-//		matView = glm::rotate(matView, idk += 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
-//
-//		glUniform3f(eyeLocation_location, camera.Position.x, camera.Position.y, camera.Position.z);
-//
-//		//matView = glm::lookAt( g_CameraEye,	// Eye
-//		//	                    g_CameraAt,		// At
-//		//	                    glm::vec3( 0.0f, 1.0f, 0.0f ) );// Up
-//		glUniformMatrix4fv(matView_location, 1, GL_FALSE, glm::value_ptr(matView));
-//		glUniformMatrix4fv(matProj_location, 1, GL_FALSE, glm::value_ptr(matProjection));
-//		// Do all this ONCE per frame
-//
-//		//Copy LIGHT unnif
-//
-//		// Draw all the objects in the "scene"
-//		for (unsigned int objIndex = 0;
-//			objIndex != (unsigned int)vec_non_transObj.size();
-//			objIndex++)
-//		{
-//			cGameObject* pCurrentMesh = vec_non_transObj[objIndex];
-//
-//			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
-//
-//			DrawObject(pCurrentMesh, matModel, program, NULL);
-//
-//		}//for ( unsigned int objIndex = 0; 
-//
-//		for (unsigned int objIndex = 0;
-//			objIndex != (unsigned int)vec_transObj.size();
-//			objIndex++)
-//		{
-//			cGameObject* pCurrentMesh = vec_transObj[objIndex];
-//
-//			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
-//
-//			DrawObject(pCurrentMesh, matModel, program, NULL);
-//
-//		}//for ( unsigned int objIndex = 0; 
-//
-//
-
-
 
 	// *****************************************
 	// 2nd pass
 	// *****************************************
-
+		dalek->bIsVisible = true;
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);		// Points to the "regular" frame buffer
 
 													// Get the size of the actual (screen) frame buffer
@@ -780,23 +682,22 @@ int main(void)
 		p2SidedQuad->b_HACK_UsesOffscreenFBO = true;
 		p2SidedQuad->bDontLight = true;
 		p2SidedQuad->bUseVertexColour = false;
-		//p2SidedQuad->materialDiffuse = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 		p2SidedQuad->materialDiffuse = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-		//p2SidedQuad->bIsWireFrame = true;
-		// Rotate it so it's "up and down"
-		//p2SidedQuad->setMeshOrientationEulerAngles(90.0f, 0.0f, 90.0f, true);
-		//p2SidedQuad->position = glm::vec3(0.0f, 100.0f, 50.0f); ;
-		//p2SidedQuad->setUniformScale(50.0f);
-		//p2SidedQuad->nonUniformScale.x = 50.0f;
-		//p2SidedQuad->nonUniformScale.y = 50.0f;
-		//p2SidedQuad->nonUniformScale.z = 70.0f;
+
 		
 
-
-		//  (for now: soon there will be multiple textures)
-		glUniform1f(renderPassNumber_UniLoc, 2.0f);	// Tell shader it's the 1st pass
+		glUniform1f(renderPassNumber_UniLoc, 2.0f);	// Tell shader it's the 2nd pass
 
 		matView = camera.GetViewMatrix();
+
+
+		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+		matProjection = glm::perspective(1.0f,			// FOV
+			ratio,		// Aspect ratio
+			0.1f,			// Near clipping plane
+			10000.0f);	// Far clipping plane
+
+		glUniform3f(eyeLocation_location, camera.Position.x, camera.Position.y, camera.Position.z);
 
 		glUniformMatrix4fv(matView_location, 1, GL_FALSE, glm::value_ptr(matView));
 		glUniformMatrix4fv(matProj_location, 1, GL_FALSE, glm::value_ptr(matProjection));
@@ -806,20 +707,11 @@ int main(void)
 		DrawObject(p2SidedQuad, matModel, program, ::g_pFBOMain);
 
 		matModel = glm::mat4(1.0f);
-		//p2SidedQuad->setMeshOrientationEulerAngles(90.0f, 0.0f, 90.0f, true);
-		//p2SidedQuad->position = glm::vec3(0.0f, 200.0f, 0.0f);
-		//p2SidedQuad->setMeshOrientationEulerAngles(90.0f, 0.0f, 90.0f, true);
-
-		//DrawObject(p2SidedQuad, matModel, program, pFBO2);
-
 		p2SidedQuad->bIsVisible = false;
 
 
 
 		//RENDER SCENE MAIN SCREEN
-
-
-
 
 
 		// Tell shader it's the 1st pass!
@@ -859,13 +751,7 @@ int main(void)
 					glm::mat4 matblock(1.0f);
 					DrawObject(block, matblock, program, NULL);
 					block->position.x += 20.0f;
-					//				std::cout << "X";
-					//				std::cout << '\u2500';
-					//				std::cout << (char)0xC5;
-					//				std::cout << (char)0xDA; //   (218)
-					//				std::cout << (char)0xBF; //   (191)
-					//				std::cout << (char)0xC0; //   (192)
-					//				std::cout << (char)0xD9; //   (217)
+
 				}
 				else
 				{
