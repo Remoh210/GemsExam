@@ -44,7 +44,7 @@ enum controlType
 	THIRD_PERSON
 };
 
-controlType controlScheme = FIRST_PERSON;
+controlType controlScheme = THIRD_PERSON;
 
 void SwitchToWireFrame(std::vector<cGameObject*> models); 
 
@@ -127,7 +127,13 @@ void key_callback( GLFWwindow* window,
 
 	if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
 	{
+		//camera.Type = FLY;
 		bIsDebugMode = !bIsDebugMode;
+		if (bIsDebugMode) {
+			camera.Type = FLY;
+			camera.b_controlledByScript = false;
+		}
+		else{ camera.Type = FOLLOW; }
 
 	}
 
@@ -215,42 +221,42 @@ void key_callback( GLFWwindow* window,
 	if (!bIsDebugMode) {
 
 
-		if (controlScheme == FIRST_PERSON)
-		{
-			if (key == GLFW_KEY_D && action == GLFW_PRESS)
-			{
+		//if (controlScheme == FIRST_PERSON)
+		//{
+		//	if (key == GLFW_KEY_D && action == GLFW_PRESS)
+		//	{
 
-				player->adjMeshOrientationEulerAngles(0.0f, -45.0f, 0.0f, true);
-			}
-			if (key == GLFW_KEY_A && action == GLFW_PRESS)
-			{
+		//		player->adjMeshOrientationEulerAngles(0.0f, -45.0f, 0.0f, true);
+		//	}
+		//	if (key == GLFW_KEY_A && action == GLFW_PRESS)
+		//	{
 
-				player->adjMeshOrientationEulerAngles(0.0f, 45.0f, 0.0f, true);
-			}
-		}
+		//		player->adjMeshOrientationEulerAngles(0.0f, 45.0f, 0.0f, true);
+		//	}
+		//}
 
 
 		if (controlScheme == THIRD_PERSON)
 		{
 
-			if (key == GLFW_KEY_W && action == GLFW_PRESS)
+			if (key == GLFW_KEY_D && action == GLFW_PRESS)
 			{
 
 				player->setMeshOrientationEulerAngles(0.0f, 0.0f, 0.0f, true);
 			}
 
-			if (key == GLFW_KEY_A && action == GLFW_PRESS)
+			if (key == GLFW_KEY_W && action == GLFW_PRESS)
 			{
 
 				player->setMeshOrientationEulerAngles(0.0f, 90.0f, 0.0f, true);
 			}
 
-			if (key == GLFW_KEY_D && action == GLFW_PRESS)
+			if (key == GLFW_KEY_S && action == GLFW_PRESS)
 			{
 
 				player->setMeshOrientationEulerAngles(0.0f, -90.0f, 0.0f, true);
 			}
-			if (key == GLFW_KEY_S && action == GLFW_PRESS)
+			if (key == GLFW_KEY_A && action == GLFW_PRESS)
 			{
 				player->setMeshOrientationEulerAngles(0.0f, 180.0f, 0.0f, true);
 				//player->adjMeshOrientationEulerAngles(0.0f, 45.0f, 0.0f, true);
@@ -349,6 +355,7 @@ void ProcessAsynKeys(GLFWwindow* window)
 				|| glfwGetKey(window, GLFW_KEY_S) || glfwGetKey(window, GLFW_KEY_D))
 			{
 				player->position += CharForward * 15.0f * (float)deltaTime;
+				player->currentAnimation = "Walk-forward";
 			}
 		}
 
@@ -388,6 +395,22 @@ void ProcessAsynKeys(GLFWwindow* window)
 	// If no keys are down, move the camera
 	if ( AreAllModifiersUp(window) )
 	{
+
+
+		if (camera.Type == FOLLOW) {
+			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+				camera.ProcessKeyboard(FORWARD, deltaTime);
+			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+				camera.ProcessKeyboard(BACKWARD, deltaTime);
+			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+				camera.ProcessKeyboard(LEFT, deltaTime);
+			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+				camera.ProcessKeyboard(RIGHT, deltaTime);
+			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+				camera.ProcessKeyboard(UP, deltaTime);
+			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+				camera.ProcessKeyboard(DOWN, deltaTime);
+		}
 		// Note: The "== GLFW_PRESS" isn't really needed as it's actually "1" 
 		// (so the if() treats the "1" as true...)
 		if (bIsDebugMode) {
@@ -404,6 +427,10 @@ void ProcessAsynKeys(GLFWwindow* window)
 			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 				camera.ProcessKeyboard(DOWN, deltaTime);
 		}
+
+
+
+
 
 	}//if(AreAllModifiersUp(window)
 

@@ -80,7 +80,9 @@ unsigned int SCR_HEIGHT = 800;
 std::string title = "Default";
 std::string scene = "Scene1.json";
 
-Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+//Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+
+Camera camera;
 
 bool distToCam(cGameObject* leftObj, cGameObject* rightObj) {
 	return glm::distance(leftObj->position, camera.Position) > glm::distance(rightObj->position, camera.Position); // here go your sort conditions
@@ -366,7 +368,10 @@ int main(void)
 	cGameObject* dalek = findObjectByFriendlyName("dalek");
 	cGameObject* pCharacter = findObjectByFriendlyName("Character");
 	cGameObject* block = findObjectByFriendlyName("block");
-
+	glm::vec3 idealpos(-50.0f, 100.0f, 0.0f);
+	glm::vec3 initPos = glm::vec3(pCharacter->position.x, pCharacter->position.y + 100.0f, pCharacter->position.z);
+	Camera cam(pCharacter, idealpos, 5.0f, 20.0f, 100.0f, 0.0f, initPos);
+	camera = cam;
 	// Draw the "scene" (run the program)
 	while (!glfwWindowShouldClose(window))
 	{
@@ -588,7 +593,7 @@ int main(void)
 			pCurrentMesh->Update(deltaTime);
 
 		}//for ( unsigned int objIndex = 0; 
-
+		camera.UpdateCamera(deltaTime);
 
 		//Calculate Character forward
 

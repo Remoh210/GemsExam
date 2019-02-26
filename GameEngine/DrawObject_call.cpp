@@ -204,7 +204,7 @@ void DrawScene_Simple(std::vector<cGameObject*> vec_pMeshSceneObjects,
 	return;
 }
 
-static float g_HACK_CurrentTime = 0.0f;
+static float CurTime = 0.0f;
 
 
 void DrawObject(cGameObject* pCurrentMesh,
@@ -415,7 +415,7 @@ void DrawObject(cGameObject* pCurrentMesh,
 
 		pCurrentMesh->pSimpleSkinnedMesh->BoneTransform(
 			//0.0f,	// curFrameTime,
-			g_HACK_CurrentTime,	// curFrameTime,
+			CurTime,	// curFrameTime,
 //										"assets/modelsFBX/RPG-Character_Unarmed-Walk(FBX2013).FBX",		// animationToPlay,		//**NEW**
 //										"assets/modelsFBX/RPG-Character_Unarmed-Roll-Backward(FBX2013).fbx",		// animationToPlay,		//**NEW**
 //										"assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx",		// animationToPlay,		//**NEW**
@@ -425,7 +425,7 @@ void DrawObject(cGameObject* pCurrentMesh,
 		vecOffsets);                 // local offset for each bone
 
 		
-		::g_HACK_CurrentTime += 0.01f;		// Frame time, but we are going at 60HZ
+		CurTime += 0.8f * deltaTime;		// Frame time, but we are going at 60HZ
 
 		//if (pCurrentMesh->currentAnimation == "Walk-forward") {
 		//	float ddrr = pCurrentMesh->pSimpleSkinnedMesh->FindAnimationTotalTime(pCurrentMesh->currentAnimation)/30.0f;
@@ -436,7 +436,7 @@ void DrawObject(cGameObject* pCurrentMesh,
 		//	}
 		//}
 
-		std::cout << ::g_HACK_CurrentTime << std::endl;
+		//std::cout <<  << std::endl;
 
 
 
