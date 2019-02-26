@@ -428,6 +428,7 @@ void DrawObject(cGameObject* pCurrentMesh,
 		::g_HACK_CurrentTime += 0.01f;		// Frame time, but we are going at 60HZ
 
 
+
 		unsigned int numberOfBonesUsed = static_cast<unsigned int>(vecFinalTransformation.size());
 
 		GLint numBonesUsed_UniLoc = glGetUniformLocation(shaderProgramID, "numBonesUsed");
@@ -464,10 +465,10 @@ void DrawObject(cGameObject* pCurrentMesh,
 
 			//cPhysicalProperties phyProps;
 			//pTheGO->GetPhysState( phyProps );
-			//glm::vec4 GameObjectLocalOriginLocation = glm::vec4( phyProps.position, 1.0f );
+			glm::vec4 GameObjectLocalOriginLocation = glm::vec4(pCurrentMesh->position, 1.0f );
 
-			//glm::vec4 boneBallLocation = boneLocal * GameObjectLocalOriginLocation;
-			glm::vec4 boneBallLocation = boneLocal * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+			glm::vec4 boneBallLocation = boneLocal * GameObjectLocalOriginLocation;
+			//glm::vec4 boneBallLocation = boneLocal * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 			boneBallLocation *= scale;
 
 			// Update the extents of the mesh

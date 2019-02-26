@@ -33,10 +33,6 @@
     <Filter Include="Phsyics">
       <UniqueIdentifier>{14672551-867a-4658-bcd2-b5e0a931e219}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="TextureManager">
       <UniqueIdentifier>{4b3fb560-6cd0-4465-b682-6c9962cb2e85}</UniqueIdentifier>
     </Filter>
@@ -114,35 +110,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="theMain.cpp">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="glad.c">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cShaderManager.cpp">
       <Filter>Shader Stuff</Filter>
     </ClCompile>
     <ClCompile Include="cShader.cpp">
       <Filter>Shader Stuff</Filter>
     </ClCompile>
-    <ClCompile Include="PlyFileLoader.cpp">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenGLMeshLoader.cpp">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sModelDrawInfo.cpp">
       <Filter>Mesh Manager</Filter>
     </ClCompile>
     <ClCompile Include="cVAOMeshManager.cpp">
       <Filter>Mesh Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawObject_call.cpp">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadModels.cpp">
-      <Filter>Resource Files\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DebugRenderer\cDebugRenderer.cpp">
       <Filter>DebugRender</Filter>
@@ -288,11 +266,26 @@
     <ClCompile Include="cMazeMaker.cpp">
       <Filter>cMazeMaker</Filter>
     </ClCompile>
+    <ClCompile Include="theMain.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawObject_call.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadModels.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLMeshLoader.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlyFileLoader.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="linmath.h">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="cShaderManager.h">
       <Filter>Shader Stuff</Filter>
     </ClInclude>
@@ -445,6 +438,9 @@
     </ClInclude>
     <ClInclude Include="cMazeMaker.h">
       <Filter>cMazeMaker</Filter>
+    </ClInclude>
+    <ClInclude Include="linmath.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

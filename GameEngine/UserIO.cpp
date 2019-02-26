@@ -44,7 +44,7 @@ enum controlType
 	THIRD_PERSON
 };
 
-controlType controlScheme = THIRD_PERSON;
+controlType controlScheme = FIRST_PERSON;
 
 void SwitchToWireFrame(std::vector<cGameObject*> models); 
 
@@ -75,7 +75,7 @@ void key_callback( GLFWwindow* window,
 						  int action, 
 						  int mods)
 {
-	cGameObject* player = findObjectByFriendlyName("dalek");
+	cGameObject* player = findObjectByFriendlyName("Character");
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		
@@ -340,15 +340,15 @@ void ProcessAsynKeys(GLFWwindow* window)
 
 
 
-	cGameObject* player = findObjectByFriendlyName("dalek");
+	cGameObject* player = findObjectByFriendlyName("Character");
 
-
+	player->currentAnimation = "Idle";
 	if (!bIsDebugMode) {
 		if (controlScheme == THIRD_PERSON) {
 			if (glfwGetKey(window, GLFW_KEY_W) || glfwGetKey(window, GLFW_KEY_A)
 				|| glfwGetKey(window, GLFW_KEY_S) || glfwGetKey(window, GLFW_KEY_D))
 			{
-				player->position += DalekForward * 15.0f * (float)deltaTime;
+				player->position += CharForward * 15.0f * (float)deltaTime;
 			}
 		}
 
@@ -356,7 +356,8 @@ void ProcessAsynKeys(GLFWwindow* window)
 
 			if (glfwGetKey(window, GLFW_KEY_W))
 			{
-				player->position += DalekForward * 15.0f * (float)deltaTime;
+				player->position += CharForward * 15.0f * (float)deltaTime;
+				player->currentAnimation = "Walk-forward";
 			}
 
 		}

@@ -442,6 +442,7 @@ bool cSceneManager::loadScene(std::string filename) {
 				//}
 
 				//cAnimationState* pAniState;
+				curSkinnedMesh->GetListOfBoneIDandNames(CurModel->vecBoneNames);
 				CurModel->pSimpleSkinnedMesh = curSkinnedMesh;
 				CurModel->pAniState = new cAnimationState();
 				CurModel->pAniState->defaultAnimation.name = "Idle";

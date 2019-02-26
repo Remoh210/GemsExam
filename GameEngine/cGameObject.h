@@ -147,6 +147,7 @@ public:
 
 	// Textures...
 	std::vector<sTextureInfo> vecTextures;
+	std::vector<std::string> vecBoneNames;
 
 	cSimpleAssimpSkinnedMesh*	pSimpleSkinnedMesh;
 	// HACK

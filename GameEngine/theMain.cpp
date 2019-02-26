@@ -21,14 +21,13 @@
 #include <iostream>		// cout (console out)
 
 #include <vector>		// "smart array" dynamic array
-
+#include "cMazeMaker.h"
 #include "cShaderManager.h"
 #include "cGameObject.h"
 #include "cVAOMeshManager.h"
 #include <algorithm>
 #include <windows.h>
 
-#include "cMazeMaker.h"
 
 #include "DebugRenderer/cDebugRenderer.h"
 #include "cLightHelper.h"
@@ -43,7 +42,14 @@ nPhysics::iPhysicsFactory* gPhysicsFactory = NULL;
 nPhysics::iPhysicsWorld* gPhysicsWorld = NULL;
 
 glm::vec3 g_Gravity = glm::vec3(0.0f, -1.0f, 0.0f);
+
+
+//Char Forward
 glm::vec3 DalekForward = glm::vec3(0.0f);
+glm::vec3 CharForward = glm::vec3(0.0f);
+
+
+
 GLuint program;
 cDebugRenderer* g_pDebugRendererACTUAL = NULL;
 iDebugRenderer* g_pDebugRenderer = NULL;
@@ -116,14 +122,13 @@ cFBO* g_pFBOMain;
 //  Or leave it here!!
 
 // Set up the off screen textures to draw to
-//GLuint g_FBO = 0;
-//GLuint g_FBO_colourTexture = 0;
-//GLuint g_FBO_depthTexture = 0;
-//GLint g_FBO_SizeInPixes = 512;		// = 512 the WIDTH of the framebuffer, in pixels;
+GLuint g_FBO = 0;
+GLuint g_FBO_colourTexture = 0;
+GLuint g_FBO_depthTexture = 0;
+GLint g_FBO_SizeInPixes = 512;		// = 512 the WIDTH of the framebuffer, in pixels;
 
 int main(void)
 {
-	loadConfig();
 
 
 	//********Generate Maze********
@@ -131,6 +136,8 @@ int main(void)
 	Maze.GenerateMaze(50, 50);
 	Maze.PrintMaze();
 	//********Generate Maze********
+
+	loadConfig();
 
 	GLFWwindow* window;
 
@@ -160,7 +167,10 @@ int main(void)
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	glfwSwapInterval(1);
 
-		
+
+	// Create the shader manager...
+	//cShaderManager TheShaderManager;	
+	//cShaderManager* pTheShaderManager;		
 	pTheShaderManager = new cShaderManager();
 	pTheShaderManager->setBasePath("assets/shaders/");
 
@@ -176,7 +186,7 @@ int main(void)
 	if (pTheShaderManager->createProgramFromFile("BasicUberShader",
 		vertexShader,
 		fragmentShader))
-	{		
+	{		// Shaders are OK
 		std::cout << "Compiled shaders OK." << std::endl;
 	}
 	else
@@ -186,6 +196,7 @@ int main(void)
 	}
 
 
+	// Load the uniform location values (some of them, anyway)
 	cShaderManager::cShaderProgram* pSP = ::pTheShaderManager->pGetShaderProgramFromFriendlyName("BasicUberShader");
 	pSP->LoadUniformLocation("texture00");
 	pSP->LoadUniformLocation("texture01");
@@ -199,23 +210,33 @@ int main(void)
 	pSP->LoadUniformLocation("texBlendWeights[1]");
 
 
+
+
 	program = pTheShaderManager->getIDFromFriendlyName("BasicUberShader");
 
 
 	::g_pTheVAOMeshManager = new cVAOMeshManager();
 	::g_pTheVAOMeshManager->SetBasePath("assets/models");
+
 	::g_pTheTextureManager = new cBasicTextureManager();
+
 	::g_textRenderer = new cTextRend();
+	//Create Scene Manager
 	::g_pSceneManager = new cSceneManager();
 	::g_pSceneManager->setBasePath("scenes");
+
 	::LightManager = new cLightManager();
 
 	::g_pFBOMain = new cFBO();
-	cFBO* pFBO2 = new cFBO();
 
+	//Set Up FBO
+	static const GLenum draw_bufers[] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, draw_bufers);
 
-	std::string FBOErrorString;
-	if (::g_pFBOMain->init(800, 600, FBOErrorString))
+	// Check for "completenesss"
+	GLenum FBOStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+	if (FBOStatus == GL_FRAMEBUFFER_COMPLETE)
 	{
 		std::cout << "Framebuffer is good to go!" << std::endl;
 	}
@@ -224,16 +245,31 @@ int main(void)
 		std::cout << "Framebuffer is NOT complete" << std::endl;
 	}
 
-
+	// Point back to default frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
+
+	// Loading the uniform variables here (rather than the inner draw loop)
 	GLint objectColour_UniLoc = glGetUniformLocation(program, "objectColour");
+	//uniform vec3 lightPos;
+	//uniform float lightAtten;
+
+
+//	GLint lightPos_UniLoc = glGetUniformLocation(program, "lightPos");
+//	GLint lightBrightness_UniLoc = glGetUniformLocation(program, "lightBrightness");
+
+	//	// uniform mat4 MVP;	THIS ONE IS NO LONGER USED	
+	//uniform mat4 matModel;	// M
+	//uniform mat4 matView;		// V
+	//uniform mat4 matProj;		// P
+	//GLint mvp_location = glGetUniformLocation(program, "MVP");
 	GLint matModel_location = glGetUniformLocation(program, "matModel");
 	GLint matView_location = glGetUniformLocation(program, "matView");
 	GLint matProj_location = glGetUniformLocation(program, "matProj");
 	GLint eyeLocation_location = glGetUniformLocation(program, "eyeLocation");
 
+	// Note that this point is to the +interface+ but we're creating the actual object
 	::g_pDebugRendererACTUAL = new cDebugRenderer();
 	::g_pDebugRenderer = (iDebugRenderer*)::g_pDebugRendererACTUAL;
 
@@ -302,12 +338,13 @@ int main(void)
 	//::p_LuaScripts->SetObjectVector(&(::vec_pObjectsToDraw));
 
 	//::p_LuaScripts->LoadScriptFile("example.lua");
+
+
 	//FBO
 	int renderPassNumber = 1;
 	// 1 = 1st pass (the actual scene)
 	// 2 = 2nd pass (rendering what we drew to the output)
 	GLint renderPassNumber_UniLoc = glGetUniformLocation(program, "renderPassNumber");
-
 	//std::cout << renderPassNumber_UniLoc << std::endl;
 	//*****************************************************************
 
@@ -323,8 +360,11 @@ int main(void)
 
 	//AddSomeVel
 
+
+
 	float idk = 0.0f;
 	cGameObject* dalek = findObjectByFriendlyName("dalek");
+	cGameObject* pCharacter = findObjectByFriendlyName("Character");
 	cGameObject* block = findObjectByFriendlyName("block");
 
 	// Draw the "scene" (run the program)
@@ -335,12 +375,17 @@ int main(void)
 		::pTheShaderManager->useShaderProgram("BasicUberShader");
 
 
-		//// Set for the 1st pass
-		////glBindFramebuffer(GL_FRAMEBUFFER, g_FBO);		// Point output to FBO
-		glBindFramebuffer(GL_FRAMEBUFFER, ::g_pFBOMain->ID);
+		// Set for the 1st pass
+		glBindFramebuffer(GL_FRAMEBUFFER, g_FBO);		// Point output to FBO
 
-
-		::g_pFBOMain->clearBuffers(true, true);
+		//**********************************************************
+		// Clear the offscreen frame buffer
+		glViewport(0, 0, g_FBO_SizeInPixes, g_FBO_SizeInPixes);
+		GLfloat	zero = 0.0f;
+		GLfloat one = 1.0f;
+		glClearBufferfv(GL_COLOR, 0, &zero);
+		glClearBufferfv(GL_DEPTH, 0, &one);
+		//**********************************************************
 
 
 		glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 1st pass
@@ -350,61 +395,177 @@ int main(void)
 
 
 
-
 		glm::mat4x4 matProjection = glm::mat4(1.0f);
 		glm::mat4x4	matView = glm::mat4(1.0f);
 
 
-		
-		ratio = 800 / (float)600;
-		glViewport(0, 0, 800, 600);
+		glfwGetFramebufferSize(window, &width, &height);
+		ratio = width / (float)height;
+		glViewport(0, 0, width, height);
 
-		// These things will impact ANY framebuffer
-		// (controls state of the rendering, so doesn't matter where
-		//  the output goes to, right?)
+
 		glEnable(GL_DEPTH);		// Enables the KEEPING of the depth information
 		glEnable(GL_DEPTH_TEST);	// When drawing, checked the existing depth
 		glEnable(GL_CULL_FACE);	// Discared "back facing" triangles
 
 		// Colour and depth buffers are TWO DIFF THINGS.
-		// Note that this is clearing the main framebuffer
-		// (Which will do NOTHING to the offscreen buffer)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 		matProjection = glm::perspective(1.0f,			// FOV
 			ratio,		// Aspect ratio
 			0.1f,			// Near clipping plane
-			500.0f);	// Far clipping plane
+			15000.0f);	// Far clipping plane
 
 
-		dalek->bIsVisible = false;
-		glm::vec4 vecForwardDirection_ModelSpace = glm::vec4(1.0f, 0.0f, /**/0.0f/**/, 1.0f);
+//glm::vec3 migpos = findObjectByFriendlyName("mig")->position;
+//matView = glm::lookAt(camera.Position, migpos, camera.WorldUp);
 
-		glm::quat dalekRotation = dalek->getQOrientation();
-		glm::mat4 matDalekRotation = glm::mat4(dalekRotation);
-		DalekForward = matDalekRotation * vecForwardDirection_ModelSpace;
-	
-		// optional normalize
-		DalekForward = glm::normalize(DalekForward);
+		matView = camera.GetViewMatrix();
 
-		glm::vec3 campos = dalek->position - glm::vec3(DalekForward) * 10.0f;
-
-		matView = glm::lookAt(campos, dalek->position + (glm::vec3(DalekForward) * 4.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-		glUniform3f(eyeLocation_location, campos.x, campos.y, campos.z);
+		glUniform3f(eyeLocation_location, camera.Position.x, camera.Position.y, camera.Position.z);
 
 		//matView = glm::lookAt( g_CameraEye,	// Eye
 		//	                    g_CameraAt,		// At
 		//	                    glm::vec3( 0.0f, 1.0f, 0.0f ) );// Up
+
 		glUniformMatrix4fv(matView_location, 1, GL_FALSE, glm::value_ptr(matView));
 		glUniformMatrix4fv(matProj_location, 1, GL_FALSE, glm::value_ptr(matProjection));
 		// Do all this ONCE per frame
 		LightManager->CopyLightValuesToShader();
 
+
+
+
+
+
+		//Draw Maze
+
+		block->position = glm::vec3(0.0f);
+		for (unsigned int a = 0; a < Maze.maze.size(); a++)
+		{
+			for (unsigned int b = 0; b < Maze.maze[a].size(); b++)
+			{
+				if (Maze.maze[a][b][0])
+				{
+					glm::mat4 matblock(1.0f);
+					if (glm::distance(block->position, dalek->position) < 210.0f) {
+					DrawObject(block, matblock, program, NULL);
+						}
+					block->position.x += 20.0f;
+
+				}
+				else
+				{
+					//std::cout << "  ";
+					block->position.x += 20.0f;
+				}
+
+			}
+			block->position.x = 0.0f;
+			block->position.z += 20.0f;
+		}
+				//std::sort(vec_sorted_drawObj.begin(), vec_sorted_drawObj.end(), transp);
 		std::sort(vec_transObj.begin(), vec_transObj.end(), distToCam);
 
+		cGameObject* pSkyBox = findObjectByFriendlyName("SkyBoxObject");
+		// Place skybox object at camera location
+		pSkyBox->position = camera.Position;
+		pSkyBox->bIsVisible = true;
+		pSkyBox->bIsWireFrame = false;
 
+		//		glDisable( GL_CULL_FACE );		// Force drawing the sphere
+		//		                                // Could also invert the normals
+				// Draw the BACK facing (because the normals of the sphere face OUT and we 
+				//  are inside the centre of the sphere..
+		//		glCullFace( GL_FRONT );
+
+		// Bind the cube map texture to the cube map in the shader
+		GLuint cityTextureUNIT_ID = 30;			// Texture unit go from 0 to 79
+		glActiveTexture(cityTextureUNIT_ID + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
+
+		int cubeMapTextureID = ::g_pTheTextureManager->getTextureIDFromName("CityCubeMap");
+
+		// Cube map is now bound to texture unit 30
+		//		glBindTexture( GL_TEXTURE_2D, cubeMapTextureID );
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureID);
+
+		//uniform samplerCube textureSkyBox;
+		GLint skyBoxCubeMap_UniLoc = glGetUniformLocation(program, "textureSkyBox");
+		glUniform1i(skyBoxCubeMap_UniLoc, cityTextureUNIT_ID);
+
+		//uniform bool useSkyBoxTexture;
+		GLint useSkyBoxTexture_UniLoc = glGetUniformLocation(program, "useSkyBoxTexture");
+		glUniform1f(useSkyBoxTexture_UniLoc, (float)GL_TRUE);
+
+		glm::mat4 matIdentity = glm::mat4(1.0f);
+		DrawObject(pSkyBox, matIdentity, program, NULL);
+
+		//		glEnable( GL_CULL_FACE );
+		//		glCullFace( GL_BACK );
+
+		pSkyBox->bIsVisible = false;
+		glUniform1f(useSkyBoxTexture_UniLoc, (float)GL_FALSE);
+
+
+
+
+
+		// Draw all the objects in the "scene"
+		for (unsigned int objIndex = 0;
+			objIndex != (unsigned int)vec_non_transObj.size();
+			objIndex++)
+		{
+			cGameObject* pCurrentMesh = vec_non_transObj[objIndex];
+
+			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
+
+			DrawObject(pCurrentMesh, matModel, program, NULL);
+
+		}//for ( unsigned int objIndex = 0; 
+
+		for (unsigned int objIndex = 0;
+			objIndex != (unsigned int)vec_transObj.size();
+			objIndex++)
+		{
+			cGameObject* pCurrentMesh = vec_transObj[objIndex];
+
+			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
+
+			DrawObject(pCurrentMesh, matModel, program, NULL);
+
+		}//for ( unsigned int objIndex = 0; 
+
+
+		double FPS_currentTime = glfwGetTime();
+		nbFrames++;
+		if (FPS_currentTime - FPS_last_Time >= 1.0) { // If last prinf() was more than 1 sec ago
+			// printf and reset timer
+			//printf("%f ms/frame\n", 1000.0 / double(nbFrames));
+			FPS = nbFrames * 1;
+			nbFrames = 0;
+			FPS_last_Time += 1.0;
+		}
+		g_textRenderer->drawText(width, height, ("FPS: " + std::to_string(FPS)).c_str());
+
+		switch (physics_library)
+		{
+		case SIMPLE:
+			g_textRenderer->drawText(width, height, ("Physics: My crappy physics"), 100.0f);
+			break;
+		case BULLET:
+			g_textRenderer->drawText(width, height, ("Physics: Bullet"), 100.0f);
+			break;
+		case UNKNOWN:
+			break;
+		default:
+			break;
+		}
+		g_textRenderer->drawText(width, height, ("Gravity: " + std::to_string((int)g_Gravity.y)).c_str(), 150.0f);
+
+
+
+		// High res timer (likely in ms or ns)
 		currentTime = glfwGetTime();
 		deltaTime = currentTime - lastTime;
 
@@ -418,15 +579,32 @@ int main(void)
 		// update the "last time"
 		lastTime = currentTime;
 
-		//for (unsigned int objIndex = 0;
-		//	objIndex != (unsigned int)vec_pObjectsToDraw.size();
-		//	objIndex++)
-		//{
-		//	cGameObject* pCurrentMesh = vec_pObjectsToDraw[objIndex];
+		for (unsigned int objIndex = 0;
+			objIndex != (unsigned int)vec_pObjectsToDraw.size();
+			objIndex++)
+		{
+			cGameObject* pCurrentMesh = vec_pObjectsToDraw[objIndex];
 
-		//	pCurrentMesh->Update(deltaTime);
+			pCurrentMesh->Update(deltaTime);
 
-		//}//for ( unsigned int objIndex = 0; 
+		}//for ( unsigned int objIndex = 0; 
+
+
+		//Calculate Character forward
+
+		glm::vec4 vecForwardDirection_ModelSpace = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+
+		glm::quat charkRotation = pCharacter->getQOrientation();
+		glm::mat4 matCharkRotation = glm::mat4(charkRotation);
+		CharForward = matCharkRotation * vecForwardDirection_ModelSpace;
+
+		// optional normalize
+		charkRotation = glm::normalize(CharForward);
+
+
+
+
+
 
 		//sceneCommandGroup.Update(deltaTime);
 
@@ -437,47 +615,8 @@ int main(void)
 		//New Dll physics
 		//gPhysicsWorld->Update(deltaTime);
 
-		//for (int i = 0; i < vec_pObjectsToDraw.size(); i++)
-		//{
-		//	cGameObject* curMesh = vec_pObjectsToDraw[i];
-		//	if (curMesh->rigidBody != NULL && curMesh->rigidBody->GetShape()->GetShapeType() != nPhysics::SHAPE_TYPE_PLANE) {
-
-		//		float rad;
-		//		curMesh->rigidBody->GetShape()->GetSphereRadius(rad);
-		//		if (curMesh->friendlyName == "chan") {
-		//			curMesh->position = curMesh->rigidBody->GetPosition();
-		//			curMesh->position.y = curMesh->rigidBody->GetPosition().y - rad;
-		//		}
-		//		else { curMesh->position = curMesh->rigidBody->GetPosition(); }
-		//		curMesh->m_meshQOrientation = glm::mat4(curMesh->rigidBody->GetMatRotation());
-		//		//HACK CHARACTER
-
-		//	}
-		//}
-
-		//if (bIsDebugMode) {
-		//	// Call the debug renderer
-		//	for (int i = 0; i < vec_pObjectsToDraw.size(); i++) {
-		//		cGameObject* curObj = vec_pObjectsToDraw[i];
-		//		//curObj->bIsVisible = false;
-		//		curObj->bDontLight = true;
-		//		if (curObj->rigidBody != NULL) {
-		//			if (curObj->rigidBody->GetShape()->GetShapeType() == nPhysics::SHAPE_TYPE_SPHERE) {
-
-		//				float rad;
-		//				curObj->rigidBody->GetShape()->GetSphereRadius(rad);
-		//				g_simpleDubugRenderer->drawSphere(curObj->rigidBody->GetPosition(), rad);
-		//			}
-		//			if (curObj->rigidBody->GetShape()->GetShapeType() == nPhysics::SHAPE_TYPE_PLANE) {
-		//				//curObj->bIsWireFrame = true;
-		//				curObj->bIsVisible = true;
-		//				glm::mat4 matIden = glm::mat4(1.0f);
-		//				DrawObject(curObj, matIden, program, NULL);
-		//			}
-		//		}
-		//	}
-		//}
-		//::g_pDebugRendererACTUAL->RenderDebugObjects(matView, matProjection, deltaTime);
+		
+		::g_pDebugRendererACTUAL->RenderDebugObjects(matView, matProjection, deltaTime);
 
 		//::p_LuaScripts->UpdateCG(deltaTime);
 		//::p_LuaScripts->Update(deltaTime);
@@ -559,236 +698,6 @@ int main(void)
 				pDebugSphere->bIsVisible = false;
 			}
 		}
-
-
-
-		cGameObject* pSkyBox = findObjectByFriendlyName("SkyBoxObject");
-		// Place skybox object at camera location
-		pSkyBox->position = camera.Position;
-		pSkyBox->bIsVisible = true;
-		pSkyBox->bIsWireFrame = false;
-
-		glDisable(GL_CULL_FACE);		// Force drawing the sphere
-//		                                // Could also invert the normals
-		// Draw the BACK facing (because the normals of the sphere face OUT and we 
-		//  are inside the centre of the sphere..
-		glCullFace(GL_FRONT);
-
-		// Bind the cube map texture to the cube map in the shader
-		GLuint cityTextureUNIT_ID = 30;			// Texture unit go from 0 to 79
-		glActiveTexture(cityTextureUNIT_ID + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
-
-		int cubeMapTextureID = ::g_pTheTextureManager->getTextureIDFromName("CityCubeMap");
-
-		// Cube map is now bound to texture unit 30
-		//		glBindTexture( GL_TEXTURE_2D, cubeMapTextureID );
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureID);
-
-		//uniform samplerCube textureSkyBox;
-		GLint skyBoxCubeMap_UniLoc = glGetUniformLocation(program, "textureSkyBox");
-		glUniform1i(skyBoxCubeMap_UniLoc, cityTextureUNIT_ID);
-
-		//uniform bool useSkyBoxTexture;
-		GLint useSkyBoxTexture_UniLoc = glGetUniformLocation(program, "useSkyBoxTexture");
-		glUniform1f(useSkyBoxTexture_UniLoc, (float)GL_TRUE);
-
-		glm::mat4 matIdentity = glm::mat4(1.0f);
-		DrawObject(pSkyBox, matIdentity, program, NULL);
-
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-
-		pSkyBox->bIsVisible = false;
-		glUniform1f(useSkyBoxTexture_UniLoc, (float)GL_FALSE);
-
-
-		// Draw all the objects in the "scene"
-		for (unsigned int objIndex = 0;
-			objIndex != (unsigned int)vec_non_transObj.size();
-			objIndex++)
-		{
-			cGameObject* pCurrentMesh = vec_non_transObj[objIndex];
-
-			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
-
-			DrawObject(pCurrentMesh, matModel, program, NULL);
-
-		}//for ( unsigned int objIndex = 0; 
-
-		for (unsigned int objIndex = 0;
-			objIndex != (unsigned int)vec_transObj.size();
-			objIndex++)
-		{
-			cGameObject* pCurrentMesh = vec_transObj[objIndex];
-
-			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
-
-			DrawObject(pCurrentMesh, matModel, program, NULL);
-
-		}//for ( unsigned int objIndex = 0; 
-
-		
-		block->position = glm::vec3(0.0f);
-		for (unsigned int a = 0; a < Maze.maze.size(); a++)
-		{
-			for (unsigned int b = 0; b < Maze.maze[a].size(); b++)
-			{
-				if (Maze.maze[a][b][0])
-				{
-					glm::mat4 matblock(1.0f);
-					if (glm::distance(block->position, dalek->position) < 200.0f) {
-						DrawObject(block, matblock, program, NULL);
-					}
-					block->position.x += 20.0f;
-
-				}
-				else
-				{
-					//std::cout << "  ";
-					block->position.x += 20.0f;
-				}
-
-			}
-			block->position.x = 0.0f;
-			block->position.z += 20.0f;
-		}
-		
-
-
-
-
-	// *****************************************
-	// 2nd pass
-	// *****************************************
-		dalek->bIsVisible = true;
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);		// Points to the "regular" frame buffer
-
-													// Get the size of the actual (screen) frame buffer
-		glfwGetFramebufferSize(window, &width, &height);
-		ratio = width / (float)height;
-		glViewport(0, 0, width, height);
-
-		glEnable(GL_DEPTH);		// Enables the KEEPING of the depth information
-		glEnable(GL_DEPTH_TEST);	// When drawing, checked the existing depth
-		glEnable(GL_CULL_FACE);	// Discared "back facing" triangles
-
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-
-		// 3. Bind 1 texture (what we drew)
-		cGameObject* p2SidedQuad = findObjectByFriendlyName("plane_tv");
-		p2SidedQuad->bIsVisible = true;
-		p2SidedQuad->b_HACK_UsesOffscreenFBO = true;
-		p2SidedQuad->bDontLight = true;
-		p2SidedQuad->bUseVertexColour = false;
-		p2SidedQuad->materialDiffuse = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-
-		
-
-		glUniform1f(renderPassNumber_UniLoc, 2.0f);	// Tell shader it's the 2nd pass
-
-
-		if (bIsDebugMode) {
-			camera.b_controlledByScript = false;
-			matView = camera.GetViewMatrix();
-		}
-		else
-		{
-			camera.Position = glm::vec3(-460.0f, 595.0f, 405.0f);
-			camera.b_controlledByScript = true;
-			matView = glm::lookAt(camera.Position, glm::vec3(100.0f, 300.0f, 400.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		}
-		
-
-		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-		matProjection = glm::perspective(1.0f,			// FOV
-			ratio,		// Aspect ratio
-			0.1f,			// Near clipping plane
-			10000.0f);	// Far clipping plane
-
-		glUniform3f(eyeLocation_location, camera.Position.x, camera.Position.y, camera.Position.z);
-
-		glUniformMatrix4fv(matView_location, 1, GL_FALSE, glm::value_ptr(matView));
-		glUniformMatrix4fv(matProj_location, 1, GL_FALSE, glm::value_ptr(matProjection));
-
-		// 4. Draw a single quad		
-		glm::mat4 matModel = glm::mat4(1.0f);	// identity
-		DrawObject(p2SidedQuad, matModel, program, ::g_pFBOMain);
-
-
-		matModel = glm::mat4(1.0f);
-		p2SidedQuad->bIsVisible = false;
-
-
-
-		//RENDER SCENE MAIN SCREEN
-
-
-		// Tell shader it's the 1st pass!
-		glUniform1f(renderPassNumber_UniLoc, 1.0f);
-
-		for (unsigned int objIndex = 0;
-			objIndex != (unsigned int)vec_non_transObj.size();
-			objIndex++)
-		{
-			cGameObject* pCurrentMesh = vec_non_transObj[objIndex];
-
-			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
-
-			DrawObject(pCurrentMesh, matModel, program, NULL);
-
-		}//for ( unsigned int objIndex = 0; 
-
-		for (unsigned int objIndex = 0;
-			objIndex != (unsigned int)vec_transObj.size();
-			objIndex++)
-		{
-			cGameObject* pCurrentMesh = vec_transObj[objIndex];
-
-			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
-
-			DrawObject(pCurrentMesh, matModel, program, NULL);
-
-		}//for ( unsigned int objIndex = 0; 
-
-		block->position = glm::vec3(0.0f);
-		for (unsigned int a = 0; a < Maze.maze.size(); a++)
-		{
-			for (unsigned int b = 0; b < Maze.maze[a].size(); b++)
-			{
-				if (Maze.maze[a][b][0])
-				{
-					glm::mat4 matblock(1.0f);
-					DrawObject(block, matblock, program, NULL);
-					block->position.x += 20.0f;
-
-				}
-				else
-				{
-					//std::cout << "  ";
-					block->position.x += 20.0f;
-				}
-
-			}
-			block->position.x = 0.0f;
-			block->position.z += 20.0f;
-		}
-
-
-		double FPS_currentTime = glfwGetTime();
-		nbFrames++;
-		if (FPS_currentTime - FPS_last_Time >= 1.0) { // If last prinf() was more than 1 sec ago
-			// printf and reset timer
-			//printf("%f ms/frame\n", 1000.0 / double(nbFrames));
-			FPS = nbFrames * 1;
-			nbFrames = 0;
-			FPS_last_Time += 1.0;
-		}
-		g_textRenderer->drawText(width, height, ("FPS: " + std::to_string(FPS)).c_str());
-
-
 
 
 
