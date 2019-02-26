@@ -360,6 +360,14 @@ void ProcessAsynKeys(GLFWwindow* window)
 				player->currentAnimation = "Walk-forward";
 			}
 
+			if (glfwGetKey(window, GLFW_KEY_S))
+			{
+				player->setMeshOrientationEulerAngles(0.0f, -90.0f, 0.0f, true);
+				player->position += CharForward * 15.0f * (float)deltaTime;
+
+				player->currentAnimation = "Walk-forward";
+			}
+
 		}
 
 

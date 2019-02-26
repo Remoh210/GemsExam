@@ -1,6 +1,6 @@
 {
     "Camera": {
-        "Speed": 100.0,
+        "Speed": 300.0,
         "Position": [
             -460.2924499511719,
             595.4884033203125,
@@ -44,7 +44,7 @@
         },
         {
             "Name": "Character",
-            "SkinnedMesh": "assets/models/FBX/RPG-Character(FBX2013).FBX",
+            "SkinnedMesh": "assets/models/FBX/chan.fbx",
             "Visible": true,
             "Use_Physics": true,
             "Wireframe": false,
@@ -55,8 +55,8 @@
             ],
             "DiffuseRGB_Alpha": [
                 0.0,
-                1.0,
-                1.0,
+                0.0,
+                0.0,
                 1.0
             ],
             "SpecularRGB_Alpha": [
@@ -76,12 +76,12 @@
                 0.1
             ],
           "Animation": {
-                  "Idle" : "assets/models/FBX/RPG-Character_Unarmed-Idle(FBX2013).FBX",
-                  "Walk-forward" : "assets/models/FBX/RPG-Character_Unarmed-Walk(FBX2013).FBX"
+                  "Idle" : "assets/models/FBX/chan-idle.fbx",
+                  "Walk-forward" : "assets/models/FBX/chan-walk-forward.fbx"
           		  },
           "Textures": [
               {
-                  "Name": "groundTex.bmp",
+                  "Name": "chanTex.bmp",
                   "Strength": 1.0
               }
           ]

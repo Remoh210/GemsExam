@@ -1,14 +1,14 @@
-#include "globalStuff.h"
-#include "globalStuff.h"
-
+//#include "globalStuff.h"
+//#include "globalStuff.h"
+//
 // These are for the transformation glm stuff
-#include <glm/vec4.hpp> // glm::vec4
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
-
-
-void PlayerColTest(double deltaTime, GLuint shaderProgramID)
-{
+//#include <glm/vec4.hpp> // glm::vec4
+//#include <glm/mat4x4.hpp> // glm::mat4
+//#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
+//
+//
+//void PlayerColTest(double deltaTime, GLuint shaderProgramID)
+//{
 //	// Get the MiG-29
 //	cGameObject* pMig29 = findObjectByFriendlyName("mig");
 //	cGameObject* pDebugBall = findObjectByFriendlyName("DebugSphere");
@@ -72,7 +72,7 @@ void PlayerColTest(double deltaTime, GLuint shaderProgramID)
 //	// These transformations are taken from the draw call. 
 //	// We want them to be EXACTLY THE SAME, same order, etc.
 //
-//	glm::mat4 matTransform = glm::mat4(1.0f);	// identity matrix
+//		// identity matrix
 //
 //	glm::mat4 matTranslation = glm::translate(glm::mat4(1.0f),
 //		pMig29->position);
@@ -130,4 +130,4 @@ void PlayerColTest(double deltaTime, GLuint shaderProgramID)
 //	pDebugBall->nonUniformScale = oldScale;
 //
 //	return;
-}
+//}

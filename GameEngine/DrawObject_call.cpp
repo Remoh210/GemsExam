@@ -424,8 +424,20 @@ void DrawObject(cGameObject* pCurrentMesh,
 		pCurrentMesh->vecObjectBoneTransformation,  // final location of bones
 		vecOffsets);                 // local offset for each bone
 
-
+		
 		::g_HACK_CurrentTime += 0.01f;		// Frame time, but we are going at 60HZ
+
+		//if (pCurrentMesh->currentAnimation == "Walk-forward") {
+		//	float ddrr = pCurrentMesh->pSimpleSkinnedMesh->FindAnimationTotalTime(pCurrentMesh->currentAnimation)/30.0f;
+		//	if (::g_HACK_CurrentTime >= ddrr)
+		//	{
+		//		::g_HACK_CurrentTime = 0.0f;
+		//		pCurrentMesh->position += char;
+		//	}
+		//}
+
+		std::cout << ::g_HACK_CurrentTime << std::endl;
+
 
 
 
@@ -455,55 +467,77 @@ void DrawObject(cGameObject* pCurrentMesh,
 		//  sMeshDrawInfo.maxXYZ_from_SM_Bones(glm::vec3(0.0f))
 		for (unsigned int boneIndex = 0; boneIndex != numberOfBonesUsed; boneIndex++)
 		{
-			glm::mat4 boneLocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
+			//glm::mat4 boneLocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
 
-			// HACK: Need to add "uniform scale" to mesh
-			float scale = pCurrentMesh->nonUniformScale.x;
-			boneLocal = glm::scale(boneLocal, glm::vec3(pCurrentMesh->nonUniformScale.x,
-				pCurrentMesh->nonUniformScale.y,
-				pCurrentMesh->nonUniformScale.z));
+			//// HACK: Need to add "uniform scale" to mesh
+			//float scale = pCurrentMesh->nonUniformScale.x;
+			//boneLocal = glm::scale(boneLocal, glm::vec3(pCurrentMesh->nonUniformScale.x,
+			//	pCurrentMesh->nonUniformScale.y,
+			//	pCurrentMesh->nonUniformScale.z));
 
-			//cPhysicalProperties phyProps;
-			//pTheGO->GetPhysState( phyProps );
-			glm::vec4 GameObjectLocalOriginLocation = glm::vec4(pCurrentMesh->position, 1.0f );
+			////cPhysicalProperties phyProps;
+			////pTheGO->GetPhysState( phyProps );
+			//glm::vec4 GameObjectLocalOriginLocation = glm::vec4(pCurrentMesh->position, 1.0f );
 
-			glm::vec4 boneBallLocation = boneLocal * GameObjectLocalOriginLocation;
-			//glm::vec4 boneBallLocation = boneLocal * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-			boneBallLocation *= scale;
+			//glm::vec4 boneBallLocation = boneLocal * GameObjectLocalOriginLocation;
+			////glm::vec4 boneBallLocation = boneLocal * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+			//boneBallLocation *= scale;
 
-			// Update the extents of the mesh
-			if (boneIndex == 0)
-			{
-				// For the 0th bone, just assume this is the extent
-				pCurrentMesh->minXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
-				pCurrentMesh->maxXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
-			}
-			else
-			{	// It's NOT the 0th bone, so compare with current max and min
-				if (pCurrentMesh->minXYZ_from_SM_Bones.x < boneBallLocation.x) { pCurrentMesh->minXYZ_from_SM_Bones.x = boneBallLocation.x; }
-				if (pCurrentMesh->minXYZ_from_SM_Bones.y < boneBallLocation.y) { pCurrentMesh->minXYZ_from_SM_Bones.y = boneBallLocation.y; }
-				if (pCurrentMesh->minXYZ_from_SM_Bones.z < boneBallLocation.z) { pCurrentMesh->minXYZ_from_SM_Bones.z = boneBallLocation.z; }
 
-				if (pCurrentMesh->maxXYZ_from_SM_Bones.x > boneBallLocation.x) { pCurrentMesh->maxXYZ_from_SM_Bones.x = boneBallLocation.x; }
-				if (pCurrentMesh->maxXYZ_from_SM_Bones.y > boneBallLocation.y)
-				{
-					pCurrentMesh->maxXYZ_from_SM_Bones.y = boneBallLocation.y;
-				}
-				if (pCurrentMesh->maxXYZ_from_SM_Bones.z > boneBallLocation.z)
-				{
-					pCurrentMesh->maxXYZ_from_SM_Bones.z = boneBallLocation.z;
-				}
-			}//if ( boneIndex == 0 )
+
+
+
+
+			glm::mat4 bonelocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
+			glm::mat4 boneTranslation = bonelocal * pCurrentMesh->nonUniformScale.x;
+			glm::mat4 matOrientation = glm::mat4(pCurrentMesh->m_meshQOrientation);
+			matOrientation *= boneTranslation;
+			boneTranslation *= matOrientation;
+
+			glm::vec4 vecTrans(1.0f, 1.0f, 1.0f, 1.0f);
+			glm::vec4 bonepos = matOrientation * vecTrans;
+
+
+
+
+
+			//// Update the extents of the mesh
+			//if (boneIndex == 0)
+			//{
+			//	// For the 0th bone, just assume this is the extent
+			//	pCurrentMesh->minXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
+			//	pCurrentMesh->maxXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
+			//}
+			//else
+			//{	// It's NOT the 0th bone, so compare with current max and min
+			//	if (pCurrentMesh->minXYZ_from_SM_Bones.x < boneBallLocation.x) { pCurrentMesh->minXYZ_from_SM_Bones.x = boneBallLocation.x; }
+			//	if (pCurrentMesh->minXYZ_from_SM_Bones.y < boneBallLocation.y) { pCurrentMesh->minXYZ_from_SM_Bones.y = boneBallLocation.y; }
+			//	if (pCurrentMesh->minXYZ_from_SM_Bones.z < boneBallLocation.z) { pCurrentMesh->minXYZ_from_SM_Bones.z = boneBallLocation.z; }
+
+			//	if (pCurrentMesh->maxXYZ_from_SM_Bones.x > boneBallLocation.x) { pCurrentMesh->maxXYZ_from_SM_Bones.x = boneBallLocation.x; }
+			//	if (pCurrentMesh->maxXYZ_from_SM_Bones.y > boneBallLocation.y)
+			//	{
+			//		pCurrentMesh->maxXYZ_from_SM_Bones.y = boneBallLocation.y;
+			//	}
+			//	if (pCurrentMesh->maxXYZ_from_SM_Bones.z > boneBallLocation.z)
+			//	{
+			//		pCurrentMesh->maxXYZ_from_SM_Bones.z = boneBallLocation.z;
+			//	}
+			//}//if ( boneIndex == 0 )
 
 
 			//boneBallLocation += glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
 			//DrawDebugBall( glm::vec3(boneBallLocation), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), 0.2f );
 
-	//		if ( boneIndex == 35 )
-	//		{
-	//			DrawDebugBall( glm::vec3(boneBallLocation), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 0.5f );
-	//		}
+			if ( boneIndex == 35 )
+			{
+				cGameObject* ds = findObjectByFriendlyName("DebugSphere");
+				ds->bDontLight = true;
+				ds->bIsVisible = true;
+				ds->position = glm::vec3(bonepos) + pCurrentMesh->position;
+				
+			}
 		}
 
 
