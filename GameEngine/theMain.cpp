@@ -325,6 +325,7 @@ int main(void)
 
 	float idk = 0.0f;
 	cGameObject* dalek = findObjectByFriendlyName("dalek");
+	cGameObject* block = findObjectByFriendlyName("block");
 
 	// Draw the "scene" (run the program)
 	while (!glfwWindowShouldClose(window))
@@ -626,7 +627,7 @@ int main(void)
 
 		}//for ( unsigned int objIndex = 0; 
 
-		cGameObject* block = findObjectByFriendlyName("block");
+		
 		block->position = glm::vec3(0.0f);
 		for (unsigned int a = 0; a < Maze.maze.size(); a++)
 		{
@@ -635,7 +636,9 @@ int main(void)
 				if (Maze.maze[a][b][0])
 				{
 					glm::mat4 matblock(1.0f);
-					DrawObject(block, matblock, program, NULL);
+					if (glm::distance(block->position, dalek->position) < 200.0f) {
+						DrawObject(block, matblock, program, NULL);
+					}
 					block->position.x += 20.0f;
 
 				}
