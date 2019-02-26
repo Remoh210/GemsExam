@@ -1,20 +1,15 @@
-!!Run on Debug/Release x64!!
+!!Release x64!! (very low fps on Debug mode)
 Controls:
 
-camera:
-WASD + Mouse - move camera camera
+1, 2 - change control type.
+Default Dalek constrols are - WASD to move in corresponding direction
+You can also change it to "1st person" style by pressing 2 (W - forward, A, D - turn 90 degrees)
+
+Additional controls:
+ENTER - fly camera/static camera
+
+fly camera:
+WASD + Mouse - move camera
 EQ - move camera Up/Down
-
-BackSpace - switch physics 
-T - switch between sphres
-Arrows Up/Down change gravity
-ctrl + WASD - apply velocity in camera looking direction
-Space - lift selected sphere up
-G - lift All spheres up
-Enter - switch ON/OFF debug view
-
-RK integration is in cSimplePhysicsWorld.cpp
-
-you can cofigure spheres radius/mass in GameEngine/scenes/physics.json
 
 
