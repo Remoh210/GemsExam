@@ -2,7 +2,7 @@
     "Window": {
         "Width": 1350,
         "Height": 1000,
-        "Title" : "Balls!"
+        "Title" : "Graphics Exam"
     },
     "Language" : "English",
 	  "Scene" : "graphics_exam.json",
