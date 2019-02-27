@@ -377,7 +377,7 @@ void LoadModelsIntoScene( std::vector<cGameObject*> &vec_pObjectsToDraw )
 
 	{	
 		cGameObject* pLeftDebugSphere = new cGameObject();
-		pLeftDebugSphere->setDiffuseColour(glm::vec3(1.0f, 105.0f / 255.0f, 180.0f / 255.0f));
+		pLeftDebugSphere->setDiffuseColour(glm::vec3(0.0f, 1.0f, 0.0f));
 		pLeftDebugSphere->friendlyName = "DebugSphereLeftHand";
 		float scale = 1.0f;
 		pLeftDebugSphere->nonUniformScale = glm::vec3(scale, scale, scale);
@@ -393,7 +393,7 @@ void LoadModelsIntoScene( std::vector<cGameObject*> &vec_pObjectsToDraw )
 
 	{
 		cGameObject* pRightDebugSphere = new cGameObject();
-		pRightDebugSphere->setDiffuseColour(glm::vec3(1.0f, 105.0f / 255.0f, 180.0f / 255.0f));
+		pRightDebugSphere->setDiffuseColour(glm::vec3(0.0f, 1.0f, 0.0f));
 		pRightDebugSphere->friendlyName = "DebugSphereRightHand";
 		float scale = 1.0f;
 		pRightDebugSphere->nonUniformScale = glm::vec3(scale, scale, scale);

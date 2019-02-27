@@ -368,8 +368,8 @@ int main(void)
 	cGameObject* dalek = findObjectByFriendlyName("dalek");
 	cGameObject* pCharacter = findObjectByFriendlyName("Character");
 	cGameObject* block = findObjectByFriendlyName("block");
-	glm::vec3 idealpos(-50.0f, 100.0f, 0.0f);
-	glm::vec3 initPos = glm::vec3(pCharacter->position.x, pCharacter->position.y + 100.0f, pCharacter->position.z);
+	glm::vec3 idealpos(-60.0f, 60.0f, 0.0f);
+	glm::vec3 initPos = glm::vec3(pCharacter->position.x - 400.0f, pCharacter->position.y + 250.0f, pCharacter->position.z);
 	Camera cam(pCharacter, idealpos, 5.0f, 20.0f, 100.0f, 0.0f, initPos);
 	camera = cam;
 	// Draw the "scene" (run the program)
@@ -454,9 +454,10 @@ int main(void)
 				if (Maze.maze[a][b][0])
 				{
 					glm::mat4 matblock(1.0f);
-					if (glm::distance(block->position, pCharacter->position) < 210.0f) {
-					DrawObject(block, matblock, program, NULL);
-						}
+					if (glm::distance(block->position, pCharacter->position) < 300.0f)
+					{
+						DrawObject(block, matblock, program, NULL);
+					}
 					block->position.x += 20.0f;
 
 				}
