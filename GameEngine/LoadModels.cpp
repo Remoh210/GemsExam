@@ -376,18 +376,35 @@ void LoadModelsIntoScene( std::vector<cGameObject*> &vec_pObjectsToDraw )
 	}
 
 	{	
-		cGameObject* pDebugSphere = new cGameObject();
-		pDebugSphere->setDiffuseColour(glm::vec3(1.0f, 105.0f / 255.0f, 180.0f / 255.0f));
-		pDebugSphere->friendlyName = "DebugSphere";
+		cGameObject* pLeftDebugSphere = new cGameObject();
+		pLeftDebugSphere->setDiffuseColour(glm::vec3(1.0f, 105.0f / 255.0f, 180.0f / 255.0f));
+		pLeftDebugSphere->friendlyName = "DebugSphereLeftHand";
 		float scale = 1.0f;
-		pDebugSphere->nonUniformScale = glm::vec3(scale, scale, scale);
-		pDebugSphere->meshName = "Sphere_320.ply";
-		pDebugSphere->bIsWireFrame = true;
-		pDebugSphere->position = glm::vec3(-100.0f, 10.0f, 0.0f);
-		pDebugSphere->bIsUpdatedByPhysics = true;
-		pDebugSphere->bIsDebug = true;
-		pDebugSphere->pDebugRenderer = ::g_pDebugRenderer;
-		vec_pObjectsToDraw.push_back(pDebugSphere);
+		pLeftDebugSphere->nonUniformScale = glm::vec3(scale, scale, scale);
+		pLeftDebugSphere->meshName = "Sphere_320.ply";
+		pLeftDebugSphere->bIsWireFrame = true;
+		pLeftDebugSphere->position = glm::vec3(-100.0f, 10.0f, 0.0f);
+		pLeftDebugSphere->bIsUpdatedByPhysics = true;
+		pLeftDebugSphere->bIsVisible = false;
+		pLeftDebugSphere->bIsDebug = true;
+		pLeftDebugSphere->pDebugRenderer = ::g_pDebugRenderer;
+		vec_pObjectsToDraw.push_back(pLeftDebugSphere);
+	}
+
+	{
+		cGameObject* pRightDebugSphere = new cGameObject();
+		pRightDebugSphere->setDiffuseColour(glm::vec3(1.0f, 105.0f / 255.0f, 180.0f / 255.0f));
+		pRightDebugSphere->friendlyName = "DebugSphereRightHand";
+		float scale = 1.0f;
+		pRightDebugSphere->nonUniformScale = glm::vec3(scale, scale, scale);
+		pRightDebugSphere->meshName = "Sphere_320.ply";
+		pRightDebugSphere->bIsWireFrame = true;
+		pRightDebugSphere->position = glm::vec3(-100.0f, 10.0f, 0.0f);
+		pRightDebugSphere->bIsUpdatedByPhysics = true;
+		pRightDebugSphere->bIsDebug = true;
+		pRightDebugSphere->bIsVisible = false;
+		pRightDebugSphere->pDebugRenderer = ::g_pDebugRenderer;
+		vec_pObjectsToDraw.push_back(pRightDebugSphere);
 	}
 
 

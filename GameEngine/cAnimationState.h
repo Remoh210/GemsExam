@@ -35,8 +35,6 @@ public:
 	glm::vec3 maxXYZ_from_SM_Bones;
 	// Store all the bones for this model, buing updated per frame
 	std::vector< glm::mat4x4 > vecObjectBoneTransformation;
-
-	
 	std::vector<sStateDetails> vecAnimationQueue;
 	sStateDetails defaultAnimation;
 };

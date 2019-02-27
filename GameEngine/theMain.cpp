@@ -454,7 +454,7 @@ int main(void)
 				if (Maze.maze[a][b][0])
 				{
 					glm::mat4 matblock(1.0f);
-					if (glm::distance(block->position, dalek->position) < 210.0f) {
+					if (glm::distance(block->position, pCharacter->position) < 210.0f) {
 					DrawObject(block, matblock, program, NULL);
 						}
 					block->position.x += 20.0f;
@@ -553,20 +553,8 @@ int main(void)
 		}
 		g_textRenderer->drawText(width, height, ("FPS: " + std::to_string(FPS)).c_str());
 
-		switch (physics_library)
-		{
-		case SIMPLE:
-			g_textRenderer->drawText(width, height, ("Physics: My crappy physics"), 100.0f);
-			break;
-		case BULLET:
-			g_textRenderer->drawText(width, height, ("Physics: Bullet"), 100.0f);
-			break;
-		case UNKNOWN:
-			break;
-		default:
-			break;
-		}
-		g_textRenderer->drawText(width, height, ("Gravity: " + std::to_string((int)g_Gravity.y)).c_str(), 150.0f);
+
+		
 
 
 

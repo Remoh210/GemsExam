@@ -15,8 +15,12 @@
 
 #include <iostream>
 
-
-
+std::string oldanim = "";
+bool pause = false;
+bool collided = false;
+bool isFinished = false;;
+float elapseTime = 0.0f;
+std::string newanim = "";
 
 bool HACK_bTextureUniformLocationsLoaded = false;
 GLint tex00_UniLoc = -1;
@@ -106,13 +110,7 @@ void BindTextures(cGameObject* pCurrentMesh, GLuint shaderProgramID, cFBO* fbo)
 		glUniform1i(texPass1OutputTexture_UniLoc2, FBO_Texture_Unit2);
 
 
-		// Set the blending to that it's 0th texture sampler
-		// NOTE: it's only the 0th (1st) texture that we are mixing from
-//		glUniform4f( texBW_0_UniLoc, 1.0f, 0.0f, 0.0f, 0.0f );		// <---- Note the 1.0f
-//		glUniform4f( texBW_1_UniLoc, 0.0f, 0.0f, 0.0f, 0.0f );
 
-		// NOTE: Early return (so we don't set any other textures
-		// Again; HACK!!
 		return;
 	}//if ( pCurrentMesh->b_HACK_UsesOffscreenFBO )
 	// ******************************************************************** 
@@ -393,7 +391,7 @@ void DrawObject(cGameObject* pCurrentMesh,
 	GLint bIsASkinnedMesh_LocID = glGetUniformLocation(shaderProgramID,
 		"bIsASkinnedMesh");
 
-	// Is this a skinned mesh model or a "regular" static one?
+
 	sModelDrawInfo modelInfo;
 	if (pCurrentMesh->pSimpleSkinnedMesh == NULL)
 	{
@@ -404,41 +402,39 @@ void DrawObject(cGameObject* pCurrentMesh,
 	}
 	else
 	{
-		// It ++IS++ skinned mesh
+		cGameObject* dalek = findObjectByFriendlyName("dalek");
+		if (oldanim == "Idle" && pCurrentMesh->currentAnimation != "Idle") { CurTime = 0.0f; }
+		if (pause) { 
+			pCurrentMesh->currentAnimation = oldanim;
+			elapseTime += deltaTime;
+			
+			if (elapseTime > 3.0f) 
+			{
+				pause = false;
+				elapseTime = 0.0f;
+				CurTime = 0.0f;
+				dalek->setDiffuseColour(glm::vec3(0.0f, 0.0f, 1.0f));
+
+			}
+		}
+	//	else { elapseTime = 0.0f; }
+
 		modelInfo.meshFileName = pCurrentMesh->pSimpleSkinnedMesh->fileName;
 
 		glUniform1f(bIsASkinnedMesh_LocID, (float)GL_TRUE);
-
-		// Also pass up the bone information...
-		std::vector< glm::mat4x4 > vecFinalTransformation;	// Replaced by	theMesh.vecFinalTransformation
+		std::vector< glm::mat4x4 > vecFinalTransformation;	
 		std::vector< glm::mat4x4 > vecOffsets;
-
 		pCurrentMesh->pSimpleSkinnedMesh->BoneTransform(
-			//0.0f,	// curFrameTime,
-			CurTime,	// curFrameTime,
-//										"assets/modelsFBX/RPG-Character_Unarmed-Walk(FBX2013).FBX",		// animationToPlay,		//**NEW**
-//										"assets/modelsFBX/RPG-Character_Unarmed-Roll-Backward(FBX2013).fbx",		// animationToPlay,		//**NEW**
-//										"assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx",		// animationToPlay,		//**NEW**
+			CurTime,	
 		pCurrentMesh->currentAnimation,
-		vecFinalTransformation,		// Final bone transforms for mesh
-		pCurrentMesh->vecObjectBoneTransformation,  // final location of bones
-		vecOffsets);                 // local offset for each bone
-
-		
-		CurTime += 0.8f * deltaTime;		// Frame time, but we are going at 60HZ
-
-		//if (pCurrentMesh->currentAnimation == "Walk-forward") {
-		//	float ddrr = pCurrentMesh->pSimpleSkinnedMesh->FindAnimationTotalTime(pCurrentMesh->currentAnimation)/30.0f;
-		//	if (::g_HACK_CurrentTime >= ddrr)
-		//	{
-		//		::g_HACK_CurrentTime = 0.0f;
-		//		pCurrentMesh->position += char;
-		//	}
-		//}
-
-		//std::cout <<  << std::endl;
+		vecFinalTransformation,		
+		pCurrentMesh->vecObjectBoneTransformation,  
+		vecOffsets);                 
 
 
+		if (!pause){
+			CurTime += 0.8f * deltaTime;
+		}		
 
 
 		unsigned int numberOfBonesUsed = static_cast<unsigned int>(vecFinalTransformation.size());
@@ -446,100 +442,84 @@ void DrawObject(cGameObject* pCurrentMesh,
 		GLint numBonesUsed_UniLoc = glGetUniformLocation(shaderProgramID, "numBonesUsed");
 		glUniform1i(numBonesUsed_UniLoc, numberOfBonesUsed);
 
-		//		const unsigned int TOTALNUMBEROFBONESTOPASSINTOTHESHADERASIDENTIYMATRIXVALUES = 99;
-		//		for ( unsigned int index = 0; index != numberOfBonesUsed; index++ )
-		//		{
-		//			vecFinalTransformation.push_back( glm::mat4(1.0f) );
-		//		}
-
 		glm::mat4x4* pBoneMatrixArray = &(vecFinalTransformation[0]);
-
-		// UniformLoc_bonesArray is the getUniformLoc of "bones[0]" from
-		//	uniform mat4 bones[MAXNUMBEROFBONES] 
-		// in the shader
 		GLint bones_UniLoc = glGetUniformLocation(shaderProgramID, "bones");
-		//		std::cout << "bones_UniLoc: " << bones_UniLoc << std::endl;	std::cout.flush();
 		glUniformMatrix4fv(bones_UniLoc, numberOfBonesUsed, GL_FALSE,
 			(const GLfloat*)glm::value_ptr(*pBoneMatrixArray));
 
-		// Update the extents of the skinned mesh from the bones...
-		//	sMeshDrawInfo.minXYZ_from_SM_Bones(glm::vec3(0.0f)), 
-		//  sMeshDrawInfo.maxXYZ_from_SM_Bones(glm::vec3(0.0f))
 		for (unsigned int boneIndex = 0; boneIndex != numberOfBonesUsed; boneIndex++)
 		{
-			//glm::mat4 boneLocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
-
-			//// HACK: Need to add "uniform scale" to mesh
-			//float scale = pCurrentMesh->nonUniformScale.x;
-			//boneLocal = glm::scale(boneLocal, glm::vec3(pCurrentMesh->nonUniformScale.x,
-			//	pCurrentMesh->nonUniformScale.y,
-			//	pCurrentMesh->nonUniformScale.z));
-
-			////cPhysicalProperties phyProps;
-			////pTheGO->GetPhysState( phyProps );
-			//glm::vec4 GameObjectLocalOriginLocation = glm::vec4(pCurrentMesh->position, 1.0f );
-
-			//glm::vec4 boneBallLocation = boneLocal * GameObjectLocalOriginLocation;
-			////glm::vec4 boneBallLocation = boneLocal * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-			//boneBallLocation *= scale;
 
 
+			//Left hand
+			glm::mat4 boneLeftHandlocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
+			glm::mat4 boneLeftHandTranslation = boneLeftHandlocal * pCurrentMesh->nonUniformScale.x;
+			glm::mat4 matLeftHandOrientation = glm::mat4(pCurrentMesh->m_meshQOrientation);
+			matLeftHandOrientation *= boneLeftHandTranslation;
+			boneLeftHandTranslation *= matLeftHandOrientation;
+
+			glm::vec4 vecLeftHandTrans(1.0f, 1.0f, 1.0f, 1.0f);
+			glm::vec4 LeftHandbonepos = matLeftHandOrientation * vecLeftHandTrans;
 
 
-
-
-			glm::mat4 bonelocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
-			glm::mat4 boneTranslation = bonelocal * pCurrentMesh->nonUniformScale.x;
-			glm::mat4 matOrientation = glm::mat4(pCurrentMesh->m_meshQOrientation);
-			matOrientation *= boneTranslation;
-			boneTranslation *= matOrientation;
-
-			glm::vec4 vecTrans(1.0f, 1.0f, 1.0f, 1.0f);
-			glm::vec4 bonepos = matOrientation * vecTrans;
-
-
-
-
-
-			//// Update the extents of the mesh
-			//if (boneIndex == 0)
-			//{
-			//	// For the 0th bone, just assume this is the extent
-			//	pCurrentMesh->minXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
-			//	pCurrentMesh->maxXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
-			//}
-			//else
-			//{	// It's NOT the 0th bone, so compare with current max and min
-			//	if (pCurrentMesh->minXYZ_from_SM_Bones.x < boneBallLocation.x) { pCurrentMesh->minXYZ_from_SM_Bones.x = boneBallLocation.x; }
-			//	if (pCurrentMesh->minXYZ_from_SM_Bones.y < boneBallLocation.y) { pCurrentMesh->minXYZ_from_SM_Bones.y = boneBallLocation.y; }
-			//	if (pCurrentMesh->minXYZ_from_SM_Bones.z < boneBallLocation.z) { pCurrentMesh->minXYZ_from_SM_Bones.z = boneBallLocation.z; }
-
-			//	if (pCurrentMesh->maxXYZ_from_SM_Bones.x > boneBallLocation.x) { pCurrentMesh->maxXYZ_from_SM_Bones.x = boneBallLocation.x; }
-			//	if (pCurrentMesh->maxXYZ_from_SM_Bones.y > boneBallLocation.y)
-			//	{
-			//		pCurrentMesh->maxXYZ_from_SM_Bones.y = boneBallLocation.y;
-			//	}
-			//	if (pCurrentMesh->maxXYZ_from_SM_Bones.z > boneBallLocation.z)
-			//	{
-			//		pCurrentMesh->maxXYZ_from_SM_Bones.z = boneBallLocation.z;
-			//	}
-			//}//if ( boneIndex == 0 )
-
-
-			//boneBallLocation += glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-
-			//DrawDebugBall( glm::vec3(boneBallLocation), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), 0.2f );
-
-			if ( boneIndex == 35 )
+			if (boneIndex == 35)
 			{
-				cGameObject* ds = findObjectByFriendlyName("DebugSphere");
-				ds->bDontLight = true;
-				ds->bIsVisible = true;
-				ds->position = glm::vec3(bonepos) + pCurrentMesh->position;
-				
+				cGameObject* ds = findObjectByFriendlyName("DebugSphereLeftHand");
+				ds->position = glm::vec3(LeftHandbonepos) + pCurrentMesh->position;
+
+				if (glm::distance(ds->position, dalek->position) < 5.5f)
+				{
+					if (pCurrentMesh->currentAnimation != "Idle" && pCurrentMesh->currentAnimation != "Walk-forward")
+					{
+						ds->bDontLight = true;
+						ds->bIsVisible = true;
+						dalek->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));
+						pause = true;
+						collided = true;
+
+
+					}
+
+				}
+				else { ds->bIsVisible = false; }
+			
+			}
+
+
+			//Right hand
+			glm::mat4 boneRightHandlocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
+			glm::mat4 boneRightHandTranslation = boneRightHandlocal * pCurrentMesh->nonUniformScale.x;
+			glm::mat4 matRightHandOrientation = glm::mat4(pCurrentMesh->m_meshQOrientation);
+			matRightHandOrientation *= boneRightHandTranslation;
+			boneRightHandTranslation *= matRightHandOrientation;
+
+			glm::vec4 vecRightHandTrans(1.0f, 1.0f, 1.0f, 1.0f);
+			glm::vec4 RightHandbonepos = matRightHandOrientation * vecRightHandTrans;
+
+
+			if (boneIndex == 16)
+			{
+				cGameObject* ds2 = findObjectByFriendlyName("DebugSphereRightHand");
+				ds2->position = glm::vec3(RightHandbonepos) + pCurrentMesh->position;
+
+				if (glm::distance(ds2->position, dalek->position) < 5.5f)
+				{
+					if (pCurrentMesh->currentAnimation != "Idle" && pCurrentMesh->currentAnimation != "Walk-forward")
+					{
+						ds2->bDontLight = true;
+						ds2->bIsVisible = true;
+						dalek->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));
+						pause = true;
+						collided = true;
+					}
+				}
+				else { ds2->bIsVisible = false; }
 			}
 		}
 
+
+		
+		oldanim = pCurrentMesh->currentAnimation;
 
 	}//if ( pCurrentMesh->pSimpleSkinnedMesh == NULL )
 //  ___ _   _                  _ __  __        _    

@@ -113,17 +113,7 @@ void key_callback( GLFWwindow* window,
 	}
 
 
-	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
-	{
-		controlScheme = FIRST_PERSON;
 
-	}
-
-	if (key == GLFW_KEY_2 && action == GLFW_PRESS)
-	{
-		controlScheme = THIRD_PERSON;
-
-	}
 
 	if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
 	{
@@ -359,6 +349,9 @@ void ProcessAsynKeys(GLFWwindow* window)
 			}
 		}
 
+
+
+
 		if (controlScheme == FIRST_PERSON) {
 
 			if (glfwGetKey(window, GLFW_KEY_W))
@@ -378,10 +371,23 @@ void ProcessAsynKeys(GLFWwindow* window)
 		}
 
 
+
 	}
 
 
 
+	if (glfwGetKey(window, GLFW_KEY_1))
+	{
+		//controlScheme = FIRST_PERSON;
+
+		player->currentAnimation = "Action1";
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_2))
+	{
+		//controlScheme = THIRD_PERSON;
+		player->currentAnimation = "Action2";
+	}
 
 
 

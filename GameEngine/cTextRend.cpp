@@ -146,7 +146,7 @@ void cTextRend::drawText(unsigned int width, unsigned int height, const char *te
 
 
 	//GLfloat white[4] = { 1, 1, 1, 1 };
-	GLfloat color[4] = { 1, 0, 0, 1 };
+	GLfloat color[4] = { 1, 1, 0, 1 };
 
 	glUseProgram(mprogramm);
 
