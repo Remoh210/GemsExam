@@ -92,12 +92,12 @@ void key_callback( GLFWwindow* window,
 
 
 	//SAVE MODELS
-	if (key == GLFW_KEY_G && action == GLFW_PRESS)
-	{
-		for (int i = 0; i < vec_pSpheres.size(); i++) {
-			vec_pSpheres[i]->rigidBody->SetVelocity(vec_pSpheres[i]->rigidBody->GetVelocity() + glm::vec3(0.0f, 40.0f, 0.0f));
-		}
-	}
+	//if (key == GLFW_KEY_G && action == GLFW_PRESS)
+	//{
+	//	for (int i = 0; i < vec_pSpheres.size(); i++) {
+	//		vec_pSpheres[i]->rigidBody->SetVelocity(vec_pSpheres[i]->rigidBody->GetVelocity() + glm::vec3(0.0f, 40.0f, 0.0f));
+	//	}
+	//}
 
 	//LOAD MODELS
 	if (key == GLFW_KEY_H && action == GLFW_PRESS)
@@ -109,7 +109,7 @@ void key_callback( GLFWwindow* window,
 	if (glfwGetKey(window, GLFW_KEY_K))
 	{
 		//SwitchToSolid(vec_pObjectsToDraw);
-		g_pSceneManager->saveScene("animation_exam.json");
+		g_pSceneManager->saveScene("gems_exam.json");
 	}
 
 
@@ -123,7 +123,7 @@ void key_callback( GLFWwindow* window,
 			camera.Type = FLY;
 			camera.b_controlledByScript = false;
 		}
-		else{ camera.Type = FOLLOW; }
+		else{ /*camera.Type = FOLLOW; */}
 
 	}
 
@@ -226,32 +226,32 @@ void key_callback( GLFWwindow* window,
 		//}
 
 
-		if (controlScheme == THIRD_PERSON)
-		{
+		//if (controlScheme == THIRD_PERSON)
+		//{
 
-			if (key == GLFW_KEY_D && action == GLFW_PRESS)
-			{
+		//	if (key == GLFW_KEY_D && action == GLFW_PRESS)
+		//	{
 
-				player->setMeshOrientationEulerAngles(0.0f, 0.0f, 0.0f, true);
-			}
+		//		player->setMeshOrientationEulerAngles(0.0f, 0.0f, 0.0f, true);
+		//	}
 
-			if (key == GLFW_KEY_W && action == GLFW_PRESS)
-			{
+		//	if (key == GLFW_KEY_W && action == GLFW_PRESS)
+		//	{
 
-				player->setMeshOrientationEulerAngles(0.0f, 90.0f, 0.0f, true);
-			}
+		//		player->setMeshOrientationEulerAngles(0.0f, 90.0f, 0.0f, true);
+		//	}
 
-			if (key == GLFW_KEY_S && action == GLFW_PRESS)
-			{
+		//	if (key == GLFW_KEY_S && action == GLFW_PRESS)
+		//	{
 
-				player->setMeshOrientationEulerAngles(0.0f, -90.0f, 0.0f, true);
-			}
-			if (key == GLFW_KEY_A && action == GLFW_PRESS)
-			{
-				player->setMeshOrientationEulerAngles(0.0f, 180.0f, 0.0f, true);
-				//player->adjMeshOrientationEulerAngles(0.0f, 45.0f, 0.0f, true);
-			}
-		}
+		//		player->setMeshOrientationEulerAngles(0.0f, -90.0f, 0.0f, true);
+		//	}
+		//	if (key == GLFW_KEY_A && action == GLFW_PRESS)
+		//	{
+		//		player->setMeshOrientationEulerAngles(0.0f, 180.0f, 0.0f, true);
+		//		//player->adjMeshOrientationEulerAngles(0.0f, 45.0f, 0.0f, true);
+		//	}
+		//}
 	}
 
 
@@ -336,71 +336,71 @@ void ProcessAsynKeys(GLFWwindow* window)
 
 
 
-	cGameObject* player = findObjectByFriendlyName("Character");
+	//cGameObject* player = findObjectByFriendlyName("Character");
 
-	player->currentAnimation = "Idle";
-	if (!bIsDebugMode) {
-		if (controlScheme == THIRD_PERSON) {
-			if (glfwGetKey(window, GLFW_KEY_W) || glfwGetKey(window, GLFW_KEY_A)
-				|| glfwGetKey(window, GLFW_KEY_S) || glfwGetKey(window, GLFW_KEY_D))
-			{
-				player->position += CharForward * 15.0f * (float)deltaTime;
-				player->currentAnimation = "Walk-forward";
-			}
-		}
-
-
-
-
-		if (controlScheme == FIRST_PERSON) {
-
-			if (glfwGetKey(window, GLFW_KEY_W))
-			{
-				player->position += CharForward * 15.0f * (float)deltaTime;
-				player->currentAnimation = "Walk-forward";
-			}
-
-			if (glfwGetKey(window, GLFW_KEY_S))
-			{
-				player->setMeshOrientationEulerAngles(0.0f, -90.0f, 0.0f, true);
-				player->position += CharForward * 15.0f * (float)deltaTime;
-
-				player->currentAnimation = "Walk-forward";
-			}
-
-		}
+	//player->currentAnimation = "Idle";
+	//if (!bIsDebugMode) {
+	//	if (controlScheme == THIRD_PERSON) {
+	//		if (glfwGetKey(window, GLFW_KEY_W) || glfwGetKey(window, GLFW_KEY_A)
+	//			|| glfwGetKey(window, GLFW_KEY_S) || glfwGetKey(window, GLFW_KEY_D))
+	//		{
+	//			player->position += CharForward * 15.0f * (float)deltaTime;
+	//			player->currentAnimation = "Walk-forward";
+	//		}
+	//	}
 
 
 
-	}
+
+	//	if (controlScheme == FIRST_PERSON) {
+
+	//		if (glfwGetKey(window, GLFW_KEY_W))
+	//		{
+	//			player->position += CharForward * 15.0f * (float)deltaTime;
+	//			player->currentAnimation = "Walk-forward";
+	//		}
+
+	//		if (glfwGetKey(window, GLFW_KEY_S))
+	//		{
+	//			player->setMeshOrientationEulerAngles(0.0f, -90.0f, 0.0f, true);
+	//			player->position += CharForward * 15.0f * (float)deltaTime;
+
+	//			player->currentAnimation = "Walk-forward";
+	//		}
+
+	//	}
 
 
 
-	if (glfwGetKey(window, GLFW_KEY_1))
-	{
-		//controlScheme = FIRST_PERSON;
+	//}
 
-		player->currentAnimation = "Action1";
-	}
 
-	if (glfwGetKey(window, GLFW_KEY_2))
-	{
-		//controlScheme = THIRD_PERSON;
-		player->currentAnimation = "Action2";
-	}
 
-	if (glfwGetKey(window, GLFW_KEY_3))
-	{
-		//controlScheme = FIRST_PERSON;
+	//if (glfwGetKey(window, GLFW_KEY_1))
+	//{
+	//	//controlScheme = FIRST_PERSON;
 
-		player->currentAnimation = "Action3";
-	}
+	//	player->currentAnimation = "Action1";
+	//}
 
-	if (glfwGetKey(window, GLFW_KEY_4))
-	{
-		//controlScheme = THIRD_PERSON;
-		player->currentAnimation = "Action4";
-	}
+	//if (glfwGetKey(window, GLFW_KEY_2))
+	//{
+	//	//controlScheme = THIRD_PERSON;
+	//	player->currentAnimation = "Action2";
+	//}
+
+	//if (glfwGetKey(window, GLFW_KEY_3))
+	//{
+	//	//controlScheme = FIRST_PERSON;
+
+	//	player->currentAnimation = "Action3";
+	//}
+
+	//if (glfwGetKey(window, GLFW_KEY_4))
+	//{
+	//	//controlScheme = THIRD_PERSON;
+	//	player->currentAnimation = "Action4";
+	//}
 
 
 

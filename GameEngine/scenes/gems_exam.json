@@ -2,9 +2,9 @@
     "Camera": {
         "Speed": 120.00000762939453,
         "Position": [
-            -135.22340393066407,
-            126.04275512695313,
-            373.0110778808594
+            187.6272735595703,
+            449.3464050292969,
+            380.2452087402344
         ]
     },
     "GameObjects": [
@@ -15,9 +15,9 @@
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                206.4158172607422,
+                161.1153564453125,
                 0.0,
-                421.84796142578127
+                298.85296630859377
             ],
             "DiffuseRGB_Alpha": [
                 0.0,
@@ -32,65 +32,15 @@
                 100000.0
             ],
             "Rotation": [
-                180.0,
-                2.200514793395996,
-                180.0
+                179.9998779296875,
+                87.5600814819336,
+                179.9998779296875
             ],
             "Scale": [
                 0.30000007152557375,
                 0.30000007152557375,
                 0.30000007152557375
             ]
-        },
-        {
-            "Name": "Character",
-            "SkinnedMesh": "assets/models/FBX/chan.fbx",
-            "Visible": true,
-            "Use_Physics": true,
-            "Wireframe": false,
-            "Position": [
-                50.0,
-                -10.0,
-                380.0
-            ],
-            "DiffuseRGB_Alpha": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "SpecularRGB_Alpha": [
-                1.0,
-                1.0,
-                1.0,
-                100000.0
-            ],
-            "Rotation": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "Scale": [
-                0.1,
-                0.1,
-                0.1
-            ],
-          "Animation": {
-                  "Idle" : "assets/models/FBX/chan-idle.fbx",
-                  "Walk-forward" : "assets/models/FBX/chan-walk-forward.fbx",
-                  "Action1" : "assets/models/FBX/chan-punch-left.fbx",
-                  "Action2" : "assets/models/FBX/chan-punch-right.fbx",
-                  "Action3" : "assets/models/FBX/chan-punch-3.fbx",
-                  "Action4" : "assets/models/FBX/chan-punch-4.fbx"
-
-          		  },
-          "Textures": [
-              {
-                  "Name": "chanTex.bmp",
-                  "Strength": 1.0
-              }
-          ]
-
         },
         {
             "Name": "plane_floor",
@@ -229,9 +179,9 @@
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
+                380.0,
                 0.0,
-                0.0,
-                980.0
+                360.0
             ],
             "DiffuseRGB_Alpha": [
                 0.0,

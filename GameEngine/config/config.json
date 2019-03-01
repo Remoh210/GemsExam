@@ -5,6 +5,6 @@
         "Title" : "Animation Exam"
     },
     "Language" : "English",
-	  "Scene" : "animation_exam.json",
+	  "Scene" : "gems_exam.json",
     "Gravity" : [0.0, -50.0, 0.0]
 }

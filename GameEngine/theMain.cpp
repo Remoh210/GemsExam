@@ -6,6 +6,7 @@
 //
 #include "globalOpenGLStuff.h"
 #include "globalStuff.h"
+#include <Windows.h>
 
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp> // glm::vec3
@@ -45,8 +46,8 @@ glm::vec3 g_Gravity = glm::vec3(0.0f, -1.0f, 0.0f);
 
 
 //Char Forward
-glm::vec3 DalekForward = glm::vec3(0.0f);
-glm::vec3 CharForward = glm::vec3(0.0f);
+
+
 
 
 
@@ -82,7 +83,8 @@ std::string scene = "Scene1.json";
 
 //Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
-Camera camera;
+Camera camera(glm::vec3(100.0f, 200.0f, -100.0f));
+
 
 bool distToCam(cGameObject* leftObj, cGameObject* rightObj) {
 	return glm::distance(leftObj->position, camera.Position) > glm::distance(rightObj->position, camera.Position); // here go your sort conditions
@@ -118,16 +120,43 @@ cAABBHierarchy* g_pTheTerrain = new cAABBHierarchy();
 
 bool loadConfig();
 cFBO* g_pFBOMain;
-
-// For now, I'm doing this here, but you might want to do this
-//  in the object, in the "phsyics" thing, or wherever. 
-//  Or leave it here!!
-
-// Set up the off screen textures to draw to
 GLuint g_FBO = 0;
 GLuint g_FBO_colourTexture = 0;
 GLuint g_FBO_depthTexture = 0;
-GLint g_FBO_SizeInPixes = 512;		// = 512 the WIDTH of the framebuffer, in pixels;
+GLint g_FBO_SizeInPixes = 512;		
+
+
+
+bool checkCube(glm::vec3 pos, std::vector<glm::vec3> vec_pos)
+{
+	for (int i = 0; i < vec_pos.size(); i++)
+	{
+		float dist = glm::distance(pos, vec_pos[i]);
+		if (dist < 4.0f)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool MoveOrChangeDir(cGameObject* pDalek, std::vector<glm::vec3> vec_blcok_pos, glm::vec3 dalekforward)
+{
+
+	float cubeSize = 20.0f;
+	glm::vec3 forwad_1_unit = pDalek->position + dalekforward * 20.0f;
+	if (checkCube(forwad_1_unit, vec_blcok_pos))
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+
+
 
 int main(void)
 {
@@ -135,7 +164,7 @@ int main(void)
 
 	//********Generate Maze********
 	cMazeMaker Maze;
-	Maze.GenerateMaze(50, 50);
+	Maze.GenerateMaze(20, 20);
 	Maze.PrintMaze();
 	//********Generate Maze********
 
@@ -344,25 +373,10 @@ int main(void)
 
 	//FBO
 	int renderPassNumber = 1;
-	// 1 = 1st pass (the actual scene)
-	// 2 = 2nd pass (rendering what we drew to the output)
 	GLint renderPassNumber_UniLoc = glGetUniformLocation(program, "renderPassNumber");
-	//std::cout << renderPassNumber_UniLoc << std::endl;
-	//*****************************************************************
-
-	//Copy All Spheres to new Vec to manipulate them later
-	for (int i = 0; i < vec_pObjectsToDraw.size(); i++)
-	{
-		if (vec_pObjectsToDraw[i]->rigidBody != NULL) {
-			if (vec_pObjectsToDraw[i]->rigidBody->GetShape()->GetShapeType() == nPhysics::SHAPE_TYPE_SPHERE) {
-				vec_pSpheres.push_back(vec_pObjectsToDraw[i]);
-			}
-		}
-	}
-
-	//AddSomeVel
 
 
+	camera.b_controlledByScript = true;
 
 	float idk = 0.0f;
 	cGameObject* dalek = findObjectByFriendlyName("dalek");
@@ -370,9 +384,41 @@ int main(void)
 	cGameObject* block = findObjectByFriendlyName("block");
 	glm::vec3 idealpos(-60.0f, 60.0f, 0.0f);
 	glm::vec3 initPos = glm::vec3(pCharacter->position.x - 400.0f, pCharacter->position.y + 250.0f, pCharacter->position.z);
-	Camera cam(pCharacter, idealpos, 5.0f, 20.0f, 100.0f, 0.0f, initPos);
-	camera = cam;
-	// Draw the "scene" (run the program)
+
+
+
+
+
+
+
+	std::vector<glm::vec3> vec_block_positions;
+	glm::vec3 CurPos(0.0f);
+	for (unsigned int a = 0; a < Maze.maze.size(); a++)
+	{
+		for (unsigned int b = 0; b < Maze.maze[a].size(); b++)
+		{
+			if (Maze.maze[a][b][0])
+			{
+				CurPos.x += 20.0f;
+
+				vec_block_positions.push_back(CurPos);
+			}
+			else
+			{
+				//std::cout << "  ";
+				CurPos.x += 20.0f;
+			}
+
+		}
+		CurPos.x = 0.0f;
+		CurPos.z += 20.0f;
+
+	}
+
+
+
+
+
 	while (!glfwWindowShouldClose(window))
 	{
 
@@ -425,7 +471,11 @@ int main(void)
 
 //glm::vec3 migpos = findObjectByFriendlyName("mig")->position;
 //matView = glm::lookAt(camera.Position, migpos, camera.WorldUp);
-
+		if(camera.Type != FOLLOW)
+		{
+			glm::vec3 camLookAt(camera.Position.x, -200.0f, 300);
+			camera.SetViewMatrix(glm::lookAt(camera.Position, camLookAt, glm::vec3(0.f, 1.f, 0.f)));
+		}
 		matView = camera.GetViewMatrix();
 
 		glUniform3f(eyeLocation_location, camera.Position.x, camera.Position.y, camera.Position.z);
@@ -446,31 +496,17 @@ int main(void)
 
 		//Draw Maze
 
-		block->position = glm::vec3(0.0f);
-		for (unsigned int a = 0; a < Maze.maze.size(); a++)
+
+		for (int i = 0; i < vec_block_positions.size(); i++)
 		{
-			for (unsigned int b = 0; b < Maze.maze[a].size(); b++)
-			{
-				if (Maze.maze[a][b][0])
-				{
-					glm::mat4 matblock(1.0f);
-					if (glm::distance(block->position, pCharacter->position) < 300.0f)
-					{
-						DrawObject(block, matblock, program, NULL);
-					}
-					block->position.x += 20.0f;
 
-				}
-				else
-				{
-					//std::cout << "  ";
-					block->position.x += 20.0f;
-				}
-
-			}
-			block->position.x = 0.0f;
-			block->position.z += 20.0f;
+			glm::mat4 matIden(1.0f);
+			block->bIsVisible = true;
+			block->position = vec_block_positions[i];
+			DrawObject(block, matIden, program, NULL);
 		}
+
+		
 				//std::sort(vec_sorted_drawObj.begin(), vec_sorted_drawObj.end(), transp);
 		std::sort(vec_transObj.begin(), vec_transObj.end(), distToCam);
 
@@ -586,19 +622,46 @@ int main(void)
 
 		//Calculate Character forward
 
-		glm::vec4 vecForwardDirection_ModelSpace = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+		//glm::vec4 vecForwardDirection_ModelSpace = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
-		glm::quat charkRotation = pCharacter->getQOrientation();
+		//glm::quat charkRotation = pCharacter->getQOrientation();
+		//glm::mat4 matCharkRotation = glm::mat4(charkRotation);
+		//CharForward = matCharkRotation * vecForwardDirection_ModelSpace;
+
+
+		//charkRotation = glm::normalize(CharForward);
+
+
+		glm::vec3 DalekForward = glm::vec3(0.0f);
+		glm::vec4 vecForwardDirection_ModelSpace = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
+		glm::quat charkRotation = dalek->getQOrientation();
 		glm::mat4 matCharkRotation = glm::mat4(charkRotation);
-		CharForward = matCharkRotation * vecForwardDirection_ModelSpace;
-
-		// optional normalize
-		charkRotation = glm::normalize(CharForward);
+		DalekForward = matCharkRotation * vecForwardDirection_ModelSpace;
 
 
-
-
-
+		if (MoveOrChangeDir(dalek, vec_block_positions, DalekForward))
+		{
+			float step = 10.0f * deltaTime;
+			dalek->position += DalekForward * step;
+			//Sleep(1000);
+		}
+		else
+		{
+			float r = ((float)rand() / (RAND_MAX));
+			std::cout << "random: " << r << std::endl;
+			if (r > 0.5)
+			{
+				dalek->adjMeshOrientationEulerAngles(glm::vec3(0.0f, -90.0f, 0.0f), true);
+				std::cout << "rotating: -90" << r << std::endl;
+			}
+			else
+			{
+				dalek->adjMeshOrientationEulerAngles(glm::vec3(0.0f, 90.0f, 0.0f), true);
+				//std::cout << "rotating: 90" << r << std::endl;
+			}
+			Sleep(1000);
+		}
 
 		//sceneCommandGroup.Update(deltaTime);
 
