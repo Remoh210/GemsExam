@@ -161,6 +161,7 @@
     <ClCompile Include="cAssimpBasic_Imp.cpp" />
     <ClCompile Include="cCameraChangeAnim.cpp" />
     <ClCompile Include="cCommandGroup.cpp" />
+    <ClCompile Include="cDalek.cpp" />
     <ClCompile Include="cFBO.cpp" />
     <ClCompile Include="cFollowCurve.cpp" />
     <ClCompile Include="cFollowObjectCommand.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="cAssimpBasic.h" />
     <ClInclude Include="cAssimpBasic_Imp.h" />
     <ClInclude Include="cCommandGroup.h" />
+    <ClInclude Include="cDalek.h" />
     <ClInclude Include="cFBO.h" />
     <ClInclude Include="cFollowObjectCommand.h" />
     <ClInclude Include="cLightHelper.h" />

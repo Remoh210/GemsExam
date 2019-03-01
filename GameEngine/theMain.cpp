@@ -26,6 +26,7 @@
 #include "cShaderManager.h"
 #include "cGameObject.h"
 #include "cVAOMeshManager.h"
+#include "cDalek.h"
 #include <algorithm>
 #include <windows.h>
 
@@ -109,6 +110,8 @@ cLightManager* LightManager = NULL;
 std::vector<cGameObject*> vec_transObj;
 std::vector<cGameObject*> vec_non_transObj;
 
+std::vector<cDalek*> vec_daleks;
+
 cBasicTextureManager* g_pTheTextureManager = NULL;
 
 static void error_callback(int error, const char* description)
@@ -132,7 +135,7 @@ bool checkCube(glm::vec3 pos, std::vector<glm::vec3> vec_pos)
 	for (int i = 0; i < vec_pos.size(); i++)
 	{
 		float dist = glm::distance(pos, vec_pos[i]);
-		if (dist < 4.0f)
+		if (dist < 10.0f)
 		{
 			return true;
 		}
@@ -144,7 +147,7 @@ bool MoveOrChangeDir(cGameObject* pDalek, std::vector<glm::vec3> vec_blcok_pos, 
 {
 
 	float cubeSize = 20.0f;
-	glm::vec3 forwad_1_unit = pDalek->position + dalekforward * 20.0f;
+	glm::vec3 forwad_1_unit = pDalek->position + dalekforward * cubeSize/2.0f;
 	if (checkCube(forwad_1_unit, vec_blcok_pos))
 	{
 		return false;
@@ -379,11 +382,11 @@ int main(void)
 	camera.b_controlledByScript = true;
 
 	float idk = 0.0f;
-	cGameObject* dalek = findObjectByFriendlyName("dalek");
-	cGameObject* pCharacter = findObjectByFriendlyName("Character");
+	cGameObject* dalekGo = findObjectByFriendlyName("dalek");
+	//* pCharacter = findObjectByFriendlyName("Character");
 	cGameObject* block = findObjectByFriendlyName("block");
 	glm::vec3 idealpos(-60.0f, 60.0f, 0.0f);
-	glm::vec3 initPos = glm::vec3(pCharacter->position.x - 400.0f, pCharacter->position.y + 250.0f, pCharacter->position.z);
+	//glm::vec3 initPos = glm::vec3(pCharacter->position.x - 400.0f, pCharacter->position.y + 250.0f, pCharacter->position.z);
 
 
 
@@ -415,9 +418,16 @@ int main(void)
 
 	}
 
-
-
-
+	for (int i = 0; i < vec_pObjectsToDraw.size(); i++)
+	{
+		if (vec_pObjectsToDraw[i]->meshName == "dalek.ply")
+		{
+			cGameObject* CurObj = vec_pObjectsToDraw[i];
+			glm::vec3 forw(1.f, 0.0f, 0.0f);
+			cDalek* dalek = new cDalek(CurObj, vec_block_positions, forw);
+			vec_daleks.push_back(dalek);
+		}
+	}
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -632,36 +642,18 @@ int main(void)
 		//charkRotation = glm::normalize(CharForward);
 
 
-		glm::vec3 DalekForward = glm::vec3(0.0f);
-		glm::vec4 vecForwardDirection_ModelSpace = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+		//glm::vec3 DalekForward = glm::vec3(0.0f);
+		//glm::vec4 vecForwardDirection_ModelSpace = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
-		glm::quat charkRotation = dalek->getQOrientation();
-		glm::mat4 matCharkRotation = glm::mat4(charkRotation);
-		DalekForward = matCharkRotation * vecForwardDirection_ModelSpace;
-
-
-		if (MoveOrChangeDir(dalek, vec_block_positions, DalekForward))
+		//glm::quat charkRotation = dalek->getQOrientation();
+		//glm::mat4 matCharkRotation = glm::mat4(charkRotation);
+		//DalekForward = matCharkRotation * vecForwardDirection_ModelSpace;
+		for (int i = 0; i < vec_daleks.size(); i++)
 		{
-			float step = 10.0f * deltaTime;
-			dalek->position += DalekForward * step;
-			//Sleep(1000);
+			vec_daleks[i]->dt = deltaTime;
 		}
-		else
-		{
-			float r = ((float)rand() / (RAND_MAX));
-			std::cout << "random: " << r << std::endl;
-			if (r > 0.5)
-			{
-				dalek->adjMeshOrientationEulerAngles(glm::vec3(0.0f, -90.0f, 0.0f), true);
-				std::cout << "rotating: -90" << r << std::endl;
-			}
-			else
-			{
-				dalek->adjMeshOrientationEulerAngles(glm::vec3(0.0f, 90.0f, 0.0f), true);
-				//std::cout << "rotating: 90" << r << std::endl;
-			}
-			Sleep(1000);
-		}
+
+
 
 		//sceneCommandGroup.Update(deltaTime);
 

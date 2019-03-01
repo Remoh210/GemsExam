@@ -108,6 +108,9 @@
     <Filter Include="cMazeMaker">
       <UniqueIdentifier>{e6f98bac-0bd0-49e4-a662-b846e59c7728}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Daleks">
+      <UniqueIdentifier>{7209a0e6-9a12-48ff-b734-6a1e5273a8b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cShaderManager.cpp">
@@ -284,6 +287,9 @@
     <ClCompile Include="PlyFileLoader.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="cDalek.cpp">
+      <Filter>Daleks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cShaderManager.h">
@@ -441,6 +447,9 @@
     </ClInclude>
     <ClInclude Include="linmath.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cDalek.h">
+      <Filter>Daleks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
