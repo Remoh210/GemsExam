@@ -85,12 +85,12 @@ void cDalek::update(float deltaTime)
 		if (r > 0.5)
 		{
 			dalekObj->adjMeshOrientationEulerAngles(glm::vec3(0.0f, -90.0f, 0.0f), true);
-			std::cout << "rotating: -90" << r << std::endl;
+			std::cout << "rotating: -90" << std::endl;
 		}
 		else
 		{
 			dalekObj->adjMeshOrientationEulerAngles(glm::vec3(0.0f, 90.0f, 0.0f), true);
-			//std::cout << "rotating: 90" << r << std::endl;
+			std::cout << "rotating: 90" << std::endl;
 		}
 		Sleep(1000);
 	}

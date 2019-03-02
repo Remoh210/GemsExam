@@ -167,7 +167,7 @@ int main(void)
 
 	//********Generate Maze********
 	cMazeMaker Maze;
-	Maze.GenerateMaze(30, 30);
+	Maze.GenerateMaze(100, 100);
 	Maze.PrintMaze();
 	//********Generate Maze********
 
@@ -385,6 +385,7 @@ int main(void)
 	cGameObject* dalekGo = findObjectByFriendlyName("dalek");
 	//* pCharacter = findObjectByFriendlyName("Character");
 	cGameObject* block = findObjectByFriendlyName("block");
+	cGameObject* floor = findObjectByFriendlyName("plane_floor");
 	glm::vec3 idealpos(-60.0f, 60.0f, 0.0f);
 	//glm::vec3 initPos = glm::vec3(pCharacter->position.x - 400.0f, pCharacter->position.y + 250.0f, pCharacter->position.z);
 
@@ -483,7 +484,7 @@ int main(void)
 //matView = glm::lookAt(camera.Position, migpos, camera.WorldUp);
 		if(camera.Type != FOLLOW)
 		{
-			glm::vec3 camLookAt(camera.Position.x, -200.0f, 300);
+			glm::vec3 camLookAt(floor->position);
 			camera.SetViewMatrix(glm::lookAt(camera.Position, camLookAt, glm::vec3(0.f, 1.f, 0.f)));
 		}
 		matView = camera.GetViewMatrix();

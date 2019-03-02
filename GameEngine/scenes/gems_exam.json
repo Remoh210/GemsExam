@@ -2,9 +2,9 @@
     "Camera": {
         "Speed": 120.00000762939453,
         "Position": [
-            290.1881103515625,
-            677.5808715820313,
-            572.2971801757813
+            1026.748291015625,
+            2025.3470458984376,
+            1459.91064453125
         ]
     },
     "GameObjects": [
@@ -49,9 +49,9 @@
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                200.1153564453125,
+                357.01544189453127,
                 0.0,
-                298.85296630859377
+                738.8529663085938
             ],
             "DiffuseRGB_Alpha": [
                 0.0,
@@ -83,14 +83,14 @@
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                279.0149841308594,
+                318.3146057128906,
                 0.0,
                 335.9502868652344
             ],
             "DiffuseRGB_Alpha": [
                 0.0,
-                0.0,
                 1.0,
+                0.0,
                 1.0
             ],
             "SpecularRGB_Alpha": [
@@ -111,15 +111,151 @@
             ]
         },
         {
+            "Name": "dalek4",
+            "Mesh": "dalek.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                944.5133666992188,
+                0.0,
+                658.9481811523438
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                1.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100000.0
+            ],
+            "Rotation": [
+                0.0,
+                -0.034273888915777209,
+                0.0
+            ],
+            "Scale": [
+                0.30000007152557375,
+                0.30000007152557375,
+                0.30000007152557375
+            ]
+        },
+        {
+            "Name": "dalek5",
+            "Mesh": "dalek.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                1281.113525390625,
+                0.0,
+                577.650390625
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100000.0
+            ],
+            "Rotation": [
+                0.0,
+                89.96043395996094,
+                0.0
+            ],
+            "Scale": [
+                0.30000007152557375,
+                0.30000007152557375,
+                0.30000007152557375
+            ]
+        },
+        {
+            "Name": "dalek6",
+            "Mesh": "dalek.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                719.7141723632813,
+                0.0,
+                962.650390625
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100000.0
+            ],
+            "Rotation": [
+                0.0,
+                89.96043395996094,
+                0.0
+            ],
+            "Scale": [
+                0.30000007152557375,
+                0.30000007152557375,
+                0.30000007152557375
+            ]
+        },
+        {
+            "Name": "dalek7",
+            "Mesh": "dalek.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                1441.314697265625,
+                0.0,
+                1079.549072265625
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100000.0
+            ],
+            "Rotation": [
+                0.0,
+                89.96043395996094,
+                0.0
+            ],
+            "Scale": [
+                0.30000007152557375,
+                0.30000007152557375,
+                0.30000007152557375
+            ]
+        },
+        {
             "Name": "plane_floor",
             "Mesh": "plane_floor.ply",
             "Visible": true,
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                490.0,
+                1000.0,
                 -10.0,
-                480.0
+                1000.0
             ],
             "DiffuseRGB_Alpha": [
                 0.0,
@@ -139,9 +275,9 @@
                 0.0
             ],
             "Scale": [
-                538.0148315429688,
-                538.0148315429688,
-                538.0148315429688
+                1000.014892578125,
+                1000.014892578125,
+                1000.014892578125
             ],
             "Textures": [
                 {
@@ -167,9 +303,9 @@
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                580.0,
+                1980.0,
                 0.0,
-                560.0
+                1960.0
             ],
             "DiffuseRGB_Alpha": [
                 0.0,
