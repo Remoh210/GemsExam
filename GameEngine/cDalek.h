@@ -24,7 +24,8 @@ private:
 	bool checkCube(glm::vec3 pos, std::vector<glm::vec3> vec_pos);
 	bool moveOrChangeDir(cGameObject* pDalek, std::vector<glm::vec3> vec_blcok_pos, glm::vec3 dalekforward);
 	glm::vec3 getDalekForward(glm::vec3 MF);
-	
+	glm::vec3 oldPos;
+	int moves;
 
 	glm::vec3 modelForward;
 	

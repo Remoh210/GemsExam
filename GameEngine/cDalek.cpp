@@ -4,10 +4,6 @@
 
 
 
-
-
-
-
 DWORD WINAPI UpdateDalekPosition(void* pInitialData)
 {
 
@@ -38,25 +34,23 @@ cDalek::cDalek(cGameObject * dalekOb, std::vector<glm::vec3> vecInBlocks, glm::v
 	this->dalekForward = getDalekForward(modelForward);
 	this->vecBlocks = vecInBlocks;
 	this->dt = 0.f;
+	this->oldPos = dalekOb->position;
+	this->moves = 3;
 
-	LPDWORD phThread = 0;	// Clear to zero
+	LPDWORD phThread = 0;	
 	DWORD hThread = 0;
 	HANDLE hThreadHandle = 0;
 	InitializeCriticalSection(&CR_POSITION);
 
-	// Pass a pointer to this instance 
-	// Recal that the "this" pointer is the pointer to
-	//	this particular instance of the object
 	void* pDalek = (void*)(this);
 
 
-	hThreadHandle = CreateThread(NULL,	// Default security
-		0,		// Stack size - default - win32 = 1 Mbyte
-		&UpdateDalekPosition, // Pointer to the thread's function
-		pDalek,		// The value (parameter) we pass to the thread
-			// This is a pointer to void... more on this evil thing later...
-		0,  // CREATE_SUSPENDED or 0 for threads...
-		(DWORD*)&phThread);		// pointer or ref to variable that will get loaded with threadID
+	hThreadHandle = CreateThread(NULL,	
+		0,	
+		&UpdateDalekPosition, 
+		pDalek,		
+		0,  
+		(DWORD*)&phThread);		
 
 
 	
@@ -69,13 +63,12 @@ cDalek::cDalek(cGameObject * dalekOb, std::vector<glm::vec3> vecInBlocks, glm::v
 
 void cDalek::update(float deltaTime)
 {
-	//this->dt = deltaTime;
+
 	this->dalekForward = getDalekForward(modelForward);
 
 	if (moveOrChangeDir(dalekObj, vecBlocks, dalekForward))
 	{
 		updatePosition(deltaTime);
-		//Sleep(1000);
 		
 	}
 	else
@@ -116,14 +109,33 @@ bool cDalek::checkCube(glm::vec3 pos, std::vector<glm::vec3> vec_pos)
 bool cDalek::moveOrChangeDir(cGameObject* pDalek, std::vector<glm::vec3> vec_blcok_pos, glm::vec3 dalekforward)
 {
 	float cubeSize = 20.0f;
+	
+
+
 	glm::vec3 forwad_1_unit = pDalek->position + dalekforward * cubeSize / 2.0f;
-	if (cDalek::checkCube(forwad_1_unit, vec_blcok_pos))
-	{
-		return false;
+	float cubesMove = (float)moves * 20.0f;
+	glm::vec3 futere_pos = this->oldPos + dalekforward  * cubesMove;
+
+	if (glm::distance(pDalek->position, futere_pos) > 1.0f) {
+		if (cDalek::checkCube(forwad_1_unit, vec_blcok_pos))
+		{
+
+			moves = rand() % 5 + 1;
+			std::cout << "moving: " << moves << " blocks" << std::endl;
+			this->oldPos = pDalek->position;
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 	else
 	{
-		return true;
+		moves = rand() % 5 + 1;
+		std::cout << "moving: " << moves << " blocks" << std::endl;
+		this->oldPos = pDalek->position;
+		return false;
 	}
 }
 
