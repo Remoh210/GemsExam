@@ -1,8 +1,7 @@
 #include "cDalek.h"
 #include <iostream>
 #include "globalStuff.h"
-#include <Windows.h>		
-#include <process.h>
+
 
 
 
@@ -30,7 +29,7 @@ DWORD WINAPI UpdateDalekPosition(void* pInitialData)
 
 
 
-CRITICAL_SECTION CR_POSITION;
+
 
 cDalek::cDalek(cGameObject * dalekOb, std::vector<glm::vec3> vecInBlocks, glm::vec3 MF)
 {
@@ -143,8 +142,8 @@ glm::vec3 cDalek::getDalekForward(glm::vec3 MF)
 
 void cDalek::updatePosition(float dt)
 {
-	float step = 0.1f * dt;
-	//EnterCriticalSection(&CR_POSITION);
+	float step = 0.01f * dt;
+	EnterCriticalSection(&CR_POSITION);
 	dalekObj->position += dalekForward * step;
 	LeaveCriticalSection(&CR_POSITION);
 }

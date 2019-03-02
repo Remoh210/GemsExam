@@ -1,6 +1,10 @@
 #pragma once
+#include <Windows.h>		
+#include <process.h>
 #include "cGameObject.h" 
 #include <vector>
+
+
 
 
 class cDalek
@@ -11,6 +15,7 @@ public:
 	glm::vec3 dalekForward;
 	float dt;
 	void update(float deltaTime);
+	CRITICAL_SECTION CR_POSITION;
 	
 private:
 	

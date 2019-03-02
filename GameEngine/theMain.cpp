@@ -167,7 +167,7 @@ int main(void)
 
 	//********Generate Maze********
 	cMazeMaker Maze;
-	Maze.GenerateMaze(20, 20);
+	Maze.GenerateMaze(30, 30);
 	Maze.PrintMaze();
 	//********Generate Maze********
 
@@ -517,8 +517,6 @@ int main(void)
 		}
 
 		
-				//std::sort(vec_sorted_drawObj.begin(), vec_sorted_drawObj.end(), transp);
-		std::sort(vec_transObj.begin(), vec_transObj.end(), distToCam);
 
 		cGameObject* pSkyBox = findObjectByFriendlyName("SkyBoxObject");
 		// Place skybox object at camera location
@@ -565,10 +563,10 @@ int main(void)
 
 		// Draw all the objects in the "scene"
 		for (unsigned int objIndex = 0;
-			objIndex != (unsigned int)vec_non_transObj.size();
+			objIndex != (unsigned int)vec_pObjectsToDraw.size();
 			objIndex++)
 		{
-			cGameObject* pCurrentMesh = vec_non_transObj[objIndex];
+			cGameObject* pCurrentMesh = vec_pObjectsToDraw[objIndex];
 
 			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
 
@@ -576,17 +574,19 @@ int main(void)
 
 		}//for ( unsigned int objIndex = 0; 
 
+
+		//Render Daleks
 		for (unsigned int objIndex = 0;
-			objIndex != (unsigned int)vec_transObj.size();
+			objIndex != (unsigned int)vec_daleks.size();
 			objIndex++)
 		{
-			cGameObject* pCurrentMesh = vec_transObj[objIndex];
+			cDalek* pCurrentDallek= vec_daleks[objIndex];
 
-			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
+			glm::mat4x4 matModel = glm::mat4(1.0f);			
 
-			DrawObject(pCurrentMesh, matModel, program, NULL);
+			DrawDaleks(pCurrentDallek, matModel, program, NULL);
 
-		}//for ( unsigned int objIndex = 0; 
+		}
 
 
 		double FPS_currentTime = glfwGetTime();
@@ -651,7 +651,13 @@ int main(void)
 		for (int i = 0; i < vec_daleks.size(); i++)
 		{
 			vec_daleks[i]->dt = deltaTime;
+
 		}
+
+
+
+
+
 
 
 
@@ -665,88 +671,88 @@ int main(void)
 		//gPhysicsWorld->Update(deltaTime);
 
 		
-		::g_pDebugRendererACTUAL->RenderDebugObjects(matView, matProjection, deltaTime);
+		//::g_pDebugRendererACTUAL->RenderDebugObjects(matView, matProjection, deltaTime);
 
 		//::p_LuaScripts->UpdateCG(deltaTime);
 		//::p_LuaScripts->Update(deltaTime);
 
-		for (std::vector<sLight*>::iterator it = LightManager->vecLights.begin(); it != LightManager->vecLights.end(); ++it)
-		{
+		//for (std::vector<sLight*>::iterator it = LightManager->vecLights.begin(); it != LightManager->vecLights.end(); ++it)
+		//{
 
-			sLight* CurLight = *it;
-			if (CurLight->AtenSphere == true)
-			{
-
-
-				cGameObject* pDebugSphere = findObjectByFriendlyName("DebugSphere");
-				pDebugSphere->bIsVisible = true;
-				pDebugSphere->bDontLight = true;
-				glm::vec4 oldDiffuse = pDebugSphere->materialDiffuse;
-				glm::vec3 oldScale = pDebugSphere->nonUniformScale;
-				pDebugSphere->setDiffuseColour(glm::vec3(255.0f / 255.0f, 105.0f / 255.0f, 180.0f / 255.0f));
-				pDebugSphere->bUseVertexColour = false;
-				pDebugSphere->position = glm::vec3(CurLight->position);
-				glm::mat4 matBall(1.0f);
+		//	sLight* CurLight = *it;
+		//	if (CurLight->AtenSphere == true)
+		//	{
 
 
-				pDebugSphere->materialDiffuse = oldDiffuse;
-				pDebugSphere->setUniformScale(0.1f);			// Position
-				DrawObject(pDebugSphere, matBall, program, NULL);
+		//		cGameObject* pDebugSphere = findObjectByFriendlyName("DebugSphere");
+		//		pDebugSphere->bIsVisible = true;
+		//		pDebugSphere->bDontLight = true;
+		//		glm::vec4 oldDiffuse = pDebugSphere->materialDiffuse;
+		//		glm::vec3 oldScale = pDebugSphere->nonUniformScale;
+		//		pDebugSphere->setDiffuseColour(glm::vec3(255.0f / 255.0f, 105.0f / 255.0f, 180.0f / 255.0f));
+		//		pDebugSphere->bUseVertexColour = false;
+		//		pDebugSphere->position = glm::vec3(CurLight->position);
+		//		glm::mat4 matBall(1.0f);
 
-				const float ACCURACY_OF_DISTANCE = 0.0001f;
-				const float INFINITE_DISTANCE = 10000.0f;
 
-				float distance90Percent =
-					pLightHelper->calcApproxDistFromAtten(0.90f, ACCURACY_OF_DISTANCE,
-						INFINITE_DISTANCE,
-						CurLight->atten.x,
-						CurLight->atten.y,
-						CurLight->atten.z);
+		//		pDebugSphere->materialDiffuse = oldDiffuse;
+		//		pDebugSphere->setUniformScale(0.1f);			// Position
+		//		DrawObject(pDebugSphere, matBall, program, NULL);
 
-				pDebugSphere->setUniformScale(distance90Percent);			// 90% brightness
-				//pDebugSphere->objColour = glm::vec3(1.0f,1.0f,0.0f);
-				pDebugSphere->setDiffuseColour(glm::vec3(1.0f, 1.0f, 0.0f));
-				DrawObject(pDebugSphere, matBall, program, NULL);
+		//		const float ACCURACY_OF_DISTANCE = 0.0001f;
+		//		const float INFINITE_DISTANCE = 10000.0f;
 
-				//			pDebugSphere->objColour = glm::vec3(0.0f,1.0f,0.0f);	// 50% brightness
-				pDebugSphere->setDiffuseColour(glm::vec3(0.0f, 1.0f, 0.0f));
-				float distance50Percent =
-					pLightHelper->calcApproxDistFromAtten(0.50f, ACCURACY_OF_DISTANCE,
-						INFINITE_DISTANCE,
-						CurLight->atten.x,
-						CurLight->atten.y,
-						CurLight->atten.z);
-				pDebugSphere->setUniformScale(distance50Percent);
-				DrawObject(pDebugSphere, matBall, program, NULL);
+		//		float distance90Percent =
+		//			pLightHelper->calcApproxDistFromAtten(0.90f, ACCURACY_OF_DISTANCE,
+		//				INFINITE_DISTANCE,
+		//				CurLight->atten.x,
+		//				CurLight->atten.y,
+		//				CurLight->atten.z);
 
-				//			pDebugSphere->objColour = glm::vec3(1.0f,0.0f,0.0f);	// 25% brightness
-				pDebugSphere->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));
-				float distance25Percent =
-					pLightHelper->calcApproxDistFromAtten(0.25f, ACCURACY_OF_DISTANCE,
-						INFINITE_DISTANCE,
-						CurLight->atten.x,
-						CurLight->atten.y,
-						CurLight->atten.z);
-				pDebugSphere->setUniformScale(distance25Percent);
-				DrawObject(pDebugSphere, matBall, program, NULL);
+		//		pDebugSphere->setUniformScale(distance90Percent);			// 90% brightness
+		//		//pDebugSphere->objColour = glm::vec3(1.0f,1.0f,0.0f);
+		//		pDebugSphere->setDiffuseColour(glm::vec3(1.0f, 1.0f, 0.0f));
+		//		DrawObject(pDebugSphere, matBall, program, NULL);
 
-				float distance1Percent =
-					pLightHelper->calcApproxDistFromAtten(0.01f, ACCURACY_OF_DISTANCE,
-						INFINITE_DISTANCE,
-						CurLight->atten.x,
-						CurLight->atten.y,
-						CurLight->atten.z);
-				//			pDebugSphere->objColour = glm::vec3(0.0f,0.0f,1.0f);	// 1% brightness
-				pDebugSphere->setDiffuseColour(glm::vec3(0.0f, 0.0f, 1.0f));
-				pDebugSphere->setUniformScale(distance1Percent);
-				DrawObject(pDebugSphere, matBall, program, NULL);
+		//		//			pDebugSphere->objColour = glm::vec3(0.0f,1.0f,0.0f);	// 50% brightness
+		//		pDebugSphere->setDiffuseColour(glm::vec3(0.0f, 1.0f, 0.0f));
+		//		float distance50Percent =
+		//			pLightHelper->calcApproxDistFromAtten(0.50f, ACCURACY_OF_DISTANCE,
+		//				INFINITE_DISTANCE,
+		//				CurLight->atten.x,
+		//				CurLight->atten.y,
+		//				CurLight->atten.z);
+		//		pDebugSphere->setUniformScale(distance50Percent);
+		//		DrawObject(pDebugSphere, matBall, program, NULL);
 
-				//			pDebugSphere->objColour = oldColour;
-				pDebugSphere->materialDiffuse = oldDiffuse;
-				pDebugSphere->nonUniformScale = oldScale;
-				pDebugSphere->bIsVisible = false;
-			}
-		}
+		//		//			pDebugSphere->objColour = glm::vec3(1.0f,0.0f,0.0f);	// 25% brightness
+		//		pDebugSphere->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));
+		//		float distance25Percent =
+		//			pLightHelper->calcApproxDistFromAtten(0.25f, ACCURACY_OF_DISTANCE,
+		//				INFINITE_DISTANCE,
+		//				CurLight->atten.x,
+		//				CurLight->atten.y,
+		//				CurLight->atten.z);
+		//		pDebugSphere->setUniformScale(distance25Percent);
+		//		DrawObject(pDebugSphere, matBall, program, NULL);
+
+		//		float distance1Percent =
+		//			pLightHelper->calcApproxDistFromAtten(0.01f, ACCURACY_OF_DISTANCE,
+		//				INFINITE_DISTANCE,
+		//				CurLight->atten.x,
+		//				CurLight->atten.y,
+		//				CurLight->atten.z);
+		//		//			pDebugSphere->objColour = glm::vec3(0.0f,0.0f,1.0f);	// 1% brightness
+		//		pDebugSphere->setDiffuseColour(glm::vec3(0.0f, 0.0f, 1.0f));
+		//		pDebugSphere->setUniformScale(distance1Percent);
+		//		DrawObject(pDebugSphere, matBall, program, NULL);
+
+		//		//			pDebugSphere->objColour = oldColour;
+		//		pDebugSphere->materialDiffuse = oldDiffuse;
+		//		pDebugSphere->nonUniformScale = oldScale;
+		//		pDebugSphere->bIsVisible = false;
+		//	}
+		//}
 
 
 

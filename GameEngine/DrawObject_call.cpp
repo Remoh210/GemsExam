@@ -10,6 +10,7 @@
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
 #include "cShaderManager.h"
+#include "cDalek.h"
 
 #include "cGameObject.h"
 
@@ -205,357 +206,473 @@ void DrawScene_Simple(std::vector<cGameObject*> vec_pMeshSceneObjects,
 static float CurTime = 0.0f;
 
 
-void DrawObject(cGameObject* pCurrentMesh,
+void DrawDaleks(cDalek* dalek,
 	glm::mat4x4 &matModel,
 	GLuint shaderProgramID, cFBO* fbo)
 {
 
-	// Is this object visible
-	if (!pCurrentMesh->bIsVisible)
-	{
+		// Is this object visible
+		if (!dalek->dalekObj->bIsVisible)
+		{
+			return;
+		}
+
+		// Set up the texture binding for this object
+		BindTextures(dalek->dalekObj, shaderProgramID, fbo);
+
+
+
+		glm::vec3 position(0.f);
+		EnterCriticalSection(&dalek->CR_POSITION);
+		position = dalek->dalekObj->position;
+		LeaveCriticalSection(&dalek->CR_POSITION);
+
+		glm::mat4 matTranslation = glm::translate(glm::mat4(1.0f),
+			position);
+		matModel = matModel * matTranslation;		
+
+		glm::quat qRotation = dalek->dalekObj->getQOrientation();
+		glm::mat4 matQrotation = glm::mat4(qRotation);
+
+		matModel = matModel * matQrotation;
+
+
+		glm::mat4 matModelInvTrans = glm::inverse(glm::transpose(matModel));
+
+		// And now scale
+
+		glm::mat4 matScale = glm::scale(glm::mat4(1.0f),
+			dalek->dalekObj->nonUniformScale);
+		matModel = matModel * matScale;
+
+
+		glUseProgram(shaderProgramID);
+
+		GLint objectDiffuse_UniLoc = glGetUniformLocation(shaderProgramID, "objectDiffuse");
+		GLint objectSpecular_UniLoc = glGetUniformLocation(shaderProgramID, "objectSpecular");
+
+		GLint lightPos_UniLoc = glGetUniformLocation(shaderProgramID, "lightPos");
+		GLint lightBrightness_UniLoc = glGetUniformLocation(shaderProgramID, "lightBrightness");
+		GLint useVertexColour_UniLoc = glGetUniformLocation(shaderProgramID, "useVertexColour");
+
+		GLint matModel_location = glGetUniformLocation(shaderProgramID, "matModel");
+		GLint matModelInvTrans_location = glGetUniformLocation(shaderProgramID, "matModelInvTrans");
+		GLint matView_location = glGetUniformLocation(shaderProgramID, "matView");
+		GLint matProj_location = glGetUniformLocation(shaderProgramID, "matProj");
+
+		GLint bDontUseLighting_UniLoc = glGetUniformLocation(shaderProgramID, "bDontUseLighting");
+
+		glUniformMatrix4fv(matModel_location, 1, GL_FALSE, glm::value_ptr(matModel));
+		glUniformMatrix4fv(matModelInvTrans_location, 1, GL_FALSE, glm::value_ptr(matModelInvTrans));
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//GL_FILL
+
+
+		glEnable(GL_BLEND);
+
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		GLint wholeObjectAlphaTransparency_LocID = glGetUniformLocation(shaderProgramID,
+			"wholeObjectAlphaTransparency");
+		// Take the 4th value from the material and pass it as alpha
+		glUniform1f(wholeObjectAlphaTransparency_LocID, dalek->dalekObj->materialDiffuse.a);
+
+		// ****************************************************
+
+
+		glUniform4f(objectDiffuse_UniLoc,
+			dalek->dalekObj->materialDiffuse.r,
+			dalek->dalekObj->materialDiffuse.g,
+			dalek->dalekObj->materialDiffuse.b,
+			dalek->dalekObj->materialDiffuse.a);
+		glUniform4f(objectSpecular_UniLoc,
+			dalek->dalekObj->materialSpecular.r,
+			dalek->dalekObj->materialSpecular.g,
+			dalek->dalekObj->materialSpecular.b,
+			dalek->dalekObj->materialSpecular.a);
+
+		if (dalek->dalekObj->bUseVertexColour)
+		{
+			glUniform1f(useVertexColour_UniLoc, (float)GL_TRUE);
+		}
+		else
+		{
+			glUniform1f(useVertexColour_UniLoc, (float)GL_FALSE);
+		}
+
+		if (dalek->dalekObj->bDontLight)
+		{
+			glUniform1f(bDontUseLighting_UniLoc, (float)GL_TRUE);
+		}
+		else
+		{
+			glUniform1f(bDontUseLighting_UniLoc, (float)GL_FALSE);
+		}
+
+		if (dalek->dalekObj->bIsWireFrame)
+		{
+			// Yes, draw it wireframe
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			glDisable(GL_CULL_FACE);	// Discared "back facing" triangles
+
+		}
+		else
+		{
+			// No, it's "solid" (or "Filled")
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glEnable(GL_CULL_FACE);	// Discared "back facing" triangles
+
+		}
+
+
+		GLint bIsASkinnedMesh_LocID = glGetUniformLocation(shaderProgramID,
+			"bIsASkinnedMesh");
+
+
+		sModelDrawInfo modelInfo;
+
+		// It's a "regular" mesh
+		modelInfo.meshFileName = dalek->dalekObj->meshName;
+
+		glUniform1f(bIsASkinnedMesh_LocID, (float)GL_FALSE);
+
+
+
+
+
+		if (g_pTheVAOMeshManager->FindDrawInfoByModelName(modelInfo))
+		{
+			//glDrawArrays(GL_TRIANGLES, 0, bunnyInfo.numberOfIndices );
+
+			glBindVertexArray(modelInfo.VAO_ID);
+
+			glDrawElements(GL_TRIANGLES,
+				modelInfo.numberOfIndices,
+				GL_UNSIGNED_INT,
+				0);
+
+			glBindVertexArray(0);
+
+		}
+		else
+		{
+			std::cout << dalek->dalekObj->meshName << " was not found" << std::endl;
+		}
+
+
+		for (unsigned int childMeshIndex = 0; childMeshIndex != dalek->dalekObj->vec_pChildObjectsToDraw.size(); childMeshIndex++)
+		{
+			glm::mat4 matWorldParent = matModel;
+			DrawObject(dalek->dalekObj->vec_pChildObjectsToDraw[childMeshIndex], matWorldParent, shaderProgramID, NULL);
+		}
+
 		return;
-	}
+
+}
 
 
 
-	// Set up the texture binding for this object
-	BindTextures(pCurrentMesh, shaderProgramID, fbo);
-
-
-
-	//************************************
-	//	matModel = glm::mat4x4(1.0f);		// mat4x4_identity(m);
-
-
-		//m = m * rotateZ;
-
-	glm::mat4 matTranslation = glm::translate(glm::mat4(1.0f),
-		pCurrentMesh->position);
-	matModel = matModel * matTranslation;		// matMove
-
-	glm::quat qRotation = pCurrentMesh->getQOrientation();
-	// Generate the 4x4 matrix for that
-	glm::mat4 matQrotation = glm::mat4(qRotation);
-
-	matModel = matModel * matQrotation;
-
-	//glm::mat4 postRot_X = glm::rotate( glm::mat4(1.0f), 
-	//									pCurrentMesh->postRotation.x, 
-	//									glm::vec3( 1.0f, 0.0, 0.0f ) );
-	//matModel = matModel * postRot_X;
-	//
-	//glm::mat4 postRot_Y = glm::rotate( glm::mat4(1.0f), 
-	//									pCurrentMesh->postRotation.y, 
-	//									glm::vec3( 0.0f, 1.0, 0.0f ) );
-	//matModel = matModel * postRot_Y;
-	//
-	//glm::mat4 postRot_Z = glm::rotate( glm::mat4(1.0f), 
-	//									pCurrentMesh->postRotation.z, 
-	//									glm::vec3( 0.0f, 0.0, 1.0f ) );
-	//matModel = matModel * postRot_Z;
-
-		// Calculate the inverse transpose before the scaling
-	glm::mat4 matModelInvTrans = glm::inverse(glm::transpose(matModel));
-
-	// And now scale
-
-	glm::mat4 matScale = glm::scale(glm::mat4(1.0f),
-		pCurrentMesh->nonUniformScale);
-	matModel = matModel * matScale;
-
-
-	//************************************
-
-		//mat4x4_mul(mvp, p, m);
-		//mvp = p * view * m; 
-
-	glUseProgram(shaderProgramID);
-
-	// HACK: We wil deal with these uniform issues later...
-
-	// Loading the uniform variables here (rather than the inner draw loop)
-//	GLint objectColour_UniLoc = glGetUniformLocation( shaderProgramID, "objectColour" );
-	GLint objectDiffuse_UniLoc = glGetUniformLocation(shaderProgramID, "objectDiffuse");
-	GLint objectSpecular_UniLoc = glGetUniformLocation(shaderProgramID, "objectSpecular");
-
-	//uniform vec3 lightPos;
-	//uniform float lightAtten;
-	GLint lightPos_UniLoc = glGetUniformLocation(shaderProgramID, "lightPos");
-	GLint lightBrightness_UniLoc = glGetUniformLocation(shaderProgramID, "lightBrightness");
-	GLint useVertexColour_UniLoc = glGetUniformLocation(shaderProgramID, "useVertexColour");
-
-	//	// uniform mat4 MVP;	THIS ONE IS NO LONGER USED	
-	//uniform mat4 matModel;	// M
-	//uniform mat4 matView;		// V
-	//uniform mat4 matProj;		// P
-	//GLint mvp_location = glGetUniformLocation(program, "MVP");
-	GLint matModel_location = glGetUniformLocation(shaderProgramID, "matModel");
-	GLint matModelInvTrans_location = glGetUniformLocation(shaderProgramID, "matModelInvTrans");
-	GLint matView_location = glGetUniformLocation(shaderProgramID, "matView");
-	GLint matProj_location = glGetUniformLocation(shaderProgramID, "matProj");
-
-	GLint bDontUseLighting_UniLoc = glGetUniformLocation(shaderProgramID, "bDontUseLighting");
-
-	glUniformMatrix4fv(matModel_location, 1, GL_FALSE, glm::value_ptr(matModel));
-	glUniformMatrix4fv(matModelInvTrans_location, 1, GL_FALSE, glm::value_ptr(matModelInvTrans));
-
-
-	// Set the object to "wireframe"
-//			glPolygonMode( GL_FRONT_AND_BACK , GL_LINE );	//GL_FILL
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//GL_FILL
-
-	//GLint objectColour_UniLoc 
-	//	= glGetUniformLocation( program, "objectColour" );
-
-	//glUniform3f( objectColour_UniLoc, 
-	//				pCurrentMesh->objColour.r, 
-	//				pCurrentMesh->objColour.g, 
-	//				pCurrentMesh->objColour.b ); 
-
-
-
-	// ***************************************************
-
-	// I'll do quick sort or whatever sexy sorts
-	// One pass of bubble sort is fine...
-
-	// Enable blend or "alpha" transparency
-	glEnable(GL_BLEND);
-
-	//glDisable( GL_BLEND );
-	// Source == already on framebuffer
-	// Dest == what you're about to draw
-	// This is the "regular alpha blend transparency"
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	GLint wholeObjectAlphaTransparency_LocID = glGetUniformLocation(shaderProgramID,
-		"wholeObjectAlphaTransparency");
-	// Take the 4th value from the material and pass it as alpha
-	glUniform1f(wholeObjectAlphaTransparency_LocID, pCurrentMesh->materialDiffuse.a);
-
-	// ****************************************************
-
-
-	glUniform4f(objectDiffuse_UniLoc,
-		pCurrentMesh->materialDiffuse.r,
-		pCurrentMesh->materialDiffuse.g,
-		pCurrentMesh->materialDiffuse.b,
-		pCurrentMesh->materialDiffuse.a);
-	glUniform4f(objectSpecular_UniLoc,
-		pCurrentMesh->materialSpecular.r,
-		pCurrentMesh->materialSpecular.g,
-		pCurrentMesh->materialSpecular.b,
-		pCurrentMesh->materialSpecular.a);
-
-	if (pCurrentMesh->bUseVertexColour)
+void DrawObject(cGameObject* pCurrentMesh,
+	glm::mat4x4 &matModel,
+	GLuint shaderProgramID, cFBO* fbo)
+{
+	if (pCurrentMesh->meshName != "dalek.ply")
 	{
-		glUniform1f(useVertexColour_UniLoc, (float)GL_TRUE);
-	}
-	else
-	{
-		glUniform1f(useVertexColour_UniLoc, (float)GL_FALSE);
-	}
 
-	if (pCurrentMesh->bDontLight)
-	{
-		glUniform1f(bDontUseLighting_UniLoc, (float)GL_TRUE);
-	}
-	else
-	{
-		glUniform1f(bDontUseLighting_UniLoc, (float)GL_FALSE);
-	}
+		// Is this object visible
+		if (!pCurrentMesh->bIsVisible)
+		{
+			return;
+		}
 
-	if (pCurrentMesh->bIsWireFrame)
-	{
-		// Yes, draw it wireframe
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDisable(GL_CULL_FACE);	// Discared "back facing" triangles
-		//glDisable( GL_DEPTH );		// Enables the KEEPING of the depth information
-		//glDisable( GL_DEPTH_TEST );	// When drawing, checked the existing depth
-	}
-	else
-	{
-		// No, it's "solid" (or "Filled")
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glEnable(GL_CULL_FACE);	// Discared "back facing" triangles
-		//glEnable( GL_DEPTH );		// Enables the KEEPING of the depth information
-		//glEnable( GL_DEPTH_TEST );	// When drawing, checked the existing depth
-	}
 
-	// *****************************************************************
+
+		// Set up the texture binding for this object
+		BindTextures(pCurrentMesh, shaderProgramID, fbo);
+
+
+
+		//************************************
+		//	matModel = glm::mat4x4(1.0f);		// mat4x4_identity(m);
+
+
+			//m = m * rotateZ;
+
+		glm::mat4 matTranslation = glm::translate(glm::mat4(1.0f),
+			pCurrentMesh->position);
+		matModel = matModel * matTranslation;		// matMove
+
+		glm::quat qRotation = pCurrentMesh->getQOrientation();
+		// Generate the 4x4 matrix for that
+		glm::mat4 matQrotation = glm::mat4(qRotation);
+
+		matModel = matModel * matQrotation;
+
+
+		glm::mat4 matModelInvTrans = glm::inverse(glm::transpose(matModel));
+
+		// And now scale
+
+		glm::mat4 matScale = glm::scale(glm::mat4(1.0f),
+			pCurrentMesh->nonUniformScale);
+		matModel = matModel * matScale;
+
+
+		glUseProgram(shaderProgramID);
+
+		GLint objectDiffuse_UniLoc = glGetUniformLocation(shaderProgramID, "objectDiffuse");
+		GLint objectSpecular_UniLoc = glGetUniformLocation(shaderProgramID, "objectSpecular");
+
+		GLint lightPos_UniLoc = glGetUniformLocation(shaderProgramID, "lightPos");
+		GLint lightBrightness_UniLoc = glGetUniformLocation(shaderProgramID, "lightBrightness");
+		GLint useVertexColour_UniLoc = glGetUniformLocation(shaderProgramID, "useVertexColour");
+
+		GLint matModel_location = glGetUniformLocation(shaderProgramID, "matModel");
+		GLint matModelInvTrans_location = glGetUniformLocation(shaderProgramID, "matModelInvTrans");
+		GLint matView_location = glGetUniformLocation(shaderProgramID, "matView");
+		GLint matProj_location = glGetUniformLocation(shaderProgramID, "matProj");
+
+		GLint bDontUseLighting_UniLoc = glGetUniformLocation(shaderProgramID, "bDontUseLighting");
+
+		glUniformMatrix4fv(matModel_location, 1, GL_FALSE, glm::value_ptr(matModel));
+		glUniformMatrix4fv(matModelInvTrans_location, 1, GL_FALSE, glm::value_ptr(matModelInvTrans));
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//GL_FILL
+
+
+		glEnable(GL_BLEND);
+
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		GLint wholeObjectAlphaTransparency_LocID = glGetUniformLocation(shaderProgramID,
+			"wholeObjectAlphaTransparency");
+		// Take the 4th value from the material and pass it as alpha
+		glUniform1f(wholeObjectAlphaTransparency_LocID, pCurrentMesh->materialDiffuse.a);
+
+		// ****************************************************
+
+
+		glUniform4f(objectDiffuse_UniLoc,
+			pCurrentMesh->materialDiffuse.r,
+			pCurrentMesh->materialDiffuse.g,
+			pCurrentMesh->materialDiffuse.b,
+			pCurrentMesh->materialDiffuse.a);
+		glUniform4f(objectSpecular_UniLoc,
+			pCurrentMesh->materialSpecular.r,
+			pCurrentMesh->materialSpecular.g,
+			pCurrentMesh->materialSpecular.b,
+			pCurrentMesh->materialSpecular.a);
+
+		if (pCurrentMesh->bUseVertexColour)
+		{
+			glUniform1f(useVertexColour_UniLoc, (float)GL_TRUE);
+		}
+		else
+		{
+			glUniform1f(useVertexColour_UniLoc, (float)GL_FALSE);
+		}
+
+		if (pCurrentMesh->bDontLight)
+		{
+			glUniform1f(bDontUseLighting_UniLoc, (float)GL_TRUE);
+		}
+		else
+		{
+			glUniform1f(bDontUseLighting_UniLoc, (float)GL_FALSE);
+		}
+
+		if (pCurrentMesh->bIsWireFrame)
+		{
+			// Yes, draw it wireframe
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			glDisable(GL_CULL_FACE);	// Discared "back facing" triangles
+			//glDisable( GL_DEPTH );		// Enables the KEEPING of the depth information
+			//glDisable( GL_DEPTH_TEST );	// When drawing, checked the existing depth
+		}
+		else
+		{
+			// No, it's "solid" (or "Filled")
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glEnable(GL_CULL_FACE);	// Discared "back facing" triangles
+			//glEnable( GL_DEPTH );		// Enables the KEEPING of the depth information
+			//glEnable( GL_DEPTH_TEST );	// When drawing, checked the existing depth
+		}
+
+		// *****************************************************************
+		//  ___ _   _                  _ __  __        _    
+		// / __| |_(_)_ _  _ _  ___ __| |  \/  |___ __| |_  
+		// \__ \ / / | ' \| ' \/ -_) _` | |\/| / -_|_-< ' \ 
+		// |___/_\_\_|_||_|_||_\___\__,_|_|  |_\___/__/_||_|
+		//                                                  
+		GLint bIsASkinnedMesh_LocID = glGetUniformLocation(shaderProgramID,
+			"bIsASkinnedMesh");
+
+
+		sModelDrawInfo modelInfo;
+		if (pCurrentMesh->pSimpleSkinnedMesh == NULL)
+		{
+			// It's a "regular" mesh
+			modelInfo.meshFileName = pCurrentMesh->meshName;
+
+			glUniform1f(bIsASkinnedMesh_LocID, (float)GL_FALSE);
+		}
+		else
+		{
+			cGameObject* dalek = findObjectByFriendlyName("dalek");
+			if (oldanim == "Idle" && pCurrentMesh->currentAnimation != "Idle") { CurTime = 0.0f; }
+			if (pause) {
+				pCurrentMesh->currentAnimation = oldanim;
+				elapseTime += deltaTime;
+
+				if (elapseTime > 3.0f)
+				{
+					pause = false;
+					elapseTime = 0.0f;
+					CurTime = 0.0f;
+					dalek->setDiffuseColour(glm::vec3(0.0f, 0.0f, 1.0f));
+
+				}
+			}
+			//	else { elapseTime = 0.0f; }
+
+			modelInfo.meshFileName = pCurrentMesh->pSimpleSkinnedMesh->fileName;
+
+			glUniform1f(bIsASkinnedMesh_LocID, (float)GL_TRUE);
+			std::vector< glm::mat4x4 > vecFinalTransformation;
+			std::vector< glm::mat4x4 > vecOffsets;
+			pCurrentMesh->pSimpleSkinnedMesh->BoneTransform(
+				CurTime,
+				pCurrentMesh->currentAnimation,
+				vecFinalTransformation,
+				pCurrentMesh->vecObjectBoneTransformation,
+				vecOffsets);
+
+
+			if (!pause) {
+				CurTime += 0.8f * deltaTime;
+			}
+
+
+			unsigned int numberOfBonesUsed = static_cast<unsigned int>(vecFinalTransformation.size());
+
+			GLint numBonesUsed_UniLoc = glGetUniformLocation(shaderProgramID, "numBonesUsed");
+			glUniform1i(numBonesUsed_UniLoc, numberOfBonesUsed);
+
+			glm::mat4x4* pBoneMatrixArray = &(vecFinalTransformation[0]);
+			GLint bones_UniLoc = glGetUniformLocation(shaderProgramID, "bones");
+			glUniformMatrix4fv(bones_UniLoc, numberOfBonesUsed, GL_FALSE,
+				(const GLfloat*)glm::value_ptr(*pBoneMatrixArray));
+
+			for (unsigned int boneIndex = 0; boneIndex != numberOfBonesUsed; boneIndex++)
+			{
+
+
+				//Left hand
+				glm::mat4 boneLeftHandlocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
+				glm::mat4 boneLeftHandTranslation = boneLeftHandlocal * pCurrentMesh->nonUniformScale.x;
+				glm::mat4 matLeftHandOrientation = glm::mat4(pCurrentMesh->m_meshQOrientation);
+				matLeftHandOrientation *= boneLeftHandTranslation;
+				boneLeftHandTranslation *= matLeftHandOrientation;
+
+				glm::vec4 vecLeftHandTrans(1.0f, 1.0f, 1.0f, 1.0f);
+				glm::vec4 LeftHandbonepos = matLeftHandOrientation * vecLeftHandTrans;
+
+
+				if (boneIndex == 35)
+				{
+					cGameObject* ds = findObjectByFriendlyName("DebugSphereLeftHand");
+					ds->position = glm::vec3(LeftHandbonepos) + pCurrentMesh->position;
+
+					if (glm::distance(ds->position, dalek->position) < 5.5f)
+					{
+						if (pCurrentMesh->currentAnimation != "Idle" && pCurrentMesh->currentAnimation != "Walk-forward")
+						{
+							ds->bDontLight = true;
+							ds->bIsVisible = true;
+							dalek->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));
+							pause = true;
+							collided = true;
+
+
+						}
+
+					}
+					else { ds->bIsVisible = false; }
+
+				}
+
+
+				//Right hand
+				glm::mat4 boneRightHandlocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
+				glm::mat4 boneRightHandTranslation = boneRightHandlocal * pCurrentMesh->nonUniformScale.x;
+				glm::mat4 matRightHandOrientation = glm::mat4(pCurrentMesh->m_meshQOrientation);
+				matRightHandOrientation *= boneRightHandTranslation;
+				boneRightHandTranslation *= matRightHandOrientation;
+
+				glm::vec4 vecRightHandTrans(1.0f, 1.0f, 1.0f, 1.0f);
+				glm::vec4 RightHandbonepos = matRightHandOrientation * vecRightHandTrans;
+
+
+				if (boneIndex == 16)
+				{
+					cGameObject* ds2 = findObjectByFriendlyName("DebugSphereRightHand");
+					ds2->position = glm::vec3(RightHandbonepos) + pCurrentMesh->position;
+
+					if (glm::distance(ds2->position, dalek->position) < 5.5f)
+					{
+						if (pCurrentMesh->currentAnimation != "Idle" && pCurrentMesh->currentAnimation != "Walk-forward")
+						{
+							ds2->bDontLight = true;
+							ds2->bIsVisible = true;
+							dalek->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));
+							pause = true;
+							collided = true;
+						}
+					}
+					else { ds2->bIsVisible = false; }
+				}
+			}
+
+
+
+			oldanim = pCurrentMesh->currentAnimation;
+
+		}//if ( pCurrentMesh->pSimpleSkinnedMesh == NULL )
 	//  ___ _   _                  _ __  __        _    
 	// / __| |_(_)_ _  _ _  ___ __| |  \/  |___ __| |_  
 	// \__ \ / / | ' \| ' \/ -_) _` | |\/| / -_|_-< ' \ 
 	// |___/_\_\_|_||_|_||_\___\__,_|_|  |_\___/__/_||_|
 	//                                                  
-	GLint bIsASkinnedMesh_LocID = glGetUniformLocation(shaderProgramID,
-		"bIsASkinnedMesh");
+	// *****************************************************************
 
 
-	sModelDrawInfo modelInfo;
-	if (pCurrentMesh->pSimpleSkinnedMesh == NULL)
-	{
-		// It's a "regular" mesh
-		modelInfo.meshFileName = pCurrentMesh->meshName;
-
-		glUniform1f(bIsASkinnedMesh_LocID, (float)GL_FALSE);
-	}
-	else
-	{
-		cGameObject* dalek = findObjectByFriendlyName("dalek");
-		if (oldanim == "Idle" && pCurrentMesh->currentAnimation != "Idle") { CurTime = 0.0f; }
-		if (pause) { 
-			pCurrentMesh->currentAnimation = oldanim;
-			elapseTime += deltaTime;
-			
-			if (elapseTime > 3.0f) 
-			{
-				pause = false;
-				elapseTime = 0.0f;
-				CurTime = 0.0f;
-				dalek->setDiffuseColour(glm::vec3(0.0f, 0.0f, 1.0f));
-
-			}
-		}
-	//	else { elapseTime = 0.0f; }
-
-		modelInfo.meshFileName = pCurrentMesh->pSimpleSkinnedMesh->fileName;
-
-		glUniform1f(bIsASkinnedMesh_LocID, (float)GL_TRUE);
-		std::vector< glm::mat4x4 > vecFinalTransformation;	
-		std::vector< glm::mat4x4 > vecOffsets;
-		pCurrentMesh->pSimpleSkinnedMesh->BoneTransform(
-			CurTime,	
-		pCurrentMesh->currentAnimation,
-		vecFinalTransformation,		
-		pCurrentMesh->vecObjectBoneTransformation,  
-		vecOffsets);                 
-
-
-		if (!pause){
-			CurTime += 0.8f * deltaTime;
-		}		
-
-
-		unsigned int numberOfBonesUsed = static_cast<unsigned int>(vecFinalTransformation.size());
-
-		GLint numBonesUsed_UniLoc = glGetUniformLocation(shaderProgramID, "numBonesUsed");
-		glUniform1i(numBonesUsed_UniLoc, numberOfBonesUsed);
-
-		glm::mat4x4* pBoneMatrixArray = &(vecFinalTransformation[0]);
-		GLint bones_UniLoc = glGetUniformLocation(shaderProgramID, "bones");
-		glUniformMatrix4fv(bones_UniLoc, numberOfBonesUsed, GL_FALSE,
-			(const GLfloat*)glm::value_ptr(*pBoneMatrixArray));
-
-		for (unsigned int boneIndex = 0; boneIndex != numberOfBonesUsed; boneIndex++)
+		if (g_pTheVAOMeshManager->FindDrawInfoByModelName(modelInfo))
 		{
+			//glDrawArrays(GL_TRIANGLES, 0, bunnyInfo.numberOfIndices );
 
+			glBindVertexArray(modelInfo.VAO_ID);
 
-			//Left hand
-			glm::mat4 boneLeftHandlocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
-			glm::mat4 boneLeftHandTranslation = boneLeftHandlocal * pCurrentMesh->nonUniformScale.x;
-			glm::mat4 matLeftHandOrientation = glm::mat4(pCurrentMesh->m_meshQOrientation);
-			matLeftHandOrientation *= boneLeftHandTranslation;
-			boneLeftHandTranslation *= matLeftHandOrientation;
+			glDrawElements(GL_TRIANGLES,
+				modelInfo.numberOfIndices,
+				GL_UNSIGNED_INT,
+				0);
 
-			glm::vec4 vecLeftHandTrans(1.0f, 1.0f, 1.0f, 1.0f);
-			glm::vec4 LeftHandbonepos = matLeftHandOrientation * vecLeftHandTrans;
+			glBindVertexArray(0);
 
-
-			if (boneIndex == 35)
-			{
-				cGameObject* ds = findObjectByFriendlyName("DebugSphereLeftHand");
-				ds->position = glm::vec3(LeftHandbonepos) + pCurrentMesh->position;
-
-				if (glm::distance(ds->position, dalek->position) < 5.5f)
-				{
-					if (pCurrentMesh->currentAnimation != "Idle" && pCurrentMesh->currentAnimation != "Walk-forward")
-					{
-						ds->bDontLight = true;
-						ds->bIsVisible = true;
-						dalek->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));
-						pause = true;
-						collided = true;
-
-
-					}
-
-				}
-				else { ds->bIsVisible = false; }
-			
-			}
-
-
-			//Right hand
-			glm::mat4 boneRightHandlocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
-			glm::mat4 boneRightHandTranslation = boneRightHandlocal * pCurrentMesh->nonUniformScale.x;
-			glm::mat4 matRightHandOrientation = glm::mat4(pCurrentMesh->m_meshQOrientation);
-			matRightHandOrientation *= boneRightHandTranslation;
-			boneRightHandTranslation *= matRightHandOrientation;
-
-			glm::vec4 vecRightHandTrans(1.0f, 1.0f, 1.0f, 1.0f);
-			glm::vec4 RightHandbonepos = matRightHandOrientation * vecRightHandTrans;
-
-
-			if (boneIndex == 16)
-			{
-				cGameObject* ds2 = findObjectByFriendlyName("DebugSphereRightHand");
-				ds2->position = glm::vec3(RightHandbonepos) + pCurrentMesh->position;
-
-				if (glm::distance(ds2->position, dalek->position) < 5.5f)
-				{
-					if (pCurrentMesh->currentAnimation != "Idle" && pCurrentMesh->currentAnimation != "Walk-forward")
-					{
-						ds2->bDontLight = true;
-						ds2->bIsVisible = true;
-						dalek->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));
-						pause = true;
-						collided = true;
-					}
-				}
-				else { ds2->bIsVisible = false; }
-			}
+		}
+		else
+		{
+			std::cout << pCurrentMesh->meshName << " was not found" << std::endl;
 		}
 
 
-		
-		oldanim = pCurrentMesh->currentAnimation;
+		for (unsigned int childMeshIndex = 0; childMeshIndex != pCurrentMesh->vec_pChildObjectsToDraw.size(); childMeshIndex++)
+		{
+			glm::mat4 matWorldParent = matModel;
+			DrawObject(pCurrentMesh->vec_pChildObjectsToDraw[childMeshIndex], matWorldParent, shaderProgramID, NULL);
+		}
 
-	}//if ( pCurrentMesh->pSimpleSkinnedMesh == NULL )
-//  ___ _   _                  _ __  __        _    
-// / __| |_(_)_ _  _ _  ___ __| |  \/  |___ __| |_  
-// \__ \ / / | ' \| ' \/ -_) _` | |\/| / -_|_-< ' \ 
-// |___/_\_\_|_||_|_||_\___\__,_|_|  |_\___/__/_||_|
-//                                                  
-// *****************************************************************
-
-
-	if (g_pTheVAOMeshManager->FindDrawInfoByModelName(modelInfo))
-	{
-		//glDrawArrays(GL_TRIANGLES, 0, bunnyInfo.numberOfIndices );
-
-		glBindVertexArray(modelInfo.VAO_ID);
-
-		glDrawElements(GL_TRIANGLES,
-			modelInfo.numberOfIndices,
-			GL_UNSIGNED_INT,
-			0);
-
-		glBindVertexArray(0);
-
+		return;
 	}
-	else
-	{
-		std::cout << pCurrentMesh->meshName << " was not found" << std::endl;
-	}
-
-
-	for (unsigned int childMeshIndex = 0; childMeshIndex != pCurrentMesh->vec_pChildObjectsToDraw.size(); childMeshIndex++)
-	{
-		glm::mat4 matWorldParent = matModel;
-		DrawObject(pCurrentMesh->vec_pChildObjectsToDraw[childMeshIndex], matWorldParent, shaderProgramID, NULL);
-	}
-
-	return;
 }//void DrawObject(void)
 

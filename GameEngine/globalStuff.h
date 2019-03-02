@@ -8,6 +8,7 @@
 #include <glm/vec3.hpp>
 #include "cAABB.h"
 #include "cTextRend.h"
+#include "cDalek.h"
 
 #include <string>
 
@@ -111,6 +112,10 @@ void loadLights(std::string filename, std::vector<sLight*> lights);
 void DrawObject( cGameObject* pCurrentMesh,
 				 glm::mat4x4 &matModel, 
 				 GLuint shaderProgramID, cFBO* fbo);
+
+void DrawDaleks(cDalek* dalek,
+	glm::mat4x4 &matModel,
+	GLuint shaderProgramID, cFBO* fbo);
 
 void LoadSkinnedMeshModel(std::vector<cGameObject*> &vec_pObjectsToDraw,
 	unsigned int shaderProgramID);

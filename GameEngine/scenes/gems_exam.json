@@ -2,9 +2,9 @@
     "Camera": {
         "Speed": 120.00000762939453,
         "Position": [
-            187.6272735595703,
-            449.3464050292969,
-            380.2452087402344
+            290.1881103515625,
+            677.5808715820313,
+            572.2971801757813
         ]
     },
     "GameObjects": [
@@ -15,7 +15,41 @@
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                161.1153564453125,
+                160.8153533935547,
+                0.0,
+                294.3531494140625
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100000.0
+            ],
+            "Rotation": [
+                0.0,
+                89.98021697998047,
+                0.0
+            ],
+            "Scale": [
+                0.30000007152557375,
+                0.30000007152557375,
+                0.30000007152557375
+            ]
+        },
+        {
+            "Name": "dalek2",
+            "Mesh": "dalek.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                200.1153564453125,
                 0.0,
                 298.85296630859377
             ],
@@ -32,9 +66,43 @@
                 100000.0
             ],
             "Rotation": [
-                179.9998779296875,
-                87.5600814819336,
-                179.9998779296875
+                0.0,
+                89.98021697998047,
+                0.0
+            ],
+            "Scale": [
+                0.30000007152557375,
+                0.30000007152557375,
+                0.30000007152557375
+            ]
+        },
+        {
+            "Name": "dalek3",
+            "Mesh": "dalek.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                279.0149841308594,
+                0.0,
+                335.9502868652344
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100000.0
+            ],
+            "Rotation": [
+                0.0,
+                89.96573638916016,
+                0.0
             ],
             "Scale": [
                 0.30000007152557375,
@@ -93,95 +161,15 @@
             }
         },
         {
-            "Name": "plane_tv",
-            "Mesh": "tv_screen_new.ply",
-            "Visible": false,
-            "Use_Physics": true,
-            "Wireframe": false,
-            "Position": [
-                963.199951171875,
-                296.30035400390627,
-                373.50006103515627
-            ],
-            "DiffuseRGB_Alpha": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "SpecularRGB_Alpha": [
-                1.0,
-                1.0,
-                1.0,
-                100.0
-            ],
-            "Rotation": [
-                0.0,
-                -89.98021697998047,
-                0.0
-            ],
-            "Scale": [
-                7.139995098114014,
-                7.139995098114014,
-                7.139995098114014
-            ],
-            "Textures": [
-                {
-                    "Name": "recticleTex.bmp",
-                    "Strength": 1.0
-                }
-            ]
-        },
-        {
-            "Name": "retroTV",
-            "Mesh": "RetroTV.ply",
-            "Visible": true,
-            "Use_Physics": true,
-            "Wireframe": false,
-            "Position": [
-                1190.0,
-                439.39825439453127,
-                492.30010986328127
-            ],
-            "DiffuseRGB_Alpha": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "SpecularRGB_Alpha": [
-                1.0,
-                1.0,
-                1.0,
-                100.0
-            ],
-            "Rotation": [
-                180.0,
-                -88.32906341552735,
-                180.0
-            ],
-            "Scale": [
-                6.5999956130981449,
-                6.5999956130981449,
-                6.5999956130981449
-            ],
-            "Textures": [
-                {
-                    "Name": "blackWoodTex.bmp",
-                    "Strength": 1.0
-                }
-            ]
-        },
-        {
             "Name": "block",
             "Mesh": "maze_cube.ply",
             "Visible": true,
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                380.0,
+                580.0,
                 0.0,
-                360.0
+                560.0
             ],
             "DiffuseRGB_Alpha": [
                 0.0,

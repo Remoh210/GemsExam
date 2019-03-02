@@ -137,7 +137,7 @@ void key_callback( GLFWwindow* window,
 			index = index + 1;
 		}
 		else { index = 0; }
-		std::cout << "Model " << vec_pObjectsToDraw.at(index)->meshName << " is Chosen" << std::endl;
+		std::cout << "Model " << vec_pObjectsToDraw.at(index)->friendlyName << " is Chosen" << std::endl;
 	}
 
 
