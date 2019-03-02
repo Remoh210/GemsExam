@@ -1,23 +1,125 @@
 {
     "Camera": {
-        "Speed": 100.0,
+        "Speed": 120.00000762939453,
         "Position": [
-            0.0,
-            50.0,
-            0.0
+            1026.748291015625,
+            2025.3470458984376,
+            1459.91064453125
         ]
     },
     "GameObjects": [
         {
-            "Name": "earth",
-            "Mesh": "earth.ply",
+            "Name": "dalek1",
+            "Mesh": "dalek.ply",
             "Visible": true,
             "Use_Physics": true,
             "Wireframe": false,
             "Position": [
+                318.3146057128906,
                 0.0,
-                100.0,
+                335.9502868652344
+            ],
+            "DiffuseRGB_Alpha": [
+                0.0,
+                1.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100000.0
+            ],
+            "Rotation": [
+                0.0,
+                89.96573638916016,
                 0.0
+            ],
+            "Scale": [
+                0.30000007152557375,
+                0.30000007152557375,
+                0.30000007152557375
+            ]
+        },
+        {
+            "Name": "dalek2",
+            "Mesh": "dalek.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                944.5133666992188,
+                0.0,
+                658.9481811523438
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                1.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100000.0
+            ],
+            "Rotation": [
+                0.0,
+                -0.034273888915777209,
+                0.0
+            ],
+            "Scale": [
+                0.30000007152557375,
+                0.30000007152557375,
+                0.30000007152557375
+            ]
+        },
+        {
+            "Name": "dalek3",
+            "Mesh": "dalek.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                719.7141723632813,
+                0.0,
+                962.650390625
+            ],
+            "DiffuseRGB_Alpha": [
+                1.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "SpecularRGB_Alpha": [
+                1.0,
+                1.0,
+                1.0,
+                100000.0
+            ],
+            "Rotation": [
+                0.0,
+                89.96043395996094,
+                0.0
+            ],
+            "Scale": [
+                0.30000007152557375,
+                0.30000007152557375,
+                0.30000007152557375
+            ]
+        },
+        {
+            "Name": "plane_floor",
+            "Mesh": "plane_floor.ply",
+            "Visible": true,
+            "Use_Physics": true,
+            "Wireframe": false,
+            "Position": [
+                1000.0,
+                -10.0,
+                1000.0
             ],
             "DiffuseRGB_Alpha": [
                 0.0,
@@ -32,98 +134,54 @@
                 100.0
             ],
             "Rotation": [
-                -90.0,
                 0.0,
+                -8.537743951819721e-7,
                 0.0
             ],
             "Scale": [
-                1,
-                1,
-                1
+                1000.014892578125,
+                1000.014892578125,
+                1000.014892578125
             ],
             "Textures": [
                 {
-                    "Name": "earthTex.bmp",
+                    "Name": "groundTex.bmp",
                     "Strength": 1.0
                 }
             ],
             "RigidBody": {
-                "Type": "SPHERE",
-                "Radius": 1.0,
-                "Mass": 10.0
+                "Type": "PLANE",
+                "Constant": 0.0,
+                "Normal": [
+                    0.0,
+                    1.0,
+                    0.0
+                ],
+                "Mass": 0.0
             }
         },
-          {
-                  "Name": "plane_floor",
-                  "Mesh": "plane_floor.ply",
-                  "Visible": true,
-                  "Use_Physics": true,
-                  "Wireframe": false,
-                  "Position": [
-                      0.0,
-                      2.0,
-                      0.0
-                  ],
-                  "DiffuseRGB_Alpha": [
-                      0.0,
-                      0.0,
-                      0.0,
-                      1.0
-                  ],
-                  "SpecularRGB_Alpha": [
-                      1.0,
-                      1.0,
-                      1.0,
-                      100.0
-                  ],
-                  "Rotation": [
-                      0.0,
-                      0.0,
-                      0.0
-                  ],
-                  "Scale": [
-                      100,
-                      100,
-                      100
-                  ],
-                  "Textures": [
-                      {
-                          "Name": "metal.bmp",
-                          "Strength": 1.0
-                      }
-                  ],
-                  "RigidBody": {
-                      "Type": "PLANE",
-                      "Normal": [
-                        0.0,
-                        1.0,
-                        0.0
-                      ],
-                      "Constant": 2.0
-                  }
-       },
         {
-            "Name": "Sphere_320_faces_xyz_n",
-            "Mesh": "Sphere_320_faces_xyz_n.ply",
-            "Visible": false,
-            "Use_Physics": false,
+            "Name": "block",
+            "Mesh": "maze_cube.ply",
+            "Visible": true,
+            "Use_Physics": true,
             "Wireframe": false,
             "Position": [
-                686.0,
-                2220.0,
-                185.0
+                1980.0,
+                0.0,
+                1960.0
             ],
             "DiffuseRGB_Alpha": [
-                1.0,
-                1.0,
-                1.0,
+                0.0,
+                0.0,
+                0.0,
                 1.0
             ],
             "SpecularRGB_Alpha": [
                 1.0,
                 1.0,
                 1.0,
-                1.0
+                100.0
             ],
             "Rotation": [
                 0.0,
@@ -131,26 +189,31 @@
                 0.0
             ],
             "Scale": [
-                30.0,
-                30.0,
-                30.0
+                10.0,
+                10.0,
+                10.0
+            ],
+            "Textures": [
+                {
+                    "Name": "brickTex.bmp",
+                    "Strength": 1.0
+                }
             ]
         }
-
     ],
     "Lights": [
         {
             "Name": "MainLight",
             "Type": "POINT_LIGHT",
             "Position": [
-                706.0,
-                2140.0,
-                185.0
+                -9.0,
+                330.0,
+                -5.0
             ],
             "Attenuation": [
                 0.0,
-                0.00015549414092674851,
-                3.6068104236619549e-7,
+                0.001569058047607541,
+                9.038285120333001e-10,
                 -431602080.0
             ],
             "DiffuseRGB_Alpha": [
@@ -190,7 +253,11 @@
                 10.0,
                 20.0
             ],
-            "ObjectLookAt": "table",
+            "Direction": [
+                -431602080.0,
+                -431602080.0,
+                -431602080.0
+            ],
             "Position": [
                 10.0,
                 1725.0,
